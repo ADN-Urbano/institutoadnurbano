@@ -1,0 +1,14 @@
+/node_modules
+/.next/
+/out/
+/build
+*.pem
+.env*
+!.env.example
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# Subidas locales de Payload (en producción van a R2)
+/media
+/public/media
