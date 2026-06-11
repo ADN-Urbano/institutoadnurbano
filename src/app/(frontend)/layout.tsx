@@ -8,6 +8,7 @@ import {
 import "../globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import CookieBanner from "@/components/CookieBanner";
 
 /* Sustitutos de las tipografías de pago del brandbook.
    Para cambiar a las oficiales (Fold-No.21, Basier Circle, Basier Circle Mono)
@@ -56,6 +57,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <CookieBanner />
       </body>
     </html>
   );

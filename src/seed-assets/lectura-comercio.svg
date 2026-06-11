@@ -1,0 +1,54 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="600" fill="#E8F4F4"/>
+  <!-- cielo / fondo -->
+  <rect width="1200" height="430" fill="#F5F8F8"/>
+  <!-- acera -->
+  <rect y="430" width="1200" height="170" fill="#D4ECEC"/>
+  <rect y="430" width="1200" height="6" fill="#2F9FA3"/>
+
+  <!-- tiendas -->
+  <!-- tienda 1 -->
+  <rect x="60" y="170" width="200" height="260" fill="#ffffff" stroke="#E0E6E6" stroke-width="2"/>
+  <rect x="60" y="170" width="200" height="40" fill="#2F9FA3"/>
+  <rect x="80" y="250" width="160" height="130" fill="#E8F4F4" stroke="#D4ECEC" stroke-width="2"/>
+  <rect x="150" y="390" width="20" height="40" fill="#143E42"/>
+  <path d="M60 210 h200 l-16 28 h-168 z" fill="#1F7378"/>
+
+  <!-- tienda 2 (amarilla) -->
+  <rect x="300" y="140" width="220" height="290" fill="#ffffff" stroke="#E0E6E6" stroke-width="2"/>
+  <rect x="300" y="140" width="220" height="44" fill="#EAC736"/>
+  <rect x="322" y="230" width="176" height="150" fill="#FBF4D6" stroke="#EAC736" stroke-width="2"/>
+  <rect x="398" y="385" width="24" height="45" fill="#143E42"/>
+  <path d="M300 184 h220 l-18 30 h-184 z" fill="#C5A526"/>
+
+  <!-- tienda 3 (verde) -->
+  <rect x="560" y="175" width="200" height="255" fill="#ffffff" stroke="#E0E6E6" stroke-width="2"/>
+  <rect x="560" y="175" width="200" height="40" fill="#96A740"/>
+  <rect x="580" y="255" width="160" height="125" fill="#E8EDD3" stroke="#96A740" stroke-width="2"/>
+  <rect x="650" y="388" width="20" height="42" fill="#143E42"/>
+  <path d="M560 215 h200 l-16 28 h-168 z" fill="#6F8030"/>
+
+  <!-- tienda 4 (coral) -->
+  <rect x="800" y="150" width="220" height="280" fill="#ffffff" stroke="#E0E6E6" stroke-width="2"/>
+  <rect x="800" y="150" width="220" height="44" fill="#DB513A"/>
+  <rect x="822" y="240" width="176" height="140" fill="#FAE0DB" stroke="#DB513A" stroke-width="2"/>
+  <rect x="898" y="385" width="24" height="45" fill="#143E42"/>
+  <path d="M800 194 h220 l-18 30 h-184 z" fill="#B23E2A"/>
+
+  <!-- farola -->
+  <rect x="1080" y="250" width="8" height="180" fill="#143E42"/>
+  <circle cx="1084" cy="245" r="14" fill="#EAC736"/>
+
+  <!-- figuras (personas) -->
+  <g fill="#2A3838">
+    <circle cx="200" cy="478" r="14"/><rect x="190" y="492" width="20" height="46" rx="8"/>
+    <circle cx="470" cy="488" r="14"/><rect x="460" y="502" width="20" height="46" rx="8"/>
+    <circle cx="720" cy="480" r="14"/><rect x="710" y="494" width="20" height="46" rx="8"/>
+  </g>
+  <g fill="#DB513A">
+    <circle cx="360" cy="496" r="14"/><rect x="350" y="510" width="20" height="42" rx="8"/>
+  </g>
+  <g fill="#2F9FA3">
+    <circle cx="900" cy="492" r="14"/><rect x="890" y="506" width="20" height="44" rx="8"/>
+  </g>
+</svg>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BrandLogo from "@/components/ui/BrandLogo";
 import { CheckIcon } from "@/components/ui/icons";
+import AccederForm from "@/components/acceder/AccederForm";
 
 export const metadata: Metadata = {
   title: "Acceder · ADN Local",
@@ -49,46 +50,11 @@ export default function AccederPage() {
           <h2 className="font-display font-extrabold text-[32px] leading-none tracking-[-0.02em] uppercase mb-1">
             Accede a tu cuenta
           </h2>
-          <p className="text-sm text-ink-muted mb-7">Introduce tus datos para entrar.</p>
+          <p className="text-sm text-ink-muted mb-7">
+            Sin contraseñas: te enviamos un enlace de acceso a tu email.
+          </p>
 
-          <form className="flex flex-col gap-4">
-            <label className="flex flex-col gap-1.5">
-              <span className="font-mono text-[11px] text-ink-soft tracking-[0.04em] uppercase">
-                Email
-              </span>
-              <input
-                type="email"
-                placeholder="tu@email.es"
-                className="border border-rule rounded-xl px-4 py-3 text-[15px] outline-none transition-colors focus:border-turquoise"
-              />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="font-mono text-[11px] text-ink-soft tracking-[0.04em] uppercase">
-                Contraseña
-              </span>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="border border-rule rounded-xl px-4 py-3 text-[15px] outline-none transition-colors focus:border-turquoise"
-              />
-            </label>
-
-            <button
-              type="button"
-              className="mt-1 bg-ink text-white text-center p-4 rounded-xl font-bold text-[15px] transition-all hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)]"
-            >
-              Acceder
-            </button>
-          </form>
-
-          <div className="flex items-center justify-between mt-4 text-[13px]">
-            <Link href="/acceder" className="text-turquoise font-medium hover:underline">
-              ¿Olvidaste la contraseña?
-            </Link>
-            <Link href="/formacion" className="text-ink-muted hover:text-ink">
-              Ver cursos →
-            </Link>
-          </div>
+          <AccederForm />
 
           <div className="mt-7 pt-6 border-t border-rule text-[13px] text-ink-muted leading-[1.5]">
             ¿Aún no tienes cuenta? El acceso se crea automáticamente al{" "}
@@ -96,9 +62,6 @@ export default function AccederPage() {
               comprar tu primer curso
             </Link>
             .
-            <span className="block mt-3 font-mono text-[10px] tracking-[0.04em] uppercase text-ink-muted/80">
-              Acceso de alumnos en preparación (Fase 1 · sistema de cursos).
-            </span>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BrandLogo from "@/components/ui/BrandLogo";
@@ -20,7 +20,15 @@ const itemOff = "text-ink-soft font-medium hover:text-turquoise hover:bg-turquoi
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [me, setMe] = useState<{ loggedIn: boolean; name?: string }>({ loggedIn: false });
   const pathname = usePathname();
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then(setMe)
+      .catch(() => {});
+  }, [pathname]);
 
   const homeActive = pathname === "/";
   const recursosActive = pathname.startsWith("/recursos");
@@ -74,11 +82,19 @@ export default function Header() {
             <SearchIcon className="w-3.5 h-3.5" />
           </button>
           <Link
-            href="/acceder"
+            href={me.loggedIn ? "/area" : "/acceder"}
             className="px-3.5 py-2 text-sm font-medium text-ink-soft rounded-lg transition-all hover:text-ink hover:bg-bg-soft max-md:hidden"
           >
-            Acceder
+            {me.loggedIn ? "Mi área" : "Acceder"}
           </Link>
+          {me.loggedIn && (
+            <a
+              href="/api/auth/logout"
+              className="px-2.5 py-2 text-sm font-medium text-ink-muted rounded-lg transition-all hover:text-ink hover:bg-bg-soft max-md:hidden"
+            >
+              Salir
+            </a>
+          )}
           <Link
             href="/curso/plan-dinamizacion-comercial"
             className="bg-ink text-white px-[18px] py-2.5 rounded-lg text-sm font-semibold transition-all inline-flex items-center gap-2 hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)] max-md:hidden"
@@ -142,12 +158,20 @@ export default function Header() {
 
           <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-rule">
             <Link
-              href="/acceder"
+              href={me.loggedIn ? "/area" : "/acceder"}
               onClick={() => setOpen(false)}
               className="px-3.5 py-2.5 text-[15px] font-medium text-ink-soft rounded-lg text-center border border-rule"
             >
-              Acceder
+              {me.loggedIn ? "Mi área" : "Acceder"}
             </Link>
+            {me.loggedIn && (
+              <a
+                href="/api/auth/logout"
+                className="px-3.5 py-2.5 text-[15px] font-medium text-ink-muted rounded-lg text-center"
+              >
+                Cerrar sesión
+              </a>
+            )}
             <Link
               href="/curso/plan-dinamizacion-comercial"
               onClick={() => setOpen(false)}

@@ -20,11 +20,31 @@ export const Courses: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "title", type: "text", required: true, admin: { width: "70%" } },
+        {
+          name: "title",
+          type: "text",
+          required: true,
+          admin: { width: "70%", description: "Nombre corto (catálogo, migas, título de pestaña). Ej.: Plan de dinamización comercial" },
+        },
         {
           name: "accent",
           type: "text",
-          admin: { width: "30%", description: "Palabra del título en turquesa." },
+          admin: { width: "30%", description: "Palabra del nombre corto en turquesa." },
+        },
+      ],
+    },
+    {
+      type: "row",
+      fields: [
+        {
+          name: "headline",
+          type: "text",
+          admin: { width: "70%", description: "Titular largo del hero de la landing. Si se deja vacío, usa el nombre corto." },
+        },
+        {
+          name: "headlineAccent",
+          type: "text",
+          admin: { width: "30%", description: "Palabra del titular del hero en turquesa." },
         },
       ],
     },
@@ -140,11 +160,17 @@ export const Courses: CollectionConfig = {
           ],
         },
         {
+          name: "infoLabel",
+          type: "text",
+          admin: { description: "Resumen del módulo. Ej.: 5 LECCIONES · 1H 12 MIN" },
+        },
+        {
           name: "lessons",
           type: "array",
           labels: { singular: "Lección", plural: "Lecciones" },
           fields: [
             { name: "title", type: "text", required: true },
+            { name: "description", type: "textarea" },
             {
               type: "row",
               fields: [
@@ -155,17 +181,29 @@ export const Courses: CollectionConfig = {
                   admin: { width: "33%" },
                   options: [
                     { label: "Vídeo", value: "video" },
+                    { label: "Texto / Lectura", value: "text" },
                     { label: "Material", value: "doc" },
                     { label: "Directo", value: "live" },
                   ],
                 },
-                { name: "durationLabel", type: "text", admin: { width: "33%", description: "Ej.: 14:32" } },
+                { name: "durationLabel", type: "text", admin: { width: "33%", description: "Ej.: 14:32 · 6 min lectura" } },
                 { name: "liveDate", type: "date", admin: { width: "34%", condition: (_, s) => s?.kind === "live" } },
               ],
             },
             { name: "bunnyVideoId", type: "text", admin: { condition: (_, s) => s?.kind === "video", description: "ID del vídeo en Bunny Stream." } },
             { name: "teamsLink", type: "text", admin: { condition: (_, s) => s?.kind === "live" } },
             { name: "material", type: "upload", relationTo: "media", admin: { condition: (_, s) => s?.kind === "doc" } },
+            {
+              name: "image",
+              type: "upload",
+              relationTo: "media",
+              admin: { condition: (_, s) => s?.kind === "text", description: "Foto destacada de la lectura (opcional)." },
+            },
+            {
+              name: "content",
+              type: "richText",
+              admin: { condition: (_, s) => s?.kind === "text", description: "Texto de la lección. Admite encabezados, listas e imágenes." },
+            },
           ],
         },
       ],
@@ -203,6 +241,23 @@ export const Courses: CollectionConfig = {
       fields: [
         { name: "question", type: "text", required: true },
         { name: "answer", type: "textarea", required: true },
+      ],
+    },
+    {
+      name: "announcements",
+      type: "array",
+      label: "Anuncios (área del alumno)",
+      labels: { singular: "Anuncio", plural: "Anuncios" },
+      admin: { description: "Avisos del profesor que ven los alumnos inscritos." },
+      fields: [
+        {
+          type: "row",
+          fields: [
+            { name: "date", type: "date", admin: { width: "40%" } },
+            { name: "title", type: "text", required: true, admin: { width: "60%" } },
+          ],
+        },
+        { name: "body", type: "textarea", required: true },
       ],
     },
   ],

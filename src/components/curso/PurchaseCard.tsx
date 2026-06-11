@@ -1,5 +1,6 @@
 import type { CourseDetail } from "@/data/curso";
 import { CheckIcon } from "@/components/ui/icons";
+import CheckoutButton from "@/components/curso/CheckoutButton";
 
 export default function PurchaseCard({ course }: { course: CourseDetail }) {
   return (
@@ -33,9 +34,7 @@ export default function PurchaseCard({ course }: { course: CourseDetail }) {
         ))}
       </ul>
 
-      <button className="block w-full bg-ink text-white text-center p-4 rounded-xl font-bold text-[15px] cursor-pointer transition-all mb-3 hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)]">
-        Inscribirme al curso →
-      </button>
+      <CheckoutButton slug={course.slug} />
       <div className="text-center font-mono text-[11px] text-ink-muted tracking-[0.04em] uppercase">
         Pago seguro · Stripe · folleto en PDF
       </div>

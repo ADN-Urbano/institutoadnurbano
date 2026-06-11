@@ -1,21 +1,43 @@
+import Link from "next/link";
 import BrandLogo from "@/components/ui/BrandLogo";
 
 const columns = [
   {
     title: "Recursos",
-    items: ["Artículos", "Casos de éxito", "Píldoras", "Podcast", "Newsletter"],
+    items: [
+      { label: "Artículos", href: "/recursos?formato=articulo" },
+      { label: "Casos de éxito", href: "/recursos?formato=caso" },
+      { label: "Píldoras", href: "/recursos?formato=pildora" },
+      { label: "Podcast", href: "/recursos?formato=podcast" },
+      { label: "Newsletter", href: "/#newsletter" },
+    ],
   },
   {
     title: "Formación",
-    items: ["Programas activos", "Próximas ediciones", "Para ayuntamientos", "Para empresas"],
+    items: [
+      { label: "Programas activos", href: "/formacion" },
+      { label: "Próximas ediciones", href: "/formacion" },
+      { label: "Para ayuntamientos", href: "/formacion" },
+      { label: "Para empresas", href: "/formacion" },
+    ],
   },
   {
     title: "ADN Urbano",
-    items: ["Sobre nosotros", "Equipo", "Servicios", "Contacto"],
+    items: [
+      { label: "Sobre nosotros", href: "#" },
+      { label: "Equipo", href: "#" },
+      { label: "Servicios", href: "#" },
+      { label: "Contacto", href: "mailto:hola@adnlocal.es" },
+    ],
   },
   {
     title: "Legal",
-    items: ["Aviso legal", "Privacidad", "Cookies", "Condiciones"],
+    items: [
+      { label: "Aviso legal", href: "/aviso-legal" },
+      { label: "Privacidad", href: "/privacidad" },
+      { label: "Cookies", href: "/cookies" },
+      { label: "Condiciones", href: "/condiciones" },
+    ],
   },
 ];
 
@@ -41,11 +63,13 @@ export default function Footer() {
               </div>
               <ul className="flex flex-col gap-2">
                 {col.items.map((item) => (
-                  <li
-                    key={item}
-                    className="text-[13px] text-white/75 cursor-pointer transition-colors hover:text-white"
-                  >
-                    {item}
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className="text-[13px] text-white/75 transition-colors hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

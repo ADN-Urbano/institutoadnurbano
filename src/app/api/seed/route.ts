@@ -1,94 +1,98 @@
+import path from "node:path";
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import config from "@payload-config";
+import { coursesSeed } from "@/data/courses-seed";
+
+/* Helpers mínimos para construir contenido Lexical (texto enriquecido). */
+const t = (text: string, format = 0) => ({
+  type: "text",
+  detail: 0,
+  format,
+  mode: "normal",
+  style: "",
+  text,
+  version: 1,
+});
+const p = (...children: unknown[]) => ({
+  type: "paragraph",
+  format: "",
+  indent: 0,
+  version: 1,
+  direction: "ltr",
+  textFormat: 0,
+  textStyle: "",
+  children,
+});
+const h = (tag: string, text: string) => ({
+  type: "heading",
+  tag,
+  format: "",
+  indent: 0,
+  version: 1,
+  direction: "ltr",
+  children: [t(text)],
+});
+const ul = (items: string[]) => ({
+  type: "list",
+  listType: "bullet",
+  tag: "ul",
+  start: 1,
+  format: "",
+  indent: 0,
+  version: 1,
+  direction: "ltr",
+  children: items.map((it, i) => ({
+    type: "listitem",
+    value: i + 1,
+    format: "",
+    indent: 0,
+    version: 1,
+    direction: "ltr",
+    children: [t(it)],
+  })),
+});
+const lex = (children: unknown[]) => ({
+  root: { type: "root", format: "", indent: 0, version: 1, direction: "ltr", children },
+});
+
+const lecturaContent = lex([
+  p(
+    t(
+      "Antes de seguir con los vídeos, una lectura corta. El caso que viene es uno de los más citados del curso, y conviene leerlo con calma.",
+    ),
+  ),
+  h("h2", "El cambio que casi nadie cuenta"),
+  p(
+    t(
+      "Cuando se habla de comercio de proximidad se suele contar la versión dramática: cierres, persianas bajadas, centros vacíos. Pero hay municipios que han hecho lo contrario, y casi siempre por las mismas razones.",
+    ),
+  ),
+  p(
+    t(
+      "La foto de arriba resume la idea: una calle comercial no se reactiva con una sola medida, sino con un conjunto de decisiones pequeñas que se refuerzan entre sí.",
+    ),
+  ),
+  h("h3", "Tres factores que se repiten"),
+  ul([
+    "Una gobernanza clara: alguien con nombre y apellidos lidera el plan.",
+    "Medidas visibles en los primeros 90 días, para generar confianza.",
+    "Datos antes y después, para poder demostrar que algo funcionó.",
+  ]),
+  p(
+    t("En la próxima lección en vídeo lo veremos con números. De momento, quédate con la idea de fondo: "),
+    t("el comercio se cuida, no se decreta.", 1),
+  ),
+]);
 
 /**
- * Seed de desarrollo: crea el usuario admin inicial y el curso estrella.
- * Protegido por token (?secret=PAYLOAD_SECRET) y deshabilitado en producción.
- * Idempotente: si el curso ya existe, lo actualiza.
+ * Seed de desarrollo: crea el usuario admin inicial y precarga el catálogo de
+ * cursos. Protegido por token (?secret=PAYLOAD_SECRET) y deshabilitado en
+ * producción. Idempotente: hace upsert de cada curso por slug.
  */
 
 const ADMIN_EMAIL = "admin@adnlocal.es";
 const ADMIN_PASSWORD = "adnlocal-dev-2026";
-
-const flagship = {
-  slug: "plan-dinamizacion-comercial",
-  title: "Cómo diseñar un plan de dinamización comercial que funcione",
-  accent: "comercial",
-  edition: "Curso 01 · Edición Junio 2026",
-  summary:
-    "Ocho semanas para aprender, paso a paso y con casos reales, cómo hacer un plan de comercio que de verdad cambie la actividad de un municipio. No es teoría: al terminar tendrás tu propio plan listo para presentar.",
-  priceCents: 45000,
-  oldPriceCents: 59000,
-  priceNote: "IVA inc.",
-  status: "open",
-  statusLabel: "Inscripción abierta · 16 plazas",
-  published: true,
-  startLabel: "29 jun",
-  durationLabel: "8 sem.",
-  seatsLabel: "14 / 30",
-  levelLabel: "Inter.",
-  instructor: {
-    name: "Gerardo Sánchez Romero",
-    bio: "Director de ADN Urbano · 14 años asesorando a más de 80 ayuntamientos",
-  },
-  feats: [
-    "8 módulos · 42 lecciones en vídeo",
-    "8 sesiones en directo por Teams",
-    "Plantillas y materiales descargables",
-    "Acceso a la comunidad de Slack",
-    "Tutorización individual",
-    "Certificado de finalización",
-    "Acceso de por vida al contenido",
-  ].map((feature) => ({ feature })),
-  teams: {
-    title: "Las clases en directo se imparten por Microsoft Teams",
-    desc: "Todos los miércoles a las 19:00 (CET) durante las 8 semanas. Si no puedes asistir, las sesiones se graban y se publican en tu área en menos de 24 horas.",
-  },
-  modules: [
-    {
-      num: "01",
-      name: "Diagnóstico: cómo entender de verdad qué pasa en tu municipio",
-      lessons: [
-        { title: "1.1 — El error más común: confundir intuición con datos", kind: "video", durationLabel: "14:32" },
-        { title: "1.2 — Los seis indicadores que sí importan (y dónde sacarlos gratis)", kind: "video", durationLabel: "18:05" },
-        { title: "1.3 — Cómo hacer un mapa comercial en una tarde", kind: "video", durationLabel: "12:48" },
-        { title: "1.4 — Plantilla descargable: ficha de diagnóstico", kind: "doc", durationLabel: "XLSX" },
-        { title: "1.5 — Sesión en directo · Miércoles 1 julio · 19:00", kind: "live", durationLabel: "~90 MIN" },
-      ],
-    },
-    { num: "02", name: "Visión y objetivos: qué quieres conseguir y cómo lo medirás", lessons: [] },
-    { num: "03", name: "El árbol de medidas: del objetivo a la acción concreta", lessons: [] },
-    { num: "04", name: "Presupuesto y cronograma: hacer realista lo ambicioso", lessons: [] },
-    { num: "05", name: "Gobernanza: cómo montar la mesa público-privada que funciona", lessons: [] },
-    { num: "06", name: "Comunicación del plan: vender por dentro y por fuera", lessons: [] },
-    { num: "07", name: "Ejecución y seguimiento: que el plan no se quede en cajón", lessons: [] },
-    { num: "08", name: "Tu plan: presentación final con feedback personalizado", lessons: [] },
-  ],
-  forYes: {
-    title: "Trabajas en lo local y quieres dejar de improvisar",
-    items: [
-      "Eres concejal de comercio, dinamización o desarrollo local y necesitas presentar un plan creíble.",
-      "Eres técnico municipal y quieres que tu trabajo deje huella, no que se quede en informes.",
-      "Eres consultor o asesor y quieres una metodología contrastada para tus clientes.",
-      "Diriges una asociación de comerciantes y necesitas profesionalizar la interlocución.",
-    ].map((item) => ({ item })),
-  },
-  forNo: {
-    title: "Buscas teoría pura o atajos mágicos",
-    items: [
-      "Quieres un curso solo en vídeo sin participar en directos.",
-      "Esperas plantillas mágicas que se aplican sin pensar al contexto.",
-      "Buscas un programa académico con bibliografía extensa.",
-    ].map((item) => ({ item })),
-  },
-  faq: [
-    { question: "¿Y si no puedo asistir a un directo?", answer: "Todas las sesiones se graban y quedan disponibles en tu área privada en menos de 24 horas." },
-    { question: "¿Necesito tener Microsoft Teams instalado?", answer: "No. Puedes acceder desde el navegador con el enlace que te enviamos cada semana." },
-    { question: "¿Hay descuento para grupos del mismo ayuntamiento?", answer: "Sí. A partir de tres personas del mismo organismo, descuento del 20%. Escríbenos." },
-    { question: "¿Se puede pagar a plazos?", answer: "Sí. Pago único o tres cuotas mensuales sin intereses." },
-  ],
-};
 
 export async function GET(req: Request) {
   if (process.env.NODE_ENV === "production") {
@@ -111,21 +115,137 @@ export async function GET(req: Request) {
     });
     out.admin = { created: true, email: ADMIN_EMAIL, password: ADMIN_PASSWORD };
   } else {
-    out.admin = { created: false, note: "Ya existe al menos un usuario admin." };
+    out.admin = { created: false, note: "Ya existe al menos un usuario." };
   }
 
-  // 2) Curso estrella (upsert por slug)
-  const existing = await payload.find({
-    collection: "courses",
-    where: { slug: { equals: flagship.slug } },
+  // 2a) Imagen de ejemplo para la lección de lectura (Media)
+  let lecturaImageId: string | number | null = null;
+  try {
+    const mres = await payload.find({
+      collection: "media",
+      where: { alt: { equals: "Calle comercial (ejemplo de lectura)" } },
+      limit: 1,
+    });
+    lecturaImageId =
+      mres.totalDocs > 0
+        ? mres.docs[0].id
+        : (
+            await payload.create({
+              collection: "media",
+              data: { alt: "Calle comercial (ejemplo de lectura)" },
+              filePath: path.join(process.cwd(), "src/seed-assets/lectura-comercio.svg"),
+            })
+          ).id;
+  } catch (e) {
+    out.mediaError = String(e).slice(0, 200);
+  }
+
+  const lecturaLesson = {
+    title: "1.2 — Lectura: por qué algunas calles comerciales sí reviven",
+    description:
+      "Un caso breve, para leer en 6 minutos, sobre los factores que se repiten en los municipios que recuperan su comercio.",
+    kind: "text",
+    durationLabel: "6 min lectura",
+    content: lecturaContent,
+    ...(lecturaImageId ? { image: lecturaImageId } : {}),
+  };
+
+  // 2a-bis) Material descargable de ejemplo (CSV) para una lección de tipo "Material"
+  let materialId: string | number | null = null;
+  try {
+    const mat = await payload.find({
+      collection: "media",
+      where: { alt: { equals: "Plantilla de diagnóstico (ejemplo)" } },
+      limit: 1,
+    });
+    materialId =
+      mat.totalDocs > 0
+        ? mat.docs[0].id
+        : (
+            await payload.create({
+              collection: "media",
+              data: { alt: "Plantilla de diagnóstico (ejemplo)" },
+              filePath: path.join(process.cwd(), "src/seed-assets/plantilla-diagnostico.csv"),
+            })
+          ).id;
+  } catch (e) {
+    out.materialError = String(e).slice(0, 200);
+  }
+
+  // 2b) Cursos (upsert por slug). En el curso estrella inyectamos la lección de lectura.
+  const results: { slug: string; action: "created" | "updated" }[] = [];
+  for (const course of coursesSeed) {
+    let data: Record<string, unknown> = course;
+    if (course.slug === "plan-dinamizacion-comercial") {
+      const clone = JSON.parse(JSON.stringify(course));
+      const mod = clone.modules[0];
+      if (!mod.lessons.some((l: { kind?: string }) => l.kind === "text")) {
+        mod.lessons.splice(1, 0, lecturaLesson);
+        mod.infoLabel = "6 LECCIONES · 1H 18 MIN";
+      }
+      if (materialId) {
+        const docLesson = mod.lessons.find((l: { kind?: string }) => l.kind === "doc");
+        if (docLesson) docLesson.material = materialId;
+      }
+      data = clone;
+    }
+    const existing = await payload.find({
+      collection: "courses",
+      where: { slug: { equals: course.slug } },
+      limit: 1,
+    });
+    if (existing.totalDocs > 0) {
+      await payload.update({ collection: "courses", id: existing.docs[0].id, data: data as never });
+      results.push({ slug: course.slug, action: "updated" });
+    } else {
+      await payload.create({ collection: "courses", data: data as never });
+      results.push({ slug: course.slug, action: "created" });
+    }
+  }
+  out.courses = results;
+
+  // 3) Alumno + inscripción de prueba (para probar el área privada)
+  const studentEmail = "alumno@adnlocal.es";
+  const sres = await payload.find({
+    collection: "students",
+    where: { email: { equals: studentEmail } },
     limit: 1,
   });
-  if (existing.totalDocs > 0) {
-    await payload.update({ collection: "courses", id: existing.docs[0].id, data: flagship as never });
-    out.course = { updated: true, slug: flagship.slug };
-  } else {
-    await payload.create({ collection: "courses", data: flagship as never });
-    out.course = { created: true, slug: flagship.slug };
+  const studentId =
+    sres.totalDocs > 0
+      ? sres.docs[0].id
+      : (await payload.create({
+          collection: "students",
+          data: { email: studentEmail, name: "Alumno de prueba" },
+        })).id;
+  out.student = { email: studentEmail, created: sres.totalDocs === 0 };
+
+  const flagship = await payload.find({
+    collection: "courses",
+    where: { slug: { equals: "plan-dinamizacion-comercial" } },
+    limit: 1,
+  });
+  if (flagship.totalDocs > 0) {
+    const courseId = flagship.docs[0].id;
+    const enr = await payload.find({
+      collection: "enrollments",
+      where: { and: [{ student: { equals: studentId } }, { course: { equals: courseId } }] },
+      limit: 1,
+    });
+    if (enr.totalDocs === 0) {
+      await payload.create({
+        collection: "enrollments",
+        data: {
+          student: studentId,
+          course: courseId,
+          status: "active",
+          purchasedAt: new Date().toISOString(),
+        },
+      });
+      out.enrollment = { created: true };
+    } else {
+      out.enrollment = { created: false };
+    }
   }
 
   return NextResponse.json({ ok: true, ...out });

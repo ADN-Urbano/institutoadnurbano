@@ -24,7 +24,7 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
             {course.edition}
           </div>
           <h1 className="font-display font-extrabold text-[76px] leading-[0.92] tracking-[-0.025em] uppercase mb-5 md:text-[64px] lg:text-[76px] max-md:text-[48px] max-sm:text-[40px]">
-            <AccentTitle title={course.title} accent={course.accent} />
+            <AccentTitle title={course.headline} accent={course.headlineAccent} />
           </h1>
           <p className="text-[18px] leading-[1.55] text-ink-soft mb-8 max-sm:text-base">
             {course.summary}

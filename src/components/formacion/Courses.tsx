@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { courses } from "@/data/formacion";
+import type { CatalogCard } from "@/lib/courses";
 import SectionHead from "@/components/ui/SectionHead";
 import AccentTitle from "@/components/ui/AccentTitle";
 import { ArrowUpRight } from "@/components/ui/icons";
 
-export default function Courses() {
+export default function Courses({ courses }: { courses: CatalogCard[] }) {
   return (
     <section>
       <SectionHead
@@ -19,7 +19,7 @@ export default function Courses() {
       <div className="grid grid-cols-1 gap-5 mb-24 lg:grid-cols-2 max-sm:mb-14">
         {courses.map((c) => (
           <Link
-            key={c.id}
+            key={c.slug}
             href={c.href}
             className="group bg-white border border-rule rounded-3xl p-8 flex flex-col cursor-pointer transition-all hover:border-turquoise hover:-translate-y-[3px] hover:shadow-[var(--shadow-lg)] max-sm:p-6"
           >

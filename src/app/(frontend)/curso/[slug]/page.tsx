@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCourse, courseSlugs } from "@/data/curso";
+import { getCourseBySlug } from "@/lib/courses";
 import CourseHero from "@/components/curso/CourseHero";
 import TeamsBox from "@/components/curso/TeamsBox";
 import Curriculum from "@/components/curso/Curriculum";
 import ForYou from "@/components/curso/ForYou";
 import Faq from "@/components/curso/Faq";
-
-export function generateStaticParams() {
-  return courseSlugs.map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -17,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const course = getCourse(slug);
+  const course = await getCourseBySlug(slug);
   if (!course) return { title: "Curso no encontrado · ADN Local" };
   return {
     title: `${course.title} · Instituto ADN Local`,
@@ -31,7 +27,7 @@ export default async function CursoPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const course = getCourse(slug);
+  const course = await getCourseBySlug(slug);
   if (!course) notFound();
 
   return (

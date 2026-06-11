@@ -2,7 +2,7 @@ import { newsletter } from "@/data/home";
 
 export default function Newsletter() {
   return (
-    <section className="relative overflow-hidden bg-turquoise text-white rounded-[28px] px-12 py-16 mb-16 grid grid-cols-2 gap-12 items-center max-lg:grid-cols-1 max-lg:gap-8 max-sm:px-6 max-sm:py-10 max-sm:mb-12">
+    <section id="newsletter" className="relative overflow-hidden bg-turquoise text-white rounded-[28px] px-12 py-16 mb-16 grid grid-cols-2 gap-12 items-center max-lg:grid-cols-1 max-lg:gap-8 max-sm:px-6 max-sm:py-10 max-sm:mb-12 scroll-mt-24">
       <span
         aria-hidden
         className="absolute -top-[100px] -right-[100px] w-[360px] h-[360px] rounded-full bg-white/[0.08]"
