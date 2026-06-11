@@ -41,7 +41,14 @@ export async function POST(req: Request) {
   const email = (student as { email?: string } | null)?.email;
   const stripeCustomerId = (student as { stripeCustomerId?: string } | null)?.stripeCustomerId;
 
-  const base = process.env.NEXT_PUBLIC_SERVER_URL || new URL(req.url).origin;
+  // Normaliza la URL base: tolera falta de protocolo o barra(s) finales para
+  // que success_url/cancel_url sean siempre absolutas y válidas para Stripe.
+  const rawBase = (process.env.NEXT_PUBLIC_SERVER_URL || "").trim().replace(/\/+$/, "");
+  const base = rawBase
+    ? /^https?:\/\//.test(rawBase)
+      ? rawBase
+      : `https://${rawBase}`
+    : new URL(req.url).origin;
 
   try {
     const stripe = getStripe();
