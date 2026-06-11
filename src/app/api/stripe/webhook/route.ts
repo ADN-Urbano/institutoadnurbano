@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { getPayloadClient } from "@/lib/payload";
+import { createMagicToken, newNonce } from "@/lib/session";
+import { sendWelcome } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -110,5 +112,19 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
   });
   console.log("[stripe webhook] inscripción creada", { email, courseId });
 
-  // TODO (4.6): email de bienvenida con Resend (enlace de acceso + Slack).
+  // Email de bienvenida con acceso directo (enlace mágico de un solo uso).
+  try {
+    const nonce = newNonce();
+    await payload.update({ collection: "students", id: student.id, data: { loginNonce: nonce } });
+    const token = createMagicToken(String(student.id), nonce);
+    const rawBase = (process.env.NEXT_PUBLIC_SERVER_URL || "https://www.adnlocal.es").trim().replace(/\/+$/, "");
+    const base = /^https?:\/\//.test(rawBase) ? rawBase : `https://${rawBase}`;
+    const link = `${base}/api/auth/verify?token=${encodeURIComponent(token)}`;
+    const course = await payload.findByID({ collection: "courses", id: courseId, depth: 0 });
+    const title = (course as { title?: string }).title ?? "tu curso";
+    await sendWelcome(email, link, title);
+  } catch (err) {
+    // No bloquear el alta por un fallo de email; el alumno puede entrar por /acceder.
+    console.error("[stripe webhook] fallo al enviar email de bienvenida:", err);
+  }
 }

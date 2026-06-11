@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPayloadClient } from "@/lib/payload";
 import { createMagicToken, newNonce } from "@/lib/session";
+import { sendMagicLink } from "@/lib/email";
 
 /** Solicita un enlace mágico de acceso para un email de alumno. */
 export async function POST(req: Request) {
@@ -28,15 +29,11 @@ export async function POST(req: Request) {
   const base = process.env.NEXT_PUBLIC_SERVER_URL || new URL(req.url).origin;
   const link = `${base}/api/auth/verify?token=${encodeURIComponent(createMagicToken(String(student.id), nonce))}`;
 
-  if (process.env.RESEND_API_KEY) {
-    // TODO (4.3-email): enviar el enlace con Resend.
-    // await sendMagicLink(email, link);
-    return NextResponse.json(generic);
-  }
+  const sent = await sendMagicLink(email, link);
 
-  // Sin Resend: en desarrollo devolvemos el enlace para poder probar.
-  console.log("[magic-link DEV]", link);
-  if (process.env.NODE_ENV !== "production") {
+  // Sin Resend (típico en local): devolvemos el enlace para poder probar.
+  if (!sent && process.env.NODE_ENV !== "production") {
+    console.log("[magic-link DEV]", link);
     return NextResponse.json({ ...generic, devLink: link });
   }
   return NextResponse.json(generic);
