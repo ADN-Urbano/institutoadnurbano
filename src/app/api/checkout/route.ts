@@ -42,37 +42,46 @@ export async function POST(req: Request) {
   const stripeCustomerId = (student as { stripeCustomerId?: string } | null)?.stripeCustomerId;
 
   const base = process.env.NEXT_PUBLIC_SERVER_URL || new URL(req.url).origin;
-  const stripe = getStripe();
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-    // Sin payment_method_types: Stripe ofrece los métodos habilitados en el
-    // dashboard (tarjeta, Bizum, Klarna…) según elegibilidad.
-    line_items: [
-      {
-        quantity: 1,
-        price_data: {
-          currency: "eur",
-          unit_amount: course.priceCents,
-          product_data: {
-            name: course.title,
-            description: course.summary?.slice(0, 300) || undefined,
+  try {
+    const stripe = getStripe();
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      // Sin payment_method_types: Stripe ofrece los métodos habilitados en el
+      // dashboard (tarjeta, Bizum, Klarna…) según elegibilidad.
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "eur",
+            unit_amount: course.priceCents,
+            product_data: {
+              name: course.title,
+              description: course.summary?.slice(0, 300) || undefined,
+            },
           },
         },
-      },
-    ],
-    allow_promotion_codes: true,
-    // Para activar IVA automático: descomenta y habilita Stripe Tax en el dashboard.
-    // automatic_tax: { enabled: true },
-    ...(stripeCustomerId
-      ? { customer: stripeCustomerId }
-      : email
-        ? { customer_email: email }
-        : {}),
-    metadata: { courseId: String(course.id), slug: course.slug },
-    success_url: `${base}/gracias?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${base}/curso/${course.slug}`,
-  });
+      ],
+      allow_promotion_codes: true,
+      // Para activar IVA automático: descomenta y habilita Stripe Tax en el dashboard.
+      // automatic_tax: { enabled: true },
+      ...(stripeCustomerId
+        ? { customer: stripeCustomerId }
+        : email
+          ? { customer_email: email }
+          : {}),
+      metadata: { courseId: String(course.id), slug: course.slug },
+      success_url: `${base}/gracias?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${base}/curso/${course.slug}`,
+    });
 
-  return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    console.error("[checkout] error al crear la sesión de Stripe:", detail);
+    return NextResponse.json(
+      { error: "No se pudo iniciar el pago.", detail },
+      { status: 502 },
+    );
+  }
 }
