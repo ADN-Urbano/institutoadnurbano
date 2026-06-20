@@ -13,12 +13,13 @@ npm run dev        # Next dev (Turbopack) — use this for local work; Payload a
 npm run devsafe    # rm -rf .next && next dev — recover a broken dev server
 npm run build      # next build --webpack  (MUST stay --webpack; Turbopack build crashes with Payload)
 npm run start      # serve a production build
-npm run lint       # next lint
+npm run lint       # eslint .  (flat config in eslint.config.mjs)
 ```
 
 - **Do NOT use the Payload CLI** (`payload generate:types`, `generate:importmap`, seed scripts). It's broken here (tsx/file-type ESM exports). The importMap auto-generates during `next dev`. There are no generated Payload types — collection docs are cast `as unknown as <Doc>` in the data layer.
 - **Never mix `next build` and `next dev` over the same `.next`** — it leaves the dev server returning 404s for routes and `/_next/...` assets. Recover with `pkill next; rm -rf .next; npm run dev`.
-- **No test suite.** Verification is manual (curl for API flows, headless-browser screenshots).
+- **Linting**: `next lint` was removed in Next 16; `npm run lint` now runs `eslint .` against a flat config in `eslint.config.mjs` that extends `next/core-web-vitals` + `next/typescript` (uses the native flat config exported by `eslint-config-next` 16 — no `FlatCompat`/`@eslint/eslintrc`), with `ignores` for `.next/**`, `node_modules/**`, and `src/app/(payload)/**`. It works. **Known debt**: 9 pre-existing ESLint errors in never-linted code (6× `@next/next/no-html-link-for-pages` in `Header.tsx`, 3× `react-hooks/set-state-in-effect` in `NextSession.tsx` / `Onboarding.tsx` / `AccountForm.tsx` / `CookieBanner.tsx`) — not blocking, left to clean up later.
+- **Tests**: Vitest is configured (`vitest.config.mts`); 31+ co-located unit tests pass. See the **Testing** section below. (For end-to-end/API flows, verification is still manual — curl, headless-browser screenshots.)
 
 ### Seeding / admin (via Next route, not CLI)
 
