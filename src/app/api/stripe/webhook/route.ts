@@ -64,6 +64,7 @@ export async function POST(req: Request) {
 async function fulfillCheckout(session: Stripe.Checkout.Session) {
   // La metadata de Stripe es siempre texto; los IDs de Payload son integer.
   const courseId = Number(session.metadata?.courseId);
+  const editionId = Number(session.metadata?.editionId);
   const email = (session.customer_details?.email || session.customer_email)?.toLowerCase().trim();
   const name = session.customer_details?.name ?? undefined;
   const customerId = typeof session.customer === "string" ? session.customer : undefined;
@@ -72,6 +73,11 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
 
   if (!courseId || Number.isNaN(courseId) || !email) {
     console.error("[stripe webhook] sesión sin courseId/email válidos", { courseId, email });
+    return;
+  }
+  if (!editionId || Number.isNaN(editionId)) {
+    // Sin edición no podemos crear el enrollment correctamente; no reintentar.
+    console.error("[stripe webhook] sesión sin editionId válido", { courseId, editionId, email });
     return;
   }
 
@@ -97,17 +103,28 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     });
   }
 
-  // 2) Enrollment idempotente (no duplicar si el webhook se reintenta).
+  // 2) Enrollment idempotente por (alumno, edición); no duplicar en reintentos.
   const existing = await payload.find({
     collection: "enrollments",
     where: {
       student: { equals: student.id },
-      course: { equals: courseId },
+      edition: { equals: editionId },
     },
     limit: 1,
   });
   if (existing.docs.length > 0) {
-    console.log("[stripe webhook] enrollment ya existe, omito", { email, courseId });
+    console.log("[stripe webhook] enrollment ya existe, omito", { email, editionId });
+    return;
+  }
+
+  // Guard secundario: si ya existe una inscripción con este pago, omitir.
+  const byPayment = await payload.find({
+    collection: "enrollments",
+    where: { stripePaymentId: { equals: paymentId } },
+    limit: 1,
+  });
+  if (byPayment.docs.length > 0) {
+    console.log("[stripe webhook] enrollment con este pago ya existe, omito", { email, paymentId });
     return;
   }
 
@@ -116,12 +133,13 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     data: {
       student: student.id,
       course: courseId,
+      edition: editionId,
       status: "active",
       purchasedAt: new Date().toISOString(),
       stripePaymentId: paymentId,
     },
   });
-  console.log("[stripe webhook] inscripción creada", { email, courseId });
+  console.log("[stripe webhook] inscripción creada", { email, courseId, editionId });
 
   // Email de bienvenida con acceso directo (enlace mágico de un solo uso).
   try {

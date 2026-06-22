@@ -5,7 +5,7 @@ export const Enrollments: CollectionConfig = {
   slug: "enrollments",
   admin: {
     useAsTitle: "id",
-    defaultColumns: ["student", "course", "status", "purchasedAt"],
+    defaultColumns: ["student", "course", "edition", "status", "purchasedAt"],
     group: "Alumnado",
   },
   access: {
@@ -17,6 +17,13 @@ export const Enrollments: CollectionConfig = {
   fields: [
     { name: "student", type: "relationship", relationTo: "students", required: true },
     { name: "course", type: "relationship", relationTo: "courses", required: true },
+    {
+      name: "edition",
+      type: "relationship",
+      relationTo: "course-editions",
+      required: false,
+      admin: { description: "Edición (convocatoria) comprada. Opcional para tolerar inscripciones de legado." },
+    },
     {
       type: "row",
       fields: [

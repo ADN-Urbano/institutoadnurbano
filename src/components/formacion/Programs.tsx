@@ -1,0 +1,143 @@
+import Link from "next/link";
+import { programs, type Program, type PriceTone } from "@/data/formacion";
+import SectionHead from "@/components/ui/SectionHead";
+import AccentTitle from "@/components/ui/AccentTitle";
+import { UsersIcon, ShieldIcon, ArrowRight } from "@/components/ui/icons";
+
+const priceColor: Record<PriceTone, string> = {
+  turquoise: "text-turquoise",
+  amber: "text-[#c77f1e]",
+  ink: "text-ink",
+};
+
+const discountBadge: Record<PriceTone, string> = {
+  turquoise: "bg-turquoise-soft text-turquoise-dark",
+  amber: "bg-yellow-soft text-[#9a7b15]",
+  ink: "bg-bg-soft text-ink-soft",
+};
+
+function ProgramCard({ program }: { program: Program }) {
+  const open = program.badgeTone === "open";
+  return (
+    <article
+      id={program.id}
+      className="scroll-mt-24 bg-white border border-rule rounded-3xl p-8 flex flex-col transition-all hover:border-turquoise hover:shadow-[var(--shadow-md)] max-sm:p-6"
+    >
+      <div className="flex justify-between items-center gap-3 mb-5">
+        <span className="font-mono text-[11px] font-medium text-ink-muted tracking-[0.04em] uppercase">
+          {program.num}
+        </span>
+        <span
+          className={`font-mono text-[11px] font-medium px-3 py-[5px] rounded-full inline-flex items-center gap-1.5 tracking-[0.04em] uppercase whitespace-nowrap ${
+            open ? "bg-green-soft text-[#5C6B26]" : "bg-yellow-soft text-[#9a7b15]"
+          }`}
+        >
+          <span className={`w-1.5 h-1.5 rounded-full ${open ? "bg-green" : "bg-yellow"}`} />
+          {program.badge}
+        </span>
+      </div>
+
+      <h3 className="font-display font-extrabold text-[38px] tracking-[-0.02em] leading-[0.95] uppercase mb-3.5 max-sm:text-[30px]">
+        <AccentTitle title={program.title} accent={program.accent} />
+      </h3>
+      <p className="text-sm leading-[1.6] text-ink-soft mb-6">{program.desc}</p>
+
+      {program.tiers && (
+        <>
+          <div className="grid grid-cols-3 gap-3 mb-5 max-sm:grid-cols-1">
+            {program.tiers.map((t) => (
+              <div key={t.label} className="bg-bg-soft rounded-2xl p-4 flex flex-col">
+                <div className="flex items-center justify-between gap-2 mb-3 min-h-[34px]">
+                  <span className="font-mono text-[10px] font-medium text-ink-muted tracking-[0.04em] uppercase leading-[1.2]">
+                    {t.label}
+                  </span>
+                  {t.discount && (
+                    <span
+                      className={`font-mono text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${discountBadge[t.tone]}`}
+                    >
+                      {t.discount}
+                    </span>
+                  )}
+                </div>
+                {t.oldPrice && (
+                  <s className="text-[13px] text-coral/80 line-through decoration-coral/60">
+                    {t.oldPrice}
+                  </s>
+                )}
+                <div
+                  className={`font-display font-extrabold text-[34px] leading-none tracking-[-0.02em] ${priceColor[t.tone]}`}
+                >
+                  {t.price}
+                </div>
+                <div className="font-mono text-[10px] text-ink-muted tracking-[0.03em] mt-2 leading-[1.3]">
+                  {t.edition}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-5 border-t border-rule mt-auto max-sm:grid-cols-1">
+            {program.limited && (
+              <div className="flex items-start gap-2.5">
+                <UsersIcon className="w-[18px] h-[18px] text-turquoise shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-[13px] font-semibold leading-tight">Plazas limitadas</div>
+                  <div className="text-[12px] text-ink-muted leading-snug">{program.limited}</div>
+                </div>
+              </div>
+            )}
+            {program.guarantee && (
+              <div className="flex items-start gap-2.5">
+                <ShieldIcon className="w-[18px] h-[18px] text-turquoise shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-[13px] font-semibold leading-tight">Garantía ADN Local</div>
+                  <div className="text-[12px] text-ink-muted leading-snug">{program.guarantee}</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {program.priority && (
+        <div className="bg-turquoise-soft rounded-2xl p-6 mt-auto">
+          <div className="font-display font-extrabold text-[22px] tracking-[-0.01em] uppercase text-turquoise-dark mb-2">
+            {program.priority.title}
+          </div>
+          <p className="text-sm leading-[1.55] text-ink-soft">{program.priority.desc}</p>
+        </div>
+      )}
+
+      {program.href && (
+        <Link
+          href={program.href}
+          className="group mt-6 bg-ink text-white px-6 py-4 rounded-xl text-sm font-semibold inline-flex items-center justify-between gap-3 transition-all hover:bg-turquoise hover:-translate-y-px"
+        >
+          Ver el curso
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </Link>
+      )}
+    </article>
+  );
+}
+
+export default function Programs() {
+  return (
+    <section id="programas" className="scroll-mt-24">
+      <SectionHead
+        eyebrow="·· Catálogo"
+        title={
+          <>
+            Nuestros <span className="text-turquoise">programas</span>
+          </>
+        }
+        subtitle="Diseñados para ayudarte a afrontar cada etapa de tu trayectoria."
+      />
+      <div className="grid grid-cols-1 gap-5 mb-24 lg:grid-cols-2 max-sm:mb-14">
+        {programs.map((p) => (
+          <ProgramCard key={p.id} program={p} />
+        ))}
+      </div>
+    </section>
+  );
+}

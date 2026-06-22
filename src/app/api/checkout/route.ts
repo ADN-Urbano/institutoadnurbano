@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getPayloadClient } from "@/lib/payload";
 import { getCurrentStudent } from "@/lib/session";
-import type { CourseDoc } from "@/lib/courses";
+import type { CourseDoc, EditionDoc } from "@/lib/courses";
 
 export const dynamic = "force-dynamic";
 
@@ -29,11 +29,20 @@ export async function POST(req: Request) {
   if (!course) {
     return NextResponse.json({ error: "Curso no encontrado." }, { status: 404 });
   }
-  if (course.status !== "open") {
+
+  // El precio NUNCA viene del cliente: se lee de la edición ABIERTA en Payload.
+  const editionRes = await payload.find({
+    collection: "course-editions",
+    where: { course: { equals: course.id }, status: { equals: "open" } },
+    limit: 1,
+    depth: 0,
+  });
+  const edition = editionRes.docs[0] as unknown as (EditionDoc & { id: string }) | undefined;
+  if (!edition) {
     return NextResponse.json({ error: "Este curso aún no está abierto a inscripción." }, { status: 409 });
   }
-  if (!course.priceCents || course.priceCents < 50) {
-    return NextResponse.json({ error: "Precio del curso no configurado." }, { status: 409 });
+  if (!edition.priceCents || edition.priceCents < 50) {
+    return NextResponse.json({ error: "Precio de la edición no configurado." }, { status: 409 });
   }
 
   // Prefill del email si el alumno ya tiene sesión (recompra / curso adicional).
@@ -61,7 +70,7 @@ export async function POST(req: Request) {
           quantity: 1,
           price_data: {
             currency: "eur",
-            unit_amount: course.priceCents,
+            unit_amount: edition.priceCents,
             product_data: {
               name: course.title,
               description: course.summary?.slice(0, 300) || undefined,
@@ -77,7 +86,7 @@ export async function POST(req: Request) {
         : email
           ? { customer_email: email }
           : {}),
-      metadata: { courseId: String(course.id), slug: course.slug },
+      metadata: { courseId: String(course.id), editionId: String(edition.id), slug: course.slug },
       success_url: `${base}/gracias?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${base}/curso/${course.slug}`,
     });

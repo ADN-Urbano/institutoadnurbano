@@ -12,7 +12,7 @@ export default function ForYou({
     <section className="grid grid-cols-1 gap-6 mb-20 lg:grid-cols-2">
       <div className="bg-green text-white rounded-3xl p-10 max-sm:p-7">
         <div className="font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-3.5 opacity-85">
-          ·· Es para ti si...
+          ·· Es para ti si…
         </div>
         <h2 className="font-display font-extrabold text-[32px] tracking-[-0.02em] leading-[0.95] uppercase mb-6">
           {forYes.title}
@@ -29,7 +29,7 @@ export default function ForYou({
 
       <div className="bg-ink text-white rounded-3xl p-10 max-sm:p-7">
         <div className="font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-3.5 opacity-85">
-          ·· NO es para ti si...
+          ·· NO es para ti si…
         </div>
         <h2 className="font-display font-extrabold text-[32px] tracking-[-0.02em] leading-[0.95] uppercase mb-6">
           {forNo.title}

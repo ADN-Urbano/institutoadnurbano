@@ -7,7 +7,7 @@ export const Courses: CollectionConfig = {
   slug: "courses",
   admin: {
     useAsTitle: "title",
-    defaultColumns: ["title", "status", "priceCents", "published"],
+    defaultColumns: ["title", "slug", "published"],
     group: "Contenido",
   },
   access: {
@@ -51,8 +51,7 @@ export const Courses: CollectionConfig = {
     {
       type: "row",
       fields: [
-        { name: "slug", type: "text", required: true, unique: true, index: true, admin: { width: "50%" } },
-        { name: "edition", type: "text", admin: { width: "50%", description: "Ej.: Curso 01 · Edición Junio 2026" } },
+        { name: "slug", type: "text", required: true, unique: true, index: true, admin: { width: "100%" } },
       ],
     },
     { name: "summary", type: "textarea", required: true },
@@ -60,33 +59,8 @@ export const Courses: CollectionConfig = {
 
     {
       type: "collapsible",
-      label: "Precio y estado",
+      label: "Publicación",
       fields: [
-        {
-          type: "row",
-          fields: [
-            { name: "priceCents", type: "number", required: true, admin: { width: "33%", description: "En céntimos (45000 = 450€)." } },
-            { name: "oldPriceCents", type: "number", admin: { width: "33%", description: "Precio anterior (tachado)." } },
-            { name: "priceNote", type: "text", defaultValue: "IVA inc.", admin: { width: "34%" } },
-          ],
-        },
-        {
-          type: "row",
-          fields: [
-            {
-              name: "status",
-              type: "select",
-              required: true,
-              defaultValue: "soon",
-              admin: { width: "50%" },
-              options: [
-                { label: "Inscripción abierta", value: "open" },
-                { label: "Próximamente", value: "soon" },
-              ],
-            },
-            { name: "statusLabel", type: "text", admin: { width: "50%", description: "Ej.: Inscripción abierta · 16 plazas" } },
-          ],
-        },
         { name: "published", type: "checkbox", defaultValue: false, label: "Publicado (visible al público)" },
       ],
     },
@@ -98,10 +72,8 @@ export const Courses: CollectionConfig = {
         {
           type: "row",
           fields: [
-            { name: "startLabel", type: "text", admin: { width: "25%", description: "Inicio" } },
-            { name: "durationLabel", type: "text", admin: { width: "25%", description: "Duración" } },
-            { name: "seatsLabel", type: "text", admin: { width: "25%", description: "Plazas" } },
-            { name: "levelLabel", type: "text", admin: { width: "25%", description: "Nivel" } },
+            { name: "durationLabel", type: "text", admin: { width: "50%", description: "Duración" } },
+            { name: "levelLabel", type: "text", admin: { width: "50%", description: "Nivel" } },
           ],
         },
       ],
@@ -116,7 +88,39 @@ export const Courses: CollectionConfig = {
           type: "group",
           fields: [
             { name: "name", type: "text" },
-            { name: "bio", type: "text" },
+            { name: "bio", type: "text", admin: { description: "Línea breve (catálogo / pie del avatar)." } },
+            { name: "tagline", type: "textarea", admin: { description: "Línea del bloque \"Imparte\" del hero." } },
+            { name: "photo", type: "upload", relationTo: "media", admin: { description: "Foto del profesor (\"Quién te acompaña\")." } },
+            { name: "experienceLabel", type: "text", admin: { description: "Ej.: Más de 10 años de experiencia" } },
+            {
+              name: "longBio",
+              type: "array",
+              label: "Bio larga (\"Quién te acompaña\")",
+              labels: { singular: "Párrafo", plural: "Párrafos" },
+              fields: [{ name: "paragraph", type: "textarea", required: true }],
+            },
+            {
+              name: "specialties",
+              type: "array",
+              label: "Especialidades",
+              fields: [{ name: "item", type: "text", required: true }],
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      type: "collapsible",
+      label: "Vídeo de presentación",
+      fields: [
+        {
+          name: "videoIntro",
+          type: "group",
+          fields: [
+            { name: "title", type: "text", defaultValue: "Descubre más sobre el programa" },
+            { name: "desc", type: "textarea" },
+            { name: "label", type: "text", defaultValue: "Vídeo presentación curso" },
           ],
         },
       ],
@@ -165,6 +169,11 @@ export const Courses: CollectionConfig = {
           admin: { description: "Resumen del módulo. Ej.: 5 LECCIONES · 1H 12 MIN" },
         },
         {
+          name: "description",
+          type: "textarea",
+          admin: { description: "Párrafo del módulo que se muestra al abrir el acordeón." },
+        },
+        {
           name: "lessons",
           type: "array",
           labels: { singular: "Lección", plural: "Lecciones" },
@@ -178,20 +187,17 @@ export const Courses: CollectionConfig = {
                   name: "kind",
                   type: "select",
                   defaultValue: "video",
-                  admin: { width: "33%" },
+                  admin: { width: "50%" },
                   options: [
                     { label: "Vídeo", value: "video" },
                     { label: "Texto / Lectura", value: "text" },
                     { label: "Material", value: "doc" },
-                    { label: "Directo", value: "live" },
                   ],
                 },
-                { name: "durationLabel", type: "text", admin: { width: "33%", description: "Ej.: 14:32 · 6 min lectura" } },
-                { name: "liveDate", type: "date", admin: { width: "34%", condition: (_, s) => s?.kind === "live" } },
+                { name: "durationLabel", type: "text", admin: { width: "50%", description: "Ej.: 14:32 · 6 min lectura" } },
               ],
             },
             { name: "bunnyVideoId", type: "text", admin: { condition: (_, s) => s?.kind === "video", description: "ID del vídeo en Bunny Stream." } },
-            { name: "teamsLink", type: "text", admin: { condition: (_, s) => s?.kind === "live" } },
             { name: "material", type: "upload", relationTo: "media", admin: { condition: (_, s) => s?.kind === "doc" } },
             {
               name: "image",
@@ -235,6 +241,21 @@ export const Courses: CollectionConfig = {
     },
 
     {
+      name: "outcomes",
+      type: "array",
+      label: "Al terminar tendrás listo…",
+      labels: { singular: "Resultado", plural: "Resultados" },
+      fields: [{ name: "item", type: "text", required: true }],
+    },
+
+    {
+      name: "programPdfLabel",
+      type: "text",
+      defaultValue: "Descargar programa completo PDF",
+      admin: { description: "Texto del botón de descarga del programa (enlace placeholder)." },
+    },
+
+    {
       name: "faq",
       type: "array",
       label: "Preguntas frecuentes",
@@ -243,21 +264,39 @@ export const Courses: CollectionConfig = {
         { name: "answer", type: "textarea", required: true },
       ],
     },
+
     {
-      name: "announcements",
-      type: "array",
-      label: "Anuncios (área del alumno)",
-      labels: { singular: "Anuncio", plural: "Anuncios" },
-      admin: { description: "Avisos del profesor que ven los alumnos inscritos." },
+      type: "collapsible",
+      label: "Webinar gratuito",
       fields: [
         {
-          type: "row",
+          name: "webinar",
+          type: "group",
           fields: [
-            { name: "date", type: "date", admin: { width: "40%" } },
-            { name: "title", type: "text", required: true, admin: { width: "60%" } },
+            { name: "desc", type: "textarea" },
+            { name: "nextSessionLabel", type: "text", admin: { description: "Ej.: 1 de julio 2026 a las 20:00 h" } },
+            { name: "durationLabel", type: "text", defaultValue: "45 minutos" },
+            { name: "cta", type: "text", defaultValue: "Reservar mi plaza en el webinar" },
           ],
         },
-        { name: "body", type: "textarea", required: true },
+      ],
+    },
+
+    {
+      type: "collapsible",
+      label: "CTA final",
+      fields: [
+        {
+          name: "finalCta",
+          type: "group",
+          fields: [
+            { name: "title", type: "text" },
+            { name: "desc", type: "textarea" },
+            { name: "seatsTitle", type: "text", defaultValue: "Solo 30 plazas disponibles" },
+            { name: "seatsDesc", type: "textarea" },
+            { name: "cta", type: "text", defaultValue: "Reservar mi plaza" },
+          ],
+        },
       ],
     },
   ],

@@ -8,6 +8,7 @@ import sharp from "sharp";
 import { Users } from "./collections/Users";
 import { Students } from "./collections/Students";
 import { Courses } from "./collections/Courses";
+import { CourseEditions } from "./collections/CourseEditions";
 import { Enrollments } from "./collections/Enrollments";
 import { Media } from "./collections/Media";
 
@@ -22,7 +23,7 @@ export default buildConfig({
       titleSuffix: " · ADN Local",
     },
   },
-  collections: [Users, Students, Courses, Enrollments, Media],
+  collections: [Users, Students, Courses, CourseEditions, Enrollments, Media],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
