@@ -88,12 +88,13 @@ export default function Header() {
             {me.loggedIn ? "Mi área" : "Acceder"}
           </Link>
           {me.loggedIn && (
-            <a
+            <Link
+              prefetch={false}
               href="/api/auth/logout"
               className="px-2.5 py-2 text-sm font-medium text-ink-muted rounded-lg transition-all hover:text-ink hover:bg-bg-soft max-md:hidden"
             >
               Salir
-            </a>
+            </Link>
           )}
           <Link
             href="/curso/plan-dinamizacion-comercial"
@@ -165,12 +166,14 @@ export default function Header() {
               {me.loggedIn ? "Mi área" : "Acceder"}
             </Link>
             {me.loggedIn && (
-              <a
+              <Link
+                prefetch={false}
                 href="/api/auth/logout"
+                onClick={() => setOpen(false)}
                 className="px-3.5 py-2.5 text-[15px] font-medium text-ink-muted rounded-lg text-center"
               >
                 Cerrar sesión
-              </a>
+              </Link>
             )}
             <Link
               href="/curso/plan-dinamizacion-comercial"
