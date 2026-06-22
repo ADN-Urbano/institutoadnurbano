@@ -93,6 +93,15 @@ The test runtime (this Node/Vitest) ships with **reduced ICU locale data**, so `
 
 The progress formula `Math.round((completed / total) * 100)` currently lives **inline inside `getStudentCourses`** (which calls Payload), so it can't be unit-tested in isolation. A future, deliberate step could **extract it to a pure exported `computeProgress(total, completedLessons)`** and test it. Not refactored yet — do not extract it ad hoc.
 
+### Claude Code hooks
+
+Two hooks are wired up (don't be surprised by them):
+
+- **`block-secrets`** (global, `~/.claude/hooks/` — not in this repo): a `PreToolUse` hook that **blocks** (exit 2) reading/writing secret files (`.env*` except `.env.example`, `*.pem`/`*.key`, ssh keys, `secrets.*`) and Bash commands containing secrets (Postgres URLs with passwords, `ghp_`/`sk_live`/`whsec_`/etc. tokens). If a legitimate action gets blocked, that's why.
+- **`typecheck`** (project, `.claude/hooks/typecheck.mjs` + `.claude/settings.json`): a `SubagentStop` hook that runs `npx tsc --noEmit` when a subagent finishes and **warns via `systemMessage` without blocking** (always exit 0; guarded by `stop_hook_active`). It does **not** run lint or tests (kept fast, ~4s).
+
+**Known baseline debt** the typecheck/lint will report — these are pre-existing, do NOT mass-fix them: **4× TS2532** ("possibly undefined") in `src/lib/courses.test.ts`, and **9 ESLint errors** (6× `@next/next/no-html-link-for-pages` in `Header.tsx`, 3× `react-hooks/set-state-in-effect`). After a change, check only whether you introduced something *new* on top of this baseline.
+
 ## Conventions
 
 - **Mobile-first always**: `grid-cols-1` by default + `lg:` for multi-column. Do NOT use `col-[1/3]`/`row-[1/3]` with `max-lg:` overrides (the span creates an implicit column and overflows). `body { overflow-x: clip }` is the safety net (not `overflow:hidden` — that breaks the sticky header).
