@@ -11,6 +11,13 @@ export const dynamic = "force-dynamic";
 
 const SLACK_URL = process.env.SLACK_INVITE_URL || "#";
 
+const accessDateFmt = new Intl.DateTimeFormat("es-ES", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "Europe/Madrid",
+});
+
 export default async function AreaPage() {
   const student = await getCurrentStudent();
   if (!student) redirect("/acceder");
@@ -69,29 +76,50 @@ export default async function AreaPage() {
               className="group bg-white border border-rule rounded-3xl p-8 flex flex-col transition-all hover:border-turquoise hover:-translate-y-[3px] hover:shadow-[var(--shadow-lg)] max-sm:p-6"
             >
               <div className="font-mono text-[11px] font-medium text-ink-muted tracking-[0.04em] uppercase mb-3">
-                {c.edition}
+                {c.editionLabel}
               </div>
               <h3 className="font-display font-extrabold text-[30px] leading-[0.95] tracking-[-0.02em] uppercase mb-6">
                 {c.title}
               </h3>
 
               <div className="mt-auto">
-                <div className="flex justify-between items-center font-mono text-[11px] text-ink-muted tracking-[0.04em] uppercase mb-2">
-                  <span>Progreso</span>
-                  <span>
-                    {c.completed}/{c.totalLessons} · {c.progress}%
-                  </span>
-                </div>
-                <div className="h-2 rounded-full bg-bg-soft overflow-hidden">
-                  <div
-                    className="h-full bg-turquoise rounded-full transition-all"
-                    style={{ width: `${c.progress}%` }}
-                  />
-                </div>
-                <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-turquoise group-hover:gap-3 transition-all">
-                  {c.progress > 0 ? "Continuar" : "Empezar"}
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
+                {c.accessState === "pending" ? (
+                  <>
+                    <div className="flex items-center gap-2 font-mono text-[11px] text-ink-muted tracking-[0.04em] uppercase mb-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow" />
+                      <span>Plaza confirmada</span>
+                    </div>
+                    <div className="text-sm text-ink-soft">
+                      Acceso desde el{" "}
+                      <strong className="text-ink">
+                        {c.startDate ? accessDateFmt.format(new Date(c.startDate)) : "—"}
+                      </strong>
+                    </div>
+                    <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-turquoise group-hover:gap-3 transition-all">
+                      Ver detalles
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between items-center font-mono text-[11px] text-ink-muted tracking-[0.04em] uppercase mb-2">
+                      <span>Progreso</span>
+                      <span>
+                        {c.completed}/{c.totalLessons} · {c.progress}%
+                      </span>
+                    </div>
+                    <div className="h-2 rounded-full bg-bg-soft overflow-hidden">
+                      <div
+                        className="h-full bg-turquoise rounded-full transition-all"
+                        style={{ width: `${c.progress}%` }}
+                      />
+                    </div>
+                    <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-turquoise group-hover:gap-3 transition-all">
+                      {c.progress > 0 ? "Continuar" : "Empezar"}
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </>
+                )}
               </div>
             </Link>
           ))}

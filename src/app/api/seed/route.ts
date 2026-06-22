@@ -2,7 +2,7 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { coursesSeed } from "@/data/courses-seed";
+import { coursesSeed, editionsSeed } from "@/data/courses-seed";
 
 /* Helpers mínimos para construir contenido Lexical (texto enriquecido). */
 const t = (text: string, format = 0) => ({
@@ -204,6 +204,43 @@ export async function GET(req: Request) {
   }
   out.courses = results;
 
+  // 2c) Ediciones (upsert por courseSlug + editionLabel). Guarda el id de la
+  // edición del curso estrella para enlazar la inscripción de prueba.
+  const editionResults: { editionLabel: string; action: "created" | "updated" }[] = [];
+  const editionIdBySlug: Record<string, string | number> = {};
+  for (const edition of editionsSeed) {
+    const { courseSlug, editionLabel, ...rest } = edition;
+    const courseRes = await payload.find({
+      collection: "courses",
+      where: { slug: { equals: courseSlug } },
+      limit: 1,
+    });
+    if (courseRes.totalDocs === 0) continue;
+    const courseId = courseRes.docs[0].id;
+
+    const existingEd = await payload.find({
+      collection: "course-editions",
+      where: {
+        and: [{ course: { equals: courseId } }, { editionLabel: { equals: editionLabel } }],
+      },
+      limit: 1,
+    });
+    const data = { course: courseId, editionLabel, ...rest };
+    let editionId: string | number;
+    if (existingEd.totalDocs > 0) {
+      editionId = existingEd.docs[0].id;
+      await payload.update({ collection: "course-editions", id: editionId, data: data as never });
+      editionResults.push({ editionLabel, action: "updated" });
+    } else {
+      const created = await payload.create({ collection: "course-editions", data: data as never });
+      editionId = created.id;
+      editionResults.push({ editionLabel, action: "created" });
+    }
+    // La primera edición por slug (hay una por curso) es la de referencia.
+    if (editionIdBySlug[courseSlug] === undefined) editionIdBySlug[courseSlug] = editionId;
+  }
+  out.editions = editionResults;
+
   // 3) Alumno + inscripción de prueba (para probar el área privada)
   const studentEmail = "alumno@adnlocal.es";
   const sres = await payload.find({
@@ -227,6 +264,8 @@ export async function GET(req: Request) {
   });
   if (flagship.totalDocs > 0) {
     const courseId = flagship.docs[0].id;
+    // Edición del curso estrella (startDate en el pasado → alumno de prueba "active").
+    const editionId = editionIdBySlug["plan-dinamizacion-comercial"];
     const enr = await payload.find({
       collection: "enrollments",
       where: { and: [{ student: { equals: studentId } }, { course: { equals: courseId } }] },
@@ -238,11 +277,20 @@ export async function GET(req: Request) {
         data: {
           student: studentId,
           course: courseId,
+          ...(editionId !== undefined ? { edition: editionId } : {}),
           status: "active",
           purchasedAt: new Date().toISOString(),
         },
       });
       out.enrollment = { created: true };
+    } else if (editionId !== undefined && !(enr.docs[0] as { edition?: unknown }).edition) {
+      // Inscripción de prueba previa sin edición → enlazar la edición.
+      await payload.update({
+        collection: "enrollments",
+        id: enr.docs[0].id,
+        data: { edition: editionId },
+      });
+      out.enrollment = { created: false, editionLinked: true };
     } else {
       out.enrollment = { created: false };
     }

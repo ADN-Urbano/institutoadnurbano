@@ -1,5 +1,5 @@
 import { getPayloadClient } from "@/lib/payload";
-import type { CourseDetail, Lesson, Module } from "@/data/curso";
+import type { CourseDetail, CourseInstructor, Lesson, Module, PriceTier, PriceTone } from "@/data/curso";
 
 export type CatalogCard = {
   slug: string;
@@ -25,39 +25,97 @@ type LessonDoc = {
   content?: unknown; // estado Lexical (lecciones de texto)
   image?: MediaDoc | string | null;
   material?: (MediaDoc & { filename?: string | null }) | string | null;
-  liveDate?: string | null;
-  teamsLink?: string | null;
 };
 
 export type Announcement = { date?: string | null; title: string; body: string };
 export type { LessonDoc };
-export type ModuleDoc = { num?: string; name: string; infoLabel?: string; lessons?: LessonDoc[] };
+export type ModuleDoc = {
+  num?: string;
+  name: string;
+  infoLabel?: string;
+  description?: string;
+  lessons?: LessonDoc[];
+};
+
+/** Instructor (group) ampliado para la landing. */
+export type InstructorDoc = {
+  name?: string;
+  bio?: string;
+  tagline?: string;
+  photo?: MediaDoc | string | null;
+  experienceLabel?: string;
+  longBio?: { paragraph: string }[];
+  specialties?: { item: string }[];
+};
+
+/** Curso: solo contenido permanente. El precio/estado/fechas viven en CourseEditions. */
 export type CourseDoc = {
   slug: string;
   title: string;
   accent?: string;
   headline?: string;
   headlineAccent?: string;
-  edition?: string;
   summary: string;
-  priceCents: number;
-  oldPriceCents?: number | null;
-  priceNote?: string;
-  status: "open" | "soon";
-  statusLabel?: string;
-  startLabel?: string;
   durationLabel?: string;
-  seatsLabel?: string;
   levelLabel?: string;
-  instructor?: { name?: string; bio?: string };
+  instructor?: InstructorDoc;
   feats?: { feature: string }[];
   teams?: { title?: string; desc?: string };
+  videoIntro?: { title?: string; desc?: string; label?: string };
   modules?: ModuleDoc[];
   forYes?: { title?: string; items?: { item: string }[] };
   forNo?: { title?: string; items?: { item: string }[] };
+  outcomes?: { item: string }[];
+  programPdfLabel?: string;
   faq?: { question: string; answer: string }[];
+  webinar?: { desc?: string; nextSessionLabel?: string; durationLabel?: string; cta?: string };
+  finalCta?: {
+    title?: string;
+    desc?: string;
+    seatsTitle?: string;
+    seatsDesc?: string;
+    cta?: string;
+  };
+};
+
+export type EditionStatus = "soon" | "open" | "running" | "past";
+
+export type EditionLiveSession = { title: string; date: string; teamsLink?: string | null };
+
+/** Edición (convocatoria) de un curso: todo lo que varía por cohorte. */
+export type EditionDoc = {
+  id?: string | number;
+  course?: CourseDoc | string | number | null;
+  editionLabel?: string;
+  status: EditionStatus;
+  statusLabel?: string;
+  priceCents: number;
+  oldPriceCents?: number | null;
+  priceNote?: string;
+  discountLabel?: string | null;
+  startDate: string;
+  endDate?: string | null;
+  startLabel?: string;
+  seatsLabel?: string;
+  liveSessions?: EditionLiveSession[];
   announcements?: Announcement[];
 };
+
+export type AccessState = "pending" | "active";
+
+/**
+ * Estado de acceso del alumno según la fecha de inicio de la edición. Gate de
+ * solo límite inferior: una vez alcanzada `startDate`, el acceso es de por vida.
+ * Una ISO inválida produce `NaN` → tratado como `pending` (sin acceso).
+ */
+export function computeAccessState(startDate: string, now: number = Date.now()): AccessState {
+  return new Date(startDate).getTime() <= now ? "active" : "pending";
+}
+
+/** Mapea el estado de la edición al estado binario que consume el catálogo. */
+function catalogStatus(status: EditionStatus): "open" | "soon" {
+  return status === "open" ? "open" : "soon";
+}
 
 const euros = (cents: number) => `${Math.round(cents / 100).toLocaleString("es-ES")}€`;
 
@@ -67,27 +125,106 @@ function moduleInfo(m: ModuleDoc): string {
   return n ? `${n} ${n === 1 ? "LECCIÓN" : "LECCIONES"}` : "PRÓXIMAMENTE";
 }
 
-export function toCourseDetail(doc: CourseDoc): CourseDetail {
+/** Tono y etiqueta del tramo según su posición en el roadmap (1ª/2ª/3ª+). */
+const tierTones: PriceTone[] = ["turquoise", "amber", "ink"];
+const tierLabels = ["Primera edición", "Segunda edición", "A partir de la tercera edición"];
+
+/** Descuento mostrado en un tramo: explícito en la edición o derivado de los precios. */
+function tierDiscount(edition: EditionDoc): string | undefined {
+  if (edition.discountLabel) return edition.discountLabel;
+  if (edition.oldPriceCents && edition.oldPriceCents > edition.priceCents) {
+    const pct = Math.round((1 - edition.priceCents / edition.oldPriceCents) * 100);
+    return pct > 0 ? `-${pct}%` : undefined;
+  }
+  return undefined;
+}
+
+/**
+ * Roadmap de precios de la tarjeta de compra: solo las ediciones COMPRABLES del
+ * curso (ordenadas por fecha), como tramos seleccionables. 1ª = turquoise, 2ª =
+ * amber, 3ª+ = ink. Marca `isDefault` en la edición preseleccionada (la `open`,
+ * o la comprable más próxima). Las ediciones running/past no aparecen.
+ */
+export function toPriceTiers(editions: EditionDoc[], now: number = Date.now()): PriceTier[] {
+  const purchasable = editions.filter((e) => isPurchasableEdition(e, now));
+  const defaultEdition = defaultPurchasableEdition(purchasable, now);
+  return purchasable.map((edition, i): PriceTier => {
+    const tone = tierTones[Math.min(i, tierTones.length - 1)];
+    const label = tierLabels[Math.min(i, tierLabels.length - 1)];
+    return {
+      editionId: edition.id != null ? String(edition.id) : "",
+      label,
+      discount: tierDiscount(edition),
+      oldPrice: edition.oldPriceCents ? euros(edition.oldPriceCents) : undefined,
+      price: euros(edition.priceCents),
+      editionLabel: edition.editionLabel ?? "",
+      tone,
+      purchasable: true,
+      isDefault: defaultEdition != null && edition === defaultEdition,
+    };
+  });
+}
+
+/** Instructor ampliado para la landing (fallbacks a cadena vacía / arrays vacíos). */
+function toInstructor(doc: CourseDoc): CourseInstructor {
+  const ins = doc.instructor;
+  const photo = ins?.photo && typeof ins.photo === "object" ? ins.photo : null;
+  return {
+    name: ins?.name ?? "",
+    bio: ins?.bio ?? "",
+    tagline: ins?.tagline ?? "",
+    photoUrl: photo?.url ?? undefined,
+    experienceLabel: ins?.experienceLabel ?? "",
+    longBio: (ins?.longBio ?? []).map((b) => b.paragraph),
+    specialties: (ins?.specialties ?? []).map((s) => s.item),
+  };
+}
+
+/**
+ * Construye el detalle de la landing. Precio/estado/fechas vienen de la edición
+ * (si la hay); duración/nivel y todo el contenido vienen del curso. Sin edición
+ * → estado "Próximamente" sin precio comprable (la PurchaseCard lo refleja).
+ */
+export function toCourseDetail(
+  doc: CourseDoc,
+  edition: EditionDoc | null = null,
+  editions: EditionDoc[] = [],
+  now: number = Date.now(),
+): CourseDetail {
   return {
     slug: doc.slug,
-    edition: doc.edition ?? "",
+    editionLabel: edition?.editionLabel ?? "",
+    startDate: edition?.startDate ?? null,
+    accessState: edition ? computeAccessState(edition.startDate, now) : "pending",
+    hasOpenEdition: edition?.status === "open",
     title: doc.title,
     accent: doc.accent ?? "",
     headline: doc.headline || doc.title,
     headlineAccent: doc.headlineAccent || doc.accent || "",
     summary: doc.summary,
-    instructor: { name: doc.instructor?.name ?? "", bio: doc.instructor?.bio ?? "" },
-    statusLabel: doc.statusLabel ?? "",
-    price: euros(doc.priceCents),
-    oldPrice: doc.oldPriceCents ? euros(doc.oldPriceCents) : undefined,
-    priceNote: doc.priceNote ?? "IVA inc.",
+    instructor: toInstructor(doc),
+    statusLabel: edition?.statusLabel ?? "",
+    price: edition ? euros(edition.priceCents) : "",
+    oldPrice: edition?.oldPriceCents ? euros(edition.oldPriceCents) : undefined,
+    priceNote: edition?.priceNote ?? "IVA inc.",
+    priceTiers: toPriceTiers(editions, now),
+    defaultEditionId: (() => {
+      const def = defaultPurchasableEdition(editions, now);
+      return def?.id != null ? String(def.id) : null;
+    })(),
     feats: (doc.feats ?? []).map((f) => f.feature),
     teams: { title: doc.teams?.title ?? "", desc: doc.teams?.desc ?? "" },
+    videoIntro: {
+      title: doc.videoIntro?.title ?? "Descubre más sobre el programa",
+      desc: doc.videoIntro?.desc ?? "",
+      label: doc.videoIntro?.label ?? "Vídeo presentación curso",
+    },
     modules: (doc.modules ?? []).map(
       (m): Module => ({
         num: m.num ?? "",
         name: m.name,
         info: moduleInfo(m),
+        description: m.description ?? "",
         lessons: (m.lessons ?? []).map(
           (l): Lesson => {
             const material =
@@ -107,26 +244,42 @@ export function toCourseDetail(doc: CourseDoc): CourseDetail {
     ),
     forYes: { title: doc.forYes?.title ?? "", items: (doc.forYes?.items ?? []).map((i) => i.item) },
     forNo: { title: doc.forNo?.title ?? "", items: (doc.forNo?.items ?? []).map((i) => i.item) },
+    outcomes: (doc.outcomes ?? []).map((o) => o.item),
+    programPdfLabel: doc.programPdfLabel ?? "Descargar programa completo PDF",
     faq: (doc.faq ?? []).map((f) => ({ q: f.question, a: f.answer })),
+    webinar: {
+      desc: doc.webinar?.desc ?? "",
+      nextSessionLabel: doc.webinar?.nextSessionLabel ?? "",
+      durationLabel: doc.webinar?.durationLabel ?? "45 minutos",
+      cta: doc.webinar?.cta ?? "Reservar mi plaza en el webinar",
+    },
+    finalCta: {
+      title: doc.finalCta?.title ?? "",
+      desc: doc.finalCta?.desc ?? "",
+      seatsTitle: doc.finalCta?.seatsTitle ?? "Solo 30 plazas disponibles",
+      seatsDesc: doc.finalCta?.seatsDesc ?? "",
+      cta: doc.finalCta?.cta ?? "Reservar mi plaza",
+    },
   };
 }
 
-export function toCatalogCard(doc: CourseDoc): CatalogCard {
+/** Tarjeta de catálogo: precio/estado/fechas de la edición; duración/nivel del curso. */
+export function toCatalogCard(doc: CourseDoc, edition: EditionDoc): CatalogCard {
   return {
     slug: doc.slug,
-    id: doc.edition ?? "",
-    status: doc.status,
-    statusLabel: doc.statusLabel ?? "",
+    id: edition.editionLabel ?? "",
+    status: catalogStatus(edition.status),
+    statusLabel: edition.statusLabel ?? "",
     title: doc.title,
     accent: doc.accent ?? "",
     desc: doc.summary,
     attrs: [
-      ["Inicio", doc.startLabel ?? "—"],
+      ["Inicio", edition.startLabel ?? "—"],
       ["Duración", doc.durationLabel ?? "—"],
-      ["Plazas", doc.seatsLabel ?? "—"],
+      ["Plazas", edition.seatsLabel ?? "—"],
       ["Nivel", doc.levelLabel ?? "—"],
     ],
-    price: euros(doc.priceCents),
+    price: euros(edition.priceCents),
     priceNote: " / pago único",
     href: `/curso/${doc.slug}`,
   };
@@ -144,20 +297,141 @@ export async function getCourseDocBySlug(slug: string): Promise<CourseDoc | null
   return (res.docs[0] as unknown as CourseDoc | undefined) ?? null;
 }
 
+/** Todas las ediciones de un curso, ordenadas por fecha de inicio (asc). */
+export async function getCourseEditions(courseId: string | number): Promise<EditionDoc[]> {
+  const payload = await getPayloadClient();
+  const res = await payload.find({
+    collection: "course-editions",
+    where: {
+      course: { equals: courseId },
+      status: { in: ["open", "soon", "running", "past"] },
+    },
+    sort: "startDate",
+    limit: 50,
+    depth: 0,
+  });
+  return res.docs as unknown as EditionDoc[];
+}
+
+/**
+ * Edición vendible/visible de un curso (la abierta tiene prioridad; si no, la
+ * próxima por fecha). Devuelve null si el curso no tiene edición activa.
+ */
+export function pickActiveEdition(editions: EditionDoc[]): EditionDoc | null {
+  return editions.find((e) => e.status === "open") ?? editions[0] ?? null;
+}
+
+/** Precio mínimo (céntimos) que Stripe acepta y que consideramos válido. */
+export const MIN_PRICE_CENTS = 50;
+
+/**
+ * ¿Es una edición comprable? = estado open|soon + fecha de inicio en el futuro +
+ * precio válido (≥ 50 céntimos). Las ediciones running/past no son comprables.
+ */
+export function isPurchasableEdition(edition: EditionDoc, now: number = Date.now()): boolean {
+  if (edition.status !== "open" && edition.status !== "soon") return false;
+  if (new Date(edition.startDate).getTime() <= now) return false;
+  return typeof edition.priceCents === "number" && edition.priceCents >= MIN_PRICE_CENTS;
+}
+
+/**
+ * Edición preseleccionada por defecto: la `open` comprable; si no hay, la
+ * comprable más próxima por `startDate`. Asume `editions` ordenadas por fecha.
+ */
+export function defaultPurchasableEdition(
+  editions: EditionDoc[],
+  now: number = Date.now(),
+): EditionDoc | null {
+  const purchasable = editions.filter((e) => isPurchasableEdition(e, now));
+  return purchasable.find((e) => e.status === "open") ?? purchasable[0] ?? null;
+}
+
+/**
+ * Resultado de resolver la edición a comprar. Distingue para que el checkout
+ * pueda responder con el código HTTP correcto:
+ * - `ok`            → edición válida y comprable (la devuelta).
+ * - `not-found`     → el `editionId` no pertenece al curso (→ 404).
+ * - `not-purchasable` → existe en el curso pero no es comprable, p. ej. past (→ 409).
+ * - `none`          → el curso no tiene ninguna edición comprable (→ 409).
+ */
+export type ResolveEditionResult =
+  | { status: "ok"; edition: EditionDoc }
+  | { status: "not-found" }
+  | { status: "not-purchasable" }
+  | { status: "none" };
+
+/**
+ * Resuelve qué edición se compra. Con `editionId`: la devuelve solo si pertenece
+ * al curso y es comprable (si no, distingue "no encontrada" de "no comprable").
+ * Sin `editionId`: la edición por defecto. Sin comprables: `none`.
+ */
+export function resolvePurchasableEdition(
+  editions: EditionDoc[],
+  editionId?: string | number | null,
+  now: number = Date.now(),
+): ResolveEditionResult {
+  if (editionId != null && editionId !== "") {
+    const target = editions.find((e) => e.id != null && String(e.id) === String(editionId));
+    if (!target) return { status: "not-found" };
+    if (!isPurchasableEdition(target, now)) return { status: "not-purchasable" };
+    return { status: "ok", edition: target };
+  }
+  const fallback = defaultPurchasableEdition(editions, now);
+  return fallback ? { status: "ok", edition: fallback } : { status: "none" };
+}
+
+/**
+ * Edición vendible/visible de un curso (la abierta tiene prioridad; si no, la
+ * próxima por fecha). Devuelve null si el curso no tiene edición activa.
+ */
+export async function getActiveEdition(courseId: string | number): Promise<EditionDoc | null> {
+  return pickActiveEdition(await getCourseEditions(courseId));
+}
+
+/** Edición concreta por id (la edición comprada por el alumno), o null. */
+export async function getEditionById(editionId: string | number): Promise<EditionDoc | null> {
+  const payload = await getPayloadClient();
+  try {
+    const doc = await payload.findByID({ collection: "course-editions", id: editionId, depth: 0 });
+    return (doc as unknown as EditionDoc) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Curso + su edición activa + TODAS sus ediciones (roadmap de precios). Lo usan
+ * la landing pública y el área.
+ */
+export async function getCourseWithEdition(
+  slug: string,
+): Promise<{ course: CourseDoc; edition: EditionDoc | null; editions: EditionDoc[] } | null> {
+  const payload = await getPayloadClient();
+  const res = await payload.find({
+    collection: "courses",
+    where: { slug: { equals: slug }, published: { equals: true } },
+    limit: 1,
+    depth: 1,
+  });
+  const courseRaw = res.docs[0] as unknown as (CourseDoc & { id: string | number }) | undefined;
+  if (!courseRaw) return null;
+  const editions = await getCourseEditions(courseRaw.id);
+  return { course: courseRaw, edition: pickActiveEdition(editions), editions };
+}
+
 export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
-  const doc = await getCourseDocBySlug(slug);
-  return doc ? toCourseDetail(doc) : null;
+  const found = await getCourseWithEdition(slug);
+  return found ? toCourseDetail(found.course, found.edition, found.editions) : null;
 }
 
 export type LiveSession = { title: string; date: string; teamsLink?: string };
 export type CourseMaterial = { lessonTitle: string; url: string; filename: string };
 
-/** Próxima sesión en directo del curso (la más cercana en el futuro), o null. */
-export function nextLiveSession(doc: CourseDoc, now = Date.now()): LiveSession | null {
-  const sessions = (doc.modules ?? [])
-    .flatMap((m) => m.lessons ?? [])
-    .filter((l) => l.kind === "live" && l.liveDate)
-    .map((l) => ({ title: l.title, date: l.liveDate as string, teamsLink: l.teamsLink ?? undefined }))
+/** Próxima sesión en directo de la edición (la más cercana en el futuro), o null. */
+export function nextLiveSession(edition: EditionDoc | null, now = Date.now()): LiveSession | null {
+  const sessions = (edition?.liveSessions ?? [])
+    .filter((s) => s.date)
+    .map((s) => ({ title: s.title, date: s.date, teamsLink: s.teamsLink ?? undefined }))
     .filter((s) => new Date(s.date).getTime() >= now)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   return sessions[0] ?? null;
@@ -175,30 +449,44 @@ export function courseMaterials(doc: CourseDoc): CourseMaterial[] {
   return out;
 }
 
-export function courseAnnouncements(doc: CourseDoc): Announcement[] {
-  return [...(doc.announcements ?? [])].sort(
+/** Anuncios de la edición, ordenados de más reciente a más antiguo. */
+export function courseAnnouncements(edition: EditionDoc | null): Announcement[] {
+  return [...(edition?.announcements ?? [])].sort(
     (a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime(),
   );
 }
 
+/**
+ * Catálogo: una única consulta a CourseEditions con estado open/soon, poblando
+ * el curso (depth:1). Evita el N+1. Omite ediciones sin curso publicado.
+ */
 export async function getCatalogCourses(): Promise<CatalogCard[]> {
   const payload = await getPayloadClient();
   const res = await payload.find({
-    collection: "courses",
-    where: { published: { equals: true } },
-    sort: "edition",
+    collection: "course-editions",
+    where: { status: { in: ["open", "soon"] } },
+    sort: "startDate",
     limit: 50,
-    depth: 0,
+    depth: 1,
   });
-  return (res.docs as unknown as CourseDoc[]).map(toCatalogCard);
+  const editions = res.docs as unknown as EditionDoc[];
+  return editions
+    .map((edition): CatalogCard | null => {
+      const course = edition.course;
+      if (!course || typeof course === "string" || typeof course === "number") return null;
+      return toCatalogCard(course, edition);
+    })
+    .filter((c): c is CatalogCard => c !== null);
 }
 
 export type EnrolledCourse = {
   enrollmentId: string;
   slug: string;
   title: string;
-  edition: string;
-  status: "open" | "soon";
+  editionId: string | null;
+  editionLabel: string;
+  startDate: string | null;
+  accessState: AccessState;
   totalLessons: number;
   completed: number;
   progress: number; // 0-100
@@ -209,7 +497,7 @@ function countLessons(modules: ModuleDoc[] = []): number {
   return modules.reduce((n, m) => n + (m.lessons?.length ?? 0), 0);
 }
 
-/** Cursos en los que el alumno está inscrito, con su progreso. */
+/** Cursos en los que el alumno está inscrito, con su progreso y estado de acceso. */
 export async function getStudentCourses(studentId: string): Promise<EnrolledCourse[]> {
   const payload = await getPayloadClient();
   const res = await payload.find({
@@ -227,12 +515,22 @@ export async function getStudentCourses(studentId: string): Promise<EnrolledCour
         ? (e.completedLessons as unknown[]).map(String)
         : [];
       const completed = completedLessons.length;
+
+      // Edición poblada (depth:1). Legado (sin edición) → acceso activo.
+      const edition = e.edition as unknown as EditionDoc | string | number | null;
+      const editionObj =
+        edition && typeof edition === "object" ? edition : null;
+      const startDate = editionObj?.startDate ?? null;
+      const accessState: AccessState = startDate ? computeAccessState(startDate) : "active";
+
       return {
         enrollmentId: String(e.id),
         slug: course.slug,
         title: course.title,
-        edition: course.edition ?? "",
-        status: course.status,
+        editionId: editionObj?.id != null ? String(editionObj.id) : null,
+        editionLabel: editionObj?.editionLabel ?? "",
+        startDate,
+        accessState,
         totalLessons: total,
         completed,
         progress: total ? Math.round((completed / total) * 100) : 0,

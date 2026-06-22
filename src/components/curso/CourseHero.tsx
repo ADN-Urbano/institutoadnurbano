@@ -20,9 +20,11 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
 
       <div className="grid grid-cols-1 gap-14 pb-16 mb-14 border-b border-rule lg:grid-cols-[1.4fr_1fr] max-lg:gap-10 max-sm:pb-10 max-sm:mb-10">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-turquoise-soft text-turquoise-dark rounded-full font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-6">
-            {course.edition}
-          </div>
+          {course.editionLabel && (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-turquoise-soft text-turquoise-dark rounded-full font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-6">
+              {course.editionLabel}
+            </div>
+          )}
           <h1 className="font-display font-extrabold text-[76px] leading-[0.92] tracking-[-0.025em] uppercase mb-5 md:text-[64px] lg:text-[76px] max-md:text-[48px] max-sm:text-[40px]">
             <AccentTitle title={course.headline} accent={course.headlineAccent} />
           </h1>
@@ -36,13 +38,37 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
                 Imparte
               </div>
               <div className="text-[17px] font-bold">{course.instructor.name}</div>
-              <div className="text-[13px] text-ink-muted mt-0.5">{course.instructor.bio}</div>
+              <div className="text-[13px] text-ink-muted mt-0.5">
+                {course.instructor.tagline || course.instructor.bio}
+              </div>
             </div>
           </div>
         </div>
 
-        <PurchaseCard course={course} />
+        {course.hasOpenEdition ? <PurchaseCard course={course} /> : <ComingSoonCard />}
       </div>
     </>
+  );
+}
+
+/**
+ * Tarjeta cuando no hay edición abierta a la venta (P1, Fase 1): informativa,
+ * sin botón de compra. La captura de email/lista de espera es Fase 2.
+ */
+function ComingSoonCard() {
+  return (
+    <aside className="bg-white border-2 border-ink rounded-3xl p-8 sticky top-[100px] self-start shadow-[var(--shadow-md)] max-lg:static max-sm:p-6">
+      <div className="inline-flex items-center gap-2 bg-yellow-soft text-[#9a7b15] px-3 py-[5px] rounded-full font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-[22px]">
+        <span className="w-1.5 h-1.5 rounded-full bg-yellow" />
+        <span>Próximamente</span>
+      </div>
+      <div className="font-display font-extrabold text-[34px] leading-[0.95] tracking-[-0.02em] uppercase mb-3">
+        Inscripción cerrada
+      </div>
+      <p className="text-[15px] leading-[1.55] text-ink-soft">
+        Ahora mismo no hay una convocatoria abierta para este programa. Estamos preparando la
+        próxima edición: vuelve pronto para conocer fechas y plazas.
+      </p>
+    </aside>
   );
 }

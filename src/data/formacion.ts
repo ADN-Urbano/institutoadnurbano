@@ -1,22 +1,41 @@
 /**
- * Contenido estático de la página de Formación (Instituto ADN Local).
- * Copiado del mockup del brandbook (Versión D). En Fase 2/4 los cursos
- * pasarán a gestionarse desde el panel/CMS.
+ * Contenido estático de la landing de Formación (Instituto ADN Local), que es
+ * además la página principal del sitio. Basado en el documento "Landing página
+ * Formación". En Fase 2/4 los programas pasarán a gestionarse desde el panel/CMS.
  */
 
-export const header = {
+/* ---- Hero ---- */
+export const hero = {
   eyebrow: "Instituto ADN Local · Formación",
-  title: "Aprende haciendo: casos reales, en directo, con tutorización.",
-  accent: "directo",
+  title: "El espacio de referencia de los líderes locales",
+  accent: "líderes locales",
   summary:
-    "Programas para concejales, técnicos municipales y consultores. Teoría pregrabada que se ve a tu ritmo, sesiones en directo donde resolvemos los casos que tú traes.",
-  stats: [
-    ["94%", "Tasa\nfinalización"],
-    ["187", "Profesionales\nformados"],
-    ["9.4", "Valoración\nmedia"],
-  ] as [string, string][],
+    "Programas especializados en liderazgo político, estrategia municipal y gestión pública para alcaldes, concejales, candidatos y responsables municipales.",
 };
 
+/* ---- ¿Por qué ADN Local? ---- */
+export const why = {
+  paragraphs: [
+    "ADN Local nace de una realidad que hemos observado durante años trabajando junto a alcaldes, concejales, candidatos y equipos municipales.",
+    "Cada legislatura exige tomar decisiones complejas, impulsar proyectos, gestionar equipos, comunicar con la ciudadanía y afrontar retos para los que nadie te prepara realmente.",
+    "Existen escuelas para médicos, arquitectos, abogados o ingenieros. Sin embargo, quienes asumen responsabilidades públicas en el ámbito local rara vez encuentran espacios donde aprender de la experiencia práctica de otros responsables públicos y adquirir herramientas aplicables a su día a día.",
+    "Por eso creamos ADN Local.",
+    "Una plataforma de aprendizaje y acompañamiento estratégico para quienes quieren impulsar proyectos, transformar sus municipios y afrontar con mayor preparación los retos de la política local.",
+    "Nuestra propuesta es sencilla: ofrecer herramientas, visión y estrategia para convertir la experiencia municipal en mejores decisiones y mejores resultados.",
+  ],
+  /* La cita se renderiza con varios acentos en turquesa (ver WhyAdn.tsx). */
+  quote: [
+    { text: "Impulsamos a quienes quieren liderar con más " },
+    { text: "preparación", accent: true },
+    { text: ", gobernar con más " },
+    { text: "estrategia", accent: true },
+    { text: " y " },
+    { text: "dejar huella", accent: true },
+    { text: " en sus municipios." },
+  ] as { text: string; accent?: boolean }[],
+};
+
+/* ---- Metodología ---- */
 export type MethodColor = "turquoise" | "green" | "coral";
 
 export const method = [
@@ -24,28 +43,123 @@ export const method = [
     color: "turquoise" as MethodColor,
     num: "01",
     title: "Teoría a tu ritmo",
-    desc: "Lecciones de 8 a 15 minutos en vídeo que ves cuando puedas, con ejercicios y plantillas reales que se aplican al día siguiente.",
+    desc: "Lecciones interactivas de 8 a 15 minutos, con contenidos prácticos diseñados para la realidad municipal.",
   },
   {
     color: "green" as MethodColor,
     num: "02",
-    title: "Directos por Teams",
-    desc: "Una vez por semana traes tu caso. Lo trabajamos en directo con todo el grupo. Las sesiones se graban y quedan en tu área.",
+    title: "Casos reales en directo",
+    desc: "Sesiones grupales donde analizamos situaciones reales planteadas por los participantes y trabajamos sobre experiencias compartidas.",
   },
   {
     color: "coral" as MethodColor,
     num: "03",
-    title: "Comunidad activa",
-    desc: "Slack privado con todos los alumnos y profesores. El acceso no caduca: la red es uno de los activos más valiosos del programa.",
+    title: "Todo listo para actuar",
+    desc: "Herramientas, estrategias y ejercicios aplicados a problemas reales. Trabajarás sobre tu propio caso para terminar con claridad y una hoja de ruta preparada para poner en marcha.",
   },
 ];
 
-/* El catálogo de cursos ahora viene de Payload (ver src/lib/courses.ts y
-   src/data/courses-seed.ts). Aquí solo queda el contenido de página fijo. */
+/* ---- Webinar gratuito ---- */
+export const webinar = {
+  title: "Webinar gratuito",
+  desc: "Te invitamos a participar en una sesión online gratuita donde compartiremos algunas de las claves para afrontar con éxito el último año antes de las elecciones municipales.",
+  details: [
+    ["Próxima sesión", "Fecha por confirmar"],
+    ["Duración", "45 minutos"],
+    ["Participación", "Gratuita"],
+  ] as [string, string][],
+  cta: "Reservar mi plaza en el webinar",
+};
 
-export const testimonial = {
-  quote:
-    "“Lo mejor del curso no fueron los vídeos —que estaban muy bien— sino los directos. Llevaba ocho años en el ayuntamiento y nunca había podido sentarme con alguien que entendiera mi problema.”",
-  author: "Inés Carmona",
-  role: "Concejala de comercio · Ayto. de Lorca",
+/* ---- Catálogo de programas ---- */
+export type PriceTone = "turquoise" | "amber" | "ink";
+
+export type PriceTier = {
+  label: string;
+  discount?: string;
+  oldPrice?: string;
+  price: string;
+  edition: string;
+  tone: PriceTone;
+};
+
+export type Program = {
+  id: string;
+  num: string;
+  badge: string;
+  badgeTone: "open" | "soon";
+  title: string;
+  accent: string;
+  desc: string;
+  tiers?: PriceTier[];
+  limited?: string;
+  guarantee?: string;
+  priority?: { title: string; desc: string };
+  href?: string; // landing del curso (/curso/[slug]) si existe
+};
+
+const guaranteeText =
+  "Nos reservamos el derecho de cancelar el curso si no se alcanza el mínimo.";
+const limitedText = "Máximo 30 participantes por edición";
+
+export const programs: Program[] = [
+  {
+    id: "hacia-un-nuevo-mandato",
+    num: "Curso 01 · Edición julio 2026",
+    badge: "Inscripción abierta",
+    badgeTone: "open",
+    title: "Hacia un nuevo mandato",
+    accent: "mandato",
+    href: "/curso/hacia-un-nuevo-mandato",
+    desc: "Dirigido a alcaldes y equipos de gobierno en ejercicio, este programa te ayuda a preparar el cierre de la legislatura y afrontar con garantías el próximo ciclo electoral. Analiza tu legislatura, organiza tu equipo, construye tu proyecto de futuro y prepara la estrategia que te permitirá afrontar con garantías el próximo proceso electoral.",
+    tiers: [
+      { label: "Primera edición", discount: "-40%", oldPrice: "330€", price: "198€", edition: "Edición julio 2026", tone: "turquoise" },
+      { label: "Segunda edición", discount: "-20%", oldPrice: "330€", price: "264€", edition: "Edición agosto 2026", tone: "amber" },
+      { label: "A partir de la tercera edición", price: "330€", edition: "Edición septiembre y sucesivas ediciones", tone: "ink" },
+    ],
+    limited: limitedText,
+    guarantee: guaranteeText,
+  },
+  {
+    id: "construir-la-alternativa",
+    num: "Curso 02 · Edición septiembre 2026",
+    badge: "Inscripción abierta",
+    badgeTone: "open",
+    title: "Construir la alternativa",
+    accent: "alternativa",
+    href: "/curso/construir-la-alternativa",
+    desc: "Dirigido a concejales y equipos que ejercen la oposición y quieren convertirse en una alternativa sólida y creíble de gobierno. Aprende a analizar el contexto político, construir un proyecto capaz de ilusionar a los vecinos, organizar tu equipo y diseñar una estrategia que te permita ganar su confianza y optar al gobierno municipal.",
+    tiers: [
+      { label: "Primera edición", discount: "-40%", oldPrice: "330€", price: "198€", edition: "Edición septiembre 2026", tone: "turquoise" },
+      { label: "Segunda edición", discount: "-20%", oldPrice: "330€", price: "264€", edition: "Edición octubre 2026", tone: "amber" },
+      { label: "A partir de la tercera edición", price: "330€", edition: "Edición noviembre y sucesivas ediciones", tone: "ink" },
+    ],
+    limited: limitedText,
+    guarantee: guaranteeText,
+  },
+  {
+    id: "gobernando-con-exito",
+    num: "Curso 03 · Próximas ediciones",
+    badge: "Reserva tu plaza",
+    badgeTone: "soon",
+    title: "Gobernando con éxito",
+    accent: "éxito",
+    desc: "Un programa orientado a mejorar tus capacidades de gestión, liderazgo y dirección pública. Aprende a organizar equipos, impulsar proyectos y afrontar los retos del día a día municipal con mayor preparación y confianza.",
+    priority: {
+      title: "Acceso prioritario",
+      desc: "Déjanos tus datos y te avisaremos antes que nadie cuando se abran las inscripciones de la próxima edición.",
+    },
+  },
+];
+
+/* ---- CTA final ---- */
+export const nextStep = {
+  title: "Cada momento exige una preparación diferente",
+  desc: "Ya sea para mejorar tu gestión, afrontar el último año de legislatura o construir una alternativa de gobierno, encontrarás un programa diseñado para ayudarte a avanzar con más preparación y estrategia.",
+  label: "Elige tu próximo paso",
+  options: [
+    { label: "Hacia un nuevo mandato", href: "#hacia-un-nuevo-mandato" },
+    { label: "Construir la alternativa", href: "#construir-la-alternativa" },
+    { label: "Gobernando con éxito", href: "#gobernando-con-exito" },
+  ],
 };

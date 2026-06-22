@@ -14,7 +14,7 @@ export default function Method() {
         eyebrow="·· Metodología"
         title={
           <>
-            Tres pilares que <span className="text-turquoise">funcionan</span>
+            Aprende sobre <span className="text-turquoise">tu municipio</span>
           </>
         }
       />

@@ -1,34 +1,26 @@
 import type { Metadata } from "next";
-import PageHeader from "@/components/ui/PageHeader";
-import { header } from "@/data/formacion";
-import { getCatalogCourses } from "@/lib/courses";
+import LandingHero from "@/components/formacion/LandingHero";
+import WhyAdn from "@/components/formacion/WhyAdn";
 import Method from "@/components/formacion/Method";
-import Courses from "@/components/formacion/Courses";
-import Testimonial from "@/components/formacion/Testimonial";
-
-// Revalida el catálogo (ISR): cambios en /admin se reflejan en ≤60s sin redeploy.
-export const revalidate = 60;
+import Webinar from "@/components/formacion/Webinar";
+import Programs from "@/components/formacion/Programs";
+import NextStep from "@/components/formacion/NextStep";
 
 export const metadata: Metadata = {
-  title: "Formación · Instituto ADN Local",
+  title: "Instituto ADN Local · Formación para líderes locales",
   description:
-    "Programas para concejales, técnicos municipales y consultores: teoría pregrabada a tu ritmo y sesiones en directo por Teams con tutorización. Casos reales y comunidad activa.",
+    "Programas especializados en liderazgo político, estrategia municipal y gestión pública para alcaldes, concejales, candidatos y responsables municipales.",
 };
 
-export default async function FormacionPage() {
-  const courses = await getCatalogCourses();
+export default function FormacionPage() {
   return (
     <main className="max-w-[1320px] mx-auto px-8 pt-14 pb-24 max-sm:px-5">
-      <PageHeader
-        eyebrow={header.eyebrow}
-        title={header.title}
-        accent={header.accent}
-        summary={header.summary}
-        stats={header.stats}
-      />
+      <LandingHero />
+      <WhyAdn />
       <Method />
-      <Courses courses={courses} />
-      <Testimonial />
+      <Webinar />
+      <Programs />
+      <NextStep />
     </main>
   );
 }

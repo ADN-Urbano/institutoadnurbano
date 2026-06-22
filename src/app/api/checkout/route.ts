@@ -2,17 +2,18 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getPayloadClient } from "@/lib/payload";
 import { getCurrentStudent } from "@/lib/session";
-import type { CourseDoc } from "@/lib/courses";
+import { getCourseEditions, resolvePurchasableEdition, type CourseDoc } from "@/lib/courses";
 
 export const dynamic = "force-dynamic";
 
 /**
  * Crea una Checkout Session de Stripe para un curso (por slug). El botón
  * "Inscribirme" del landing apunta aquí. El precio NUNCA viene del cliente: se
- * lee del curso en Payload. El alta del alumno la hace el webhook tras el pago.
+ * lee de la edición elegida en Payload, validando que pertenece al curso y es
+ * comprable. El alta del alumno la hace el webhook tras el pago.
  */
 export async function POST(req: Request) {
-  const body = (await req.json().catch(() => ({}))) as { slug?: string };
+  const body = (await req.json().catch(() => ({}))) as { slug?: string; editionId?: string | number };
   const slug = body.slug?.trim();
   if (!slug) {
     return NextResponse.json({ error: "Falta el curso." }, { status: 400 });
@@ -29,11 +30,25 @@ export async function POST(req: Request) {
   if (!course) {
     return NextResponse.json({ error: "Curso no encontrado." }, { status: 404 });
   }
-  if (course.status !== "open") {
+
+  // El precio NUNCA viene del cliente: se lee de la edición en Payload. El
+  // `editionId` del cliente se valida contra las ediciones del curso.
+  const editions = await getCourseEditions(course.id);
+  const resolved = resolvePurchasableEdition(editions, body.editionId);
+  if (resolved.status === "not-found") {
+    // El editionId no pertenece a este curso.
+    return NextResponse.json({ error: "Edición no encontrada." }, { status: 404 });
+  }
+  if (resolved.status === "not-purchasable") {
+    return NextResponse.json({ error: "Esta edición no está disponible para inscripción." }, { status: 409 });
+  }
+  if (resolved.status === "none") {
     return NextResponse.json({ error: "Este curso aún no está abierto a inscripción." }, { status: 409 });
   }
-  if (!course.priceCents || course.priceCents < 50) {
-    return NextResponse.json({ error: "Precio del curso no configurado." }, { status: 409 });
+  const edition = resolved.edition;
+  const editionId = edition.id;
+  if (editionId == null) {
+    return NextResponse.json({ error: "Edición no encontrada." }, { status: 404 });
   }
 
   // Prefill del email si el alumno ya tiene sesión (recompra / curso adicional).
@@ -61,9 +76,9 @@ export async function POST(req: Request) {
           quantity: 1,
           price_data: {
             currency: "eur",
-            unit_amount: course.priceCents,
+            unit_amount: edition.priceCents,
             product_data: {
-              name: course.title,
+              name: edition.editionLabel ? `${course.title} · ${edition.editionLabel}` : course.title,
               description: course.summary?.slice(0, 300) || undefined,
             },
           },
@@ -77,7 +92,9 @@ export async function POST(req: Request) {
         : email
           ? { customer_email: email }
           : {}),
-      metadata: { courseId: String(course.id), slug: course.slug },
+      // IDs de Payload/Postgres son enteros; la metadata de Stripe es siempre
+      // string. El webhook hace Number(metadata.editionId) al leerla.
+      metadata: { courseId: String(course.id), editionId: String(editionId), slug: course.slug },
       success_url: `${base}/gracias?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${base}/curso/${course.slug}`,
     });

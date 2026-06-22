@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPayloadClient } from "@/lib/payload";
 import { getCurrentStudent } from "@/lib/session";
+import { computeAccessState, getEditionById } from "@/lib/courses";
 
 /** Marca/desmarca una lección como completada en la inscripción del alumno. */
 export async function POST(req: Request) {
@@ -32,6 +33,17 @@ export async function POST(req: Request) {
       : enrollment.student;
   if (String(ownerId) !== String(student.id)) {
     return NextResponse.json({ error: "Prohibido" }, { status: 403 });
+  }
+
+  // Gate de acceso: la edición debe haber empezado. Edición nula (legado) → activo.
+  const editionRel = enrollment.edition as { id?: string | number } | string | number | null;
+  const editionId =
+    editionRel && typeof editionRel === "object" ? editionRel.id : editionRel;
+  if (editionId != null && editionId !== "") {
+    const edition = await getEditionById(editionId);
+    if (edition?.startDate && computeAccessState(edition.startDate) === "pending") {
+      return NextResponse.json({ error: "El curso aún no ha empezado." }, { status: 403 });
+    }
   }
 
   const current = Array.isArray(enrollment.completedLessons)

@@ -3,16 +3,6 @@ import BrandLogo from "@/components/ui/BrandLogo";
 
 const columns = [
   {
-    title: "Recursos",
-    items: [
-      { label: "Artículos", href: "/recursos?formato=articulo" },
-      { label: "Casos de éxito", href: "/recursos?formato=caso" },
-      { label: "Píldoras", href: "/recursos?formato=pildora" },
-      { label: "Podcast", href: "/recursos?formato=podcast" },
-      { label: "Newsletter", href: "/#newsletter" },
-    ],
-  },
-  {
     title: "Formación",
     items: [
       { label: "Programas activos", href: "/formacion" },
@@ -45,7 +35,7 @@ export default function Footer() {
   return (
     <footer className="bg-turquoise-deep text-white pt-16 pb-8 mt-20">
       <div className="max-w-[1320px] mx-auto px-8">
-        <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-12 pb-12 border-b border-white/15 mb-7 max-lg:grid-cols-2 max-sm:grid-cols-1">
+        <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-12 pb-12 border-b border-white/15 mb-7 max-lg:grid-cols-2 max-sm:grid-cols-1">
           <div>
             <div className="mb-[18px]">
               <BrandLogo tone="yellow" href={null} />
