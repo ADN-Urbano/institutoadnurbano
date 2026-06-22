@@ -207,7 +207,11 @@ export function toCourseDetail(
     price: edition ? euros(edition.priceCents) : "",
     oldPrice: edition?.oldPriceCents ? euros(edition.oldPriceCents) : undefined,
     priceNote: edition?.priceNote ?? "IVA inc.",
-    priceTiers: toPriceTiers(editions),
+    priceTiers: toPriceTiers(editions, now),
+    defaultEditionId: (() => {
+      const def = defaultPurchasableEdition(editions, now);
+      return def?.id != null ? String(def.id) : null;
+    })(),
     feats: (doc.feats ?? []).map((f) => f.feature),
     teams: { title: doc.teams?.title ?? "", desc: doc.teams?.desc ?? "" },
     videoIntro: {

@@ -3,6 +3,8 @@ import {
   toCourseDetail,
   toCatalogCard,
   toPriceTiers,
+  resolvePurchasableEdition,
+  isPurchasableEdition,
   nextLiveSession,
   courseMaterials,
   courseAnnouncements,
@@ -351,12 +353,19 @@ describe("courseMaterials", () => {
 });
 
 describe("toPriceTiers — roadmap de ediciones", () => {
+  // NOW anterior a las startDate (2026-01-01) → todas las baseEdition son futuras
+  // y, por tanto, comprables.
+  const NOW = new Date("2025-12-01T00:00:00.000Z").getTime();
+
   it("asigna tono y etiqueta por posición (1ª turquoise, 2ª amber, 3ª+ ink)", () => {
-    const tiers = toPriceTiers([
-      baseEdition({ editionLabel: "Ed 1", priceCents: 19800, oldPriceCents: 33000 }),
-      baseEdition({ editionLabel: "Ed 2", priceCents: 26400, oldPriceCents: 33000 }),
-      baseEdition({ editionLabel: "Ed 3", priceCents: 33000 }),
-    ]);
+    const tiers = toPriceTiers(
+      [
+        baseEdition({ editionLabel: "Ed 1", priceCents: 19800, oldPriceCents: 33000 }),
+        baseEdition({ editionLabel: "Ed 2", priceCents: 26400, oldPriceCents: 33000 }),
+        baseEdition({ editionLabel: "Ed 3", priceCents: 33000 }),
+      ],
+      NOW,
+    );
     expect(tiers.map((t) => t.tone)).toEqual(["turquoise", "amber", "ink"]);
     expect(tiers.map((t) => t.label)).toEqual([
       "Primera edición",
@@ -367,41 +376,176 @@ describe("toPriceTiers — roadmap de ediciones", () => {
   });
 
   it("calcula el descuento desde old/price cuando no hay discountLabel", () => {
-    const [t1, t2, t3] = toPriceTiers([
-      baseEdition({ priceCents: 19800, oldPriceCents: 33000 }), // 40%
-      baseEdition({ priceCents: 26400, oldPriceCents: 33000 }), // 20%
-      baseEdition({ priceCents: 33000 }), // sin descuento
-    ]);
+    const [t1, t2, t3] = toPriceTiers(
+      [
+        baseEdition({ priceCents: 19800, oldPriceCents: 33000 }), // 40%
+        baseEdition({ priceCents: 26400, oldPriceCents: 33000 }), // 20%
+        baseEdition({ priceCents: 33000 }), // sin descuento
+      ],
+      NOW,
+    );
     expect(t1.discount).toBe("-40%");
     expect(t2.discount).toBe("-20%");
     expect(t3.discount).toBeUndefined();
   });
 
   it("discountLabel explícito tiene prioridad sobre el cálculo", () => {
-    const [t] = toPriceTiers([
-      baseEdition({ priceCents: 19800, oldPriceCents: 33000, discountLabel: "-50%" }),
-    ]);
+    const [t] = toPriceTiers(
+      [baseEdition({ priceCents: 19800, oldPriceCents: 33000, discountLabel: "-50%" })],
+      NOW,
+    );
     expect(t.discount).toBe("-50%");
   });
 
   it("más de 3 ediciones: a partir de la 3ª todas son 'ink' / 'A partir de la tercera edición'", () => {
-    const tiers = toPriceTiers([
-      baseEdition({ priceCents: 100 }),
-      baseEdition({ priceCents: 200 }),
-      baseEdition({ priceCents: 300 }),
-      baseEdition({ priceCents: 400 }),
-    ]);
+    const tiers = toPriceTiers(
+      [
+        baseEdition({ priceCents: 100 }),
+        baseEdition({ priceCents: 200 }),
+        baseEdition({ priceCents: 300 }),
+        baseEdition({ priceCents: 400 }),
+      ],
+      NOW,
+    );
     expect(tiers[3].tone).toBe("ink");
     expect(tiers[3].label).toBe("A partir de la tercera edición");
   });
 
-  it("toCourseDetail rellena priceTiers a partir de las ediciones recibidas", () => {
-    const d = toCourseDetail(baseDoc(), baseEdition(), [
-      baseEdition({ editionLabel: "Ed 1", priceCents: 19800 }),
-      baseEdition({ editionLabel: "Ed 2", priceCents: 26400 }),
-    ]);
+  it("solo las ediciones comprables entran como tramos seleccionables (past fuera)", () => {
+    const tiers = toPriceTiers(
+      [
+        baseEdition({ id: 1, status: "past", editionLabel: "Pasada", startDate: "2025-06-01T00:00:00.000Z" }),
+        baseEdition({ id: 2, status: "open", editionLabel: "Abierta" }),
+        baseEdition({ id: 3, status: "soon", editionLabel: "Próxima" }),
+      ],
+      NOW,
+    );
+    expect(tiers.map((t) => t.editionLabel)).toEqual(["Abierta", "Próxima"]);
+    expect(tiers.every((t) => t.purchasable)).toBe(true);
+  });
+
+  it("incluye editionId y marca isDefault en la edición open", () => {
+    const tiers = toPriceTiers(
+      [
+        baseEdition({ id: 10, status: "soon", editionLabel: "Próxima" }),
+        baseEdition({ id: 20, status: "open", editionLabel: "Abierta" }),
+      ],
+      NOW,
+    );
+    expect(tiers.map((t) => t.editionId)).toEqual(["10", "20"]);
+    const def = tiers.find((t) => t.isDefault);
+    expect(def?.editionId).toBe("20"); // la open es la preseleccionada
+    expect(tiers.filter((t) => t.isDefault)).toHaveLength(1);
+  });
+
+  it("sin open, isDefault recae en la comprable más próxima (primera por fecha)", () => {
+    const tiers = toPriceTiers(
+      [
+        baseEdition({ id: 1, status: "soon", editionLabel: "Más próxima", startDate: "2026-01-01T00:00:00.000Z" }),
+        baseEdition({ id: 2, status: "soon", editionLabel: "Más lejana", startDate: "2026-03-01T00:00:00.000Z" }),
+      ],
+      NOW,
+    );
+    const def = tiers.find((t) => t.isDefault);
+    expect(def?.editionId).toBe("1");
+  });
+
+  it("toCourseDetail rellena priceTiers y defaultEditionId a partir de las ediciones", () => {
+    const d = toCourseDetail(
+      baseDoc(),
+      baseEdition({ id: 1 }),
+      [
+        baseEdition({ id: 1, status: "soon", editionLabel: "Ed 1", priceCents: 19800 }),
+        baseEdition({ id: 2, status: "open", editionLabel: "Ed 2", priceCents: 26400 }),
+      ],
+      NOW,
+    );
     expect(d.priceTiers).toHaveLength(2);
     expect(d.priceTiers[0].editionLabel).toBe("Ed 1");
+    expect(d.defaultEditionId).toBe("2"); // la open
+  });
+
+  it("sin ediciones comprables → priceTiers vacío y defaultEditionId null", () => {
+    const d = toCourseDetail(
+      baseDoc(),
+      null,
+      [baseEdition({ id: 1, status: "past", startDate: "2025-06-01T00:00:00.000Z" })],
+      NOW,
+    );
+    expect(d.priceTiers).toEqual([]);
+    expect(d.defaultEditionId).toBeNull();
+  });
+});
+
+describe("isPurchasableEdition", () => {
+  const NOW = new Date("2026-06-13T12:00:00.000Z").getTime();
+
+  it("open con fecha futura y precio válido → comprable", () => {
+    expect(isPurchasableEdition(baseEdition({ status: "open", startDate: "2026-07-01T00:00:00.000Z" }), NOW)).toBe(true);
+  });
+
+  it("soon con fecha futura y precio válido → comprable", () => {
+    expect(isPurchasableEdition(baseEdition({ status: "soon", startDate: "2026-07-01T00:00:00.000Z" }), NOW)).toBe(true);
+  });
+
+  it("fecha en el pasado → no comprable (ya empezada)", () => {
+    expect(isPurchasableEdition(baseEdition({ status: "open", startDate: "2026-06-01T00:00:00.000Z" }), NOW)).toBe(false);
+  });
+
+  it("running/past → no comprable aunque la fecha sea futura", () => {
+    expect(isPurchasableEdition(baseEdition({ status: "running", startDate: "2026-07-01T00:00:00.000Z" }), NOW)).toBe(false);
+    expect(isPurchasableEdition(baseEdition({ status: "past", startDate: "2026-07-01T00:00:00.000Z" }), NOW)).toBe(false);
+  });
+
+  it("precio por debajo del mínimo (< 50) → no comprable", () => {
+    expect(isPurchasableEdition(baseEdition({ status: "open", startDate: "2026-07-01T00:00:00.000Z", priceCents: 49 }), NOW)).toBe(false);
+  });
+});
+
+describe("resolvePurchasableEdition", () => {
+  const NOW = new Date("2026-06-13T12:00:00.000Z").getTime();
+
+  const open = baseEdition({ id: 1, status: "open", startDate: "2026-07-01T00:00:00.000Z" });
+  const soon = baseEdition({ id: 2, status: "soon", startDate: "2026-09-01T00:00:00.000Z" });
+  const past = baseEdition({ id: 3, status: "past", startDate: "2026-05-01T00:00:00.000Z" });
+
+  it("sin editionId → la edición open por defecto", () => {
+    const r = resolvePurchasableEdition([open, soon, past], undefined, NOW);
+    expect(r.status).toBe("ok");
+    expect(r.status === "ok" && r.edition.id).toBe(1);
+  });
+
+  it("sin open: sin editionId → la comprable más próxima por fecha", () => {
+    const r = resolvePurchasableEdition([soon, past], undefined, NOW);
+    expect(r.status).toBe("ok");
+    expect(r.status === "ok" && r.edition.id).toBe(2);
+  });
+
+  it("con editionId válido y comprable → esa edición", () => {
+    const r = resolvePurchasableEdition([open, soon, past], 2, NOW);
+    expect(r.status).toBe("ok");
+    expect(r.status === "ok" && r.edition.id).toBe(2);
+  });
+
+  it("editionId que no pertenece al curso → not-found (404)", () => {
+    const r = resolvePurchasableEdition([open, soon], 999, NOW);
+    expect(r.status).toBe("not-found");
+  });
+
+  it("editionId existente pero no comprable (past) → not-purchasable (409)", () => {
+    const r = resolvePurchasableEdition([open, soon, past], 3, NOW);
+    expect(r.status).toBe("not-purchasable");
+  });
+
+  it("sin ediciones comprables y sin editionId → none (409)", () => {
+    const r = resolvePurchasableEdition([past], undefined, NOW);
+    expect(r.status).toBe("none");
+  });
+
+  it("editionId como string también casa (boundary entero/string de Stripe)", () => {
+    const r = resolvePurchasableEdition([open, soon], "1", NOW);
+    expect(r.status).toBe("ok");
+    expect(r.status === "ok" && r.edition.id).toBe(1);
   });
 });
 

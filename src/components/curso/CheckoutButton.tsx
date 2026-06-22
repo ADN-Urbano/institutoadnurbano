@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 /** Botón de inscripción: crea una Checkout Session y redirige a Stripe. */
-export default function CheckoutButton({ slug }: { slug: string }) {
+export default function CheckoutButton({ slug, editionId }: { slug: string; editionId?: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,7 +14,7 @@ export default function CheckoutButton({ slug }: { slug: string }) {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug, editionId }),
       });
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !data.url) {
