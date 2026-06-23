@@ -45,7 +45,7 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
           </div>
         </div>
 
-        {course.hasOpenEdition ? <PurchaseCard course={course} /> : <ComingSoonCard />}
+        {course.defaultEditionId ? <PurchaseCard course={course} /> : <ComingSoonCard />}
       </div>
     </>
   );
