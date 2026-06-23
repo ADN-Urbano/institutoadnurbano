@@ -259,13 +259,14 @@ export async function GET(req: Request) {
 
   const flagship = await payload.find({
     collection: "courses",
-    where: { slug: { equals: "plan-dinamizacion-comercial" } },
+    where: { slug: { equals: "hacia-un-nuevo-mandato" } },
     limit: 1,
   });
   if (flagship.totalDocs > 0) {
     const courseId = flagship.docs[0].id;
-    // Edición del curso estrella (startDate en el pasado → alumno de prueba "active").
-    const editionId = editionIdBySlug["plan-dinamizacion-comercial"];
+    // Edición abierta del curso (startDate futuro → alumno de prueba "pending"
+    // hasta el inicio; útil para ver la pantalla de espera del área).
+    const editionId = editionIdBySlug["hacia-un-nuevo-mandato"];
     const enr = await payload.find({
       collection: "enrollments",
       where: { and: [{ student: { equals: studentId } }, { course: { equals: courseId } }] },
