@@ -21,7 +21,7 @@ export const hero = {
       tag: "Próximo curso",
       title: "Plan de Dinamización Comercial",
       meta: "29 jun · 8 semanas · 14/30",
-      href: "/curso/plan-dinamizacion-comercial",
+      href: "/curso/hacia-un-nuevo-mandato",
     },
     {
       color: "green" as TileColor,
@@ -171,7 +171,7 @@ export const coursePromo = {
     ["MODALIDAD", "ONLINE · TEAMS"],
     ["PLAZAS", "14 / 30"],
   ],
-  cta: { label: "Ver el programa →", href: "/curso/plan-dinamizacion-comercial" },
+  cta: { label: "Ver el programa →", href: "/curso/hacia-un-nuevo-mandato" },
   secondary: "o descarga el folleto en PDF",
 };
 

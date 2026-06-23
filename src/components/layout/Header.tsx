@@ -13,6 +13,7 @@ const itemOff = "text-ink-soft font-medium hover:text-turquoise hover:bg-turquoi
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [me, setMe] = useState<{ loggedIn: boolean; name?: string }>({ loggedIn: false });
+  const [nextCourseHref, setNextCourseHref] = useState("/formacion");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -21,6 +22,14 @@ export default function Header() {
       .then(setMe)
       .catch(() => {});
   }, [pathname]);
+
+  // Próximo curso disponible (se resuelve solo según las ediciones).
+  useEffect(() => {
+    fetch("/api/next-course")
+      .then((r) => r.json())
+      .then((d) => setNextCourseHref(d.href ?? "/formacion"))
+      .catch(() => {});
+  }, []);
 
   const formacionActive = pathname === "/" || pathname.startsWith("/formacion");
 
@@ -59,7 +68,7 @@ export default function Header() {
             </Link>
           )}
           <Link
-            href="/curso/plan-dinamizacion-comercial"
+            href={nextCourseHref}
             className="bg-ink text-white px-[18px] py-2.5 rounded-lg text-sm font-semibold transition-all inline-flex items-center gap-2 hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)] max-md:hidden"
           >
             Próximo curso
@@ -110,7 +119,7 @@ export default function Header() {
               </Link>
             )}
             <Link
-              href="/curso/plan-dinamizacion-comercial"
+              href={nextCourseHref}
               onClick={() => setOpen(false)}
               className="bg-ink text-white px-[18px] py-3 rounded-lg text-[15px] font-semibold inline-flex items-center justify-center gap-2"
             >

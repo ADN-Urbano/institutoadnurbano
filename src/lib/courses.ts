@@ -479,6 +479,32 @@ export async function getCatalogCourses(): Promise<CatalogCard[]> {
     .filter((c): c is CatalogCard => c !== null);
 }
 
+/**
+ * Próximo curso disponible = el curso cuya edición comprable (open/soon, fecha
+ * de inicio en el futuro) empieza antes. Alimenta el botón "Próximo curso" del
+ * Header. Devuelve null si no hay ninguno (el Header cae a /formacion).
+ */
+export async function getNextCourse(
+  now: number = Date.now(),
+): Promise<{ slug: string; title: string } | null> {
+  const payload = await getPayloadClient();
+  const res = await payload.find({
+    collection: "course-editions",
+    where: { status: { in: ["open", "soon"] } },
+    sort: "startDate",
+    limit: 50,
+    depth: 1,
+  });
+  const editions = res.docs as unknown as EditionDoc[];
+  for (const edition of editions) {
+    if (!isPurchasableEdition(edition, now)) continue;
+    const course = edition.course;
+    if (!course || typeof course === "string" || typeof course === "number") continue;
+    return { slug: course.slug, title: course.title };
+  }
+  return null;
+}
+
 export type EnrolledCourse = {
   enrollmentId: string;
   slug: string;
