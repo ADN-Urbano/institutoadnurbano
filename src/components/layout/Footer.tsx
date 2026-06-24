@@ -14,9 +14,9 @@ const columns = [
   {
     title: "ADN Urbano",
     items: [
-      { label: "Sobre nosotros", href: "#" },
-      { label: "Equipo", href: "#" },
-      { label: "Servicios", href: "#" },
+      { label: "Sobre nosotros", href: "/sobre-nosotros" },
+      { label: "Equipo", href: "/sobre-nosotros" },
+      { label: "Servicios", href: "https://adnurbano.es" },
       { label: "Contacto", href: "mailto:hola@adnlocal.es" },
     ],
   },

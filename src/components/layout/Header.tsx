@@ -32,6 +32,7 @@ export default function Header() {
   }, []);
 
   const formacionActive = pathname === "/" || pathname.startsWith("/formacion");
+  const sobreActive = pathname.startsWith("/sobre-nosotros");
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md backdrop-saturate-[1.8] border-b border-rule">
@@ -42,6 +43,12 @@ export default function Header() {
         <nav className="flex items-center gap-0.5 flex-1 max-md:hidden">
           <Link href="/" className={`${itemBase} ${formacionActive ? itemOn : itemOff}`}>
             Formación
+          </Link>
+          <Link
+            href="/sobre-nosotros"
+            className={`${itemBase} ${sobreActive ? itemOn : itemOff}`}
+          >
+            Sobre nosotros
           </Link>
         </nav>
 
@@ -97,6 +104,13 @@ export default function Header() {
               className={`px-3.5 py-2.5 text-[15px] rounded-lg ${formacionActive ? itemOn : itemOff}`}
             >
               Formación
+            </Link>
+            <Link
+              href="/sobre-nosotros"
+              onClick={() => setOpen(false)}
+              className={`px-3.5 py-2.5 text-[15px] rounded-lg ${sobreActive ? itemOn : itemOff}`}
+            >
+              Sobre nosotros
             </Link>
           </div>
 
