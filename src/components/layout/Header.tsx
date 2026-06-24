@@ -13,7 +13,7 @@ const itemOff = "text-ink-soft font-medium hover:text-turquoise hover:bg-turquoi
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [me, setMe] = useState<{ loggedIn: boolean; name?: string }>({ loggedIn: false });
-  const [nextCourseHref, setNextCourseHref] = useState("/formacion");
+  const [nextCourseHref, setNextCourseHref] = useState("/programas");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -31,8 +31,24 @@ export default function Header() {
       .catch(() => {});
   }, []);
 
-  const formacionActive = pathname === "/" || pathname.startsWith("/formacion");
-  const sobreActive = pathname.startsWith("/sobre-nosotros");
+  const navItems = [
+    { label: "Inicio", href: "/", active: pathname === "/" },
+    {
+      label: "Programas",
+      href: "/programas",
+      active:
+        pathname.startsWith("/programas") ||
+        pathname.startsWith("/curso") ||
+        pathname.startsWith("/formacion"),
+    },
+    { label: "Itinerario", href: "/itinerario", active: pathname.startsWith("/itinerario") },
+    { label: "Metodología", href: "/metodologia", active: pathname.startsWith("/metodologia") },
+    {
+      label: "Sobre nosotros",
+      href: "/sobre-nosotros",
+      active: pathname.startsWith("/sobre-nosotros"),
+    },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md backdrop-saturate-[1.8] border-b border-rule">
@@ -41,15 +57,15 @@ export default function Header() {
 
         {/* Navegación de escritorio */}
         <nav className="flex items-center gap-0.5 flex-1 max-md:hidden">
-          <Link href="/" className={`${itemBase} ${formacionActive ? itemOn : itemOff}`}>
-            Formación
-          </Link>
-          <Link
-            href="/sobre-nosotros"
-            className={`${itemBase} ${sobreActive ? itemOn : itemOff}`}
-          >
-            Sobre nosotros
-          </Link>
+          {navItems.map((it) => (
+            <Link
+              key={it.href}
+              href={it.href}
+              className={`${itemBase} ${it.active ? itemOn : itemOff}`}
+            >
+              {it.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2.5 ml-auto max-md:gap-2">
@@ -98,20 +114,16 @@ export default function Header() {
       {open && (
         <nav className="hidden max-md:block border-t border-rule bg-white px-5 py-4">
           <div className="flex flex-col gap-1">
-            <Link
-              href="/"
-              onClick={() => setOpen(false)}
-              className={`px-3.5 py-2.5 text-[15px] rounded-lg ${formacionActive ? itemOn : itemOff}`}
-            >
-              Formación
-            </Link>
-            <Link
-              href="/sobre-nosotros"
-              onClick={() => setOpen(false)}
-              className={`px-3.5 py-2.5 text-[15px] rounded-lg ${sobreActive ? itemOn : itemOff}`}
-            >
-              Sobre nosotros
-            </Link>
+            {navItems.map((it) => (
+              <Link
+                key={it.href}
+                href={it.href}
+                onClick={() => setOpen(false)}
+                className={`px-3.5 py-2.5 text-[15px] rounded-lg ${it.active ? itemOn : itemOff}`}
+              >
+                {it.label}
+              </Link>
+            ))}
           </div>
 
           <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-rule">

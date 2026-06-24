@@ -5,10 +5,10 @@ const columns = [
   {
     title: "Formación",
     items: [
-      { label: "Programas activos", href: "/formacion" },
-      { label: "Próximas ediciones", href: "/formacion" },
-      { label: "Para ayuntamientos", href: "/formacion" },
-      { label: "Para empresas", href: "/formacion" },
+      { label: "Programas", href: "/programas" },
+      { label: "Itinerario", href: "/itinerario" },
+      { label: "Metodología", href: "/metodologia" },
+      { label: "Sobre nosotros", href: "/sobre-nosotros" },
     ],
   },
   {

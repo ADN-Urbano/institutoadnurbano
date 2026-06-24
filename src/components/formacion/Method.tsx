@@ -14,9 +14,10 @@ export default function Method() {
         eyebrow="·· Metodología"
         title={
           <>
-            Aprende sobre <span className="text-turquoise">tu municipio</span>
+            Aprende sobre <span className="text-turquoise">política local</span>
           </>
         }
+        subtitle="Cada programa se concentra en tres semanas —una por bloque: el qué, el quién y el cómo— para que avances rápido sin perder profundidad."
       />
       <div className="grid grid-cols-1 gap-5 mb-24 md:grid-cols-3 max-sm:mb-14">
         {method.map((m) => (

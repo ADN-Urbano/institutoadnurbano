@@ -60,7 +60,7 @@ const landingFaq = [
   {
     question: "¿Cuánto tiempo tendré acceso a los materiales?",
     answer:
-      "Tendrás acceso total al campus virtual durante tres meses (el mes de formación y dos meses adicionales de consulta).",
+      "Tendrás acceso al campus virtual durante 6 meses desde la finalización del curso, para repasar los materiales y las grabaciones con calma.",
   },
   {
     question: "¿Cuándo y cómo son las sesiones en directo?",

@@ -1,5 +1,6 @@
 import type { CourseDetail } from "@/data/curso";
 import { CheckIcon, UsersIcon, ShieldIcon } from "@/components/ui/icons";
+import AccentTitle from "@/components/ui/AccentTitle";
 import EditionPurchase from "@/components/curso/EditionPurchase";
 
 const LIMITED_TEXT = "Máximo 30 participantes por edición";
@@ -12,6 +13,10 @@ export default function PurchaseCard({ course }: { course: CourseDetail }) {
         <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse-dot" />
         <span>Inscripción abierta</span>
       </div>
+
+      <h2 className="font-display font-extrabold text-[28px] leading-[0.95] tracking-[-0.02em] uppercase mb-5 max-sm:text-[24px]">
+        <AccentTitle title={course.title} accent={course.accent} />
+      </h2>
 
       {/* Roadmap de ediciones COMPRABLES como selector + botón (client). El
           contenido intermedio (plazas/garantía, feats) va como children para que
