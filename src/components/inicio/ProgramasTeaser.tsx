@@ -18,8 +18,8 @@ export default function ProgramasTeaser() {
         subtitle="Cursos prácticos de tres semanas para cada etapa de tu trayectoria."
         link={{ label: "Ver todos →", href: "/programas" }}
       />
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-        {programs.map((p) => {
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {programs.filter((p) => p.href).map((p) => {
           const open = p.badgeTone === "open";
           const inner = (
             <>

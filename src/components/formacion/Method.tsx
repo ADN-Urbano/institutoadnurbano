@@ -17,7 +17,7 @@ export default function Method() {
             Aprende sobre <span className="text-turquoise">política local</span>
           </>
         }
-        subtitle="Cada programa se concentra en tres semanas —una por bloque: el qué, el quién y el cómo— para que avances rápido sin perder profundidad."
+        subtitle="Tres pilares que combinan teoría flexible, casos reales en directo y trabajo aplicado a tu propio municipio."
       />
       <div className="grid grid-cols-1 gap-5 mb-24 md:grid-cols-3 max-sm:mb-14">
         {method.map((m) => (

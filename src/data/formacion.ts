@@ -160,7 +160,6 @@ export const nextStep = {
   options: [
     { label: "Hacia un nuevo mandato", href: "/curso/hacia-un-nuevo-mandato" },
     { label: "Construir la alternativa", href: "/curso/construir-la-alternativa" },
-    { label: "Gobernando con éxito", href: "/programas" },
   ],
 };
 
@@ -252,8 +251,12 @@ export const paraQuien = {
       desc: "Para ordenar la gestión, el relato y el proyecto de futuro del municipio.",
     },
     {
+      title: "Oposición que aspira a gobernar",
+      desc: "Para dejar de ser “el que critica” y convertirte en la alternativa real de gobierno.",
+    },
+    {
       title: "Concejales",
-      desc: "Tanto en gobierno como en la oposición, para ganar peso y estrategia.",
+      desc: "Para ganar método y estrategia en comercio, urbanismo, servicios o el área que lleves.",
     },
     {
       title: "Candidatos y futuros cargos",
@@ -297,4 +300,31 @@ export const comoFunciona = {
       desc: "Terminas con una estrategia y una hoja de ruta aplicables a tu propio municipio.",
     },
   ],
+};
+
+/* ---- Por qué tres semanas (metodología) ---- */
+export const tresSemanas = {
+  eyebrow: "·· El formato",
+  title: "Por qué tres semanas",
+  accent: "tres semanas",
+  intro:
+    "Tres semanas es el tiempo justo: suficiente para trabajar en profundidad sobre tu municipio, sin alargarse tanto que lo dejes a medias. Una semana por bloque, un directo por semana, y terminas con una estrategia lista para aplicar.",
+  weeks: [
+    {
+      num: "Semana 1",
+      block: "El QUÉ",
+      desc: "Analizas y diagnosticas: de dónde partes y qué quieres conseguir en tu municipio.",
+    },
+    {
+      num: "Semana 2",
+      block: "El QUIÉN",
+      desc: "Organizas tu equipo y el mapa de actores: con quién cuentas y a quién debes llegar.",
+    },
+    {
+      num: "Semana 3",
+      block: "El CÓMO",
+      desc: "Conviertes el diagnóstico en proyecto, mensaje y un plan de acciones concretas.",
+    },
+  ],
+  note: "Cada semana: teoría a tu ritmo + una sesión en directo por Teams donde trabajamos tu caso real. Las sesiones se graban, así que no pierdes nada si no puedes asistir.",
 };
