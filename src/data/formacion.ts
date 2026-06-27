@@ -158,8 +158,173 @@ export const nextStep = {
   desc: "Ya sea para mejorar tu gestión, afrontar el último año de legislatura o construir una alternativa de gobierno, encontrarás un programa diseñado para ayudarte a avanzar con más preparación y estrategia.",
   label: "Elige tu próximo paso",
   options: [
-    { label: "Hacia un nuevo mandato", href: "#hacia-un-nuevo-mandato" },
-    { label: "Construir la alternativa", href: "#construir-la-alternativa" },
-    { label: "Gobernando con éxito", href: "#gobernando-con-exito" },
+    { label: "Hacia un nuevo mandato", href: "/curso/hacia-un-nuevo-mandato" },
+    { label: "Construir la alternativa", href: "/curso/construir-la-alternativa" },
   ],
+};
+
+/* ---- Itinerario formativo (el programa completo) ---- */
+export type ItineraryStatus = "open" | "soon";
+
+export type ItineraryArea = {
+  title: string;
+  status: ItineraryStatus;
+  desc: string;
+  items: { label: string; href?: string }[];
+};
+
+export const itinerario: {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  subtitle: string;
+  areas: ItineraryArea[];
+} = {
+  eyebrow: "·· El programa",
+  title: "Un itinerario para gobernar lo local",
+  accent: "gobernar lo local",
+  subtitle:
+    "No son cursos sueltos: cada programa es un paso de una ruta completa de aprendizaje para cargos públicos.",
+  areas: [
+    {
+      title: "Estrategia y mandato",
+      status: "open",
+      desc: "Prepara cada etapa política: gobernar, construir una alternativa o afrontar el ciclo electoral.",
+      items: [
+        { label: "Hacia un nuevo mandato", href: "/curso/hacia-un-nuevo-mandato" },
+        { label: "Construir la alternativa", href: "/curso/construir-la-alternativa" },
+        { label: "Gobernando con éxito" },
+      ],
+    },
+    {
+      title: "Gestión municipal",
+      status: "soon",
+      desc: "Cómo funciona y se gestiona un ayuntamiento por dentro.",
+      items: [
+        { label: "Cómo funciona un ayuntamiento" },
+        { label: "Presupuestos y financiación" },
+        { label: "Contratación pública" },
+        { label: "Servicios y gestión del día a día" },
+      ],
+    },
+    {
+      title: "Liderazgo y equipos",
+      status: "soon",
+      desc: "Dirigir personas y construir equipos que funcionan.",
+      items: [
+        { label: "Dirección de personas" },
+        { label: "Gestión de equipos" },
+        { label: "Toma de decisiones" },
+      ],
+    },
+    {
+      title: "Comunicación pública",
+      status: "soon",
+      desc: "Conectar con la ciudadanía y contar lo que haces.",
+      items: [
+        { label: "Comunicación institucional" },
+        { label: "Relato y mensaje" },
+        { label: "Redes y medios" },
+      ],
+    },
+    {
+      title: "Territorio y urbanismo",
+      status: "soon",
+      desc: "La transformación del municipio y el espacio público — el ADN de ADN Urbano.",
+      items: [
+        { label: "Regeneración urbana" },
+        { label: "Espacio público y movilidad" },
+        { label: "Comercio y dinamización local" },
+      ],
+    },
+  ],
+};
+
+/* ---- Para quién es (inicio) ---- */
+export const paraQuien = {
+  eyebrow: "·· Para quién",
+  title: "Pensado para quienes lideran lo local",
+  accent: "lo local",
+  profiles: [
+    {
+      title: "Alcaldes y equipos de gobierno",
+      desc: "Para ordenar la gestión, el relato y el proyecto de futuro del municipio.",
+    },
+    {
+      title: "Oposición que aspira a gobernar",
+      desc: "Para dejar de ser “el que critica” y convertirte en la alternativa real de gobierno.",
+    },
+    {
+      title: "Concejales",
+      desc: "Para ganar método y estrategia en comercio, urbanismo, servicios o el área que lleves.",
+    },
+    {
+      title: "Candidatos y futuros cargos",
+      desc: "Para llegar preparados al ciclo electoral, sin improvisar.",
+    },
+    {
+      title: "Técnicos y responsables municipales",
+      desc: "Para convertir el trabajo del día a día en resultados visibles.",
+    },
+  ],
+};
+
+/* ---- Cómo funciona (metodología) ---- */
+export const comoFunciona = {
+  eyebrow: "·· Cómo funciona",
+  title: "Todo lo que incluye",
+  accent: "incluye",
+  items: [
+    {
+      title: "Directos por Microsoft Teams",
+      desc: "Una sesión por bloque (3 en total) para resolver casos reales. Si no puedes asistir, se graban y quedan en tu área en menos de 24 horas.",
+    },
+    {
+      title: "Campus Virtual",
+      desc: "Lecturas estructuradas, vídeos cortos de 5 a 15 minutos y un test de fijación por tema, para asimilar lo importante de forma ágil.",
+    },
+    {
+      title: "Soporte directo por WhatsApp",
+      desc: "Acceso al grupo de WhatsApp de ADN Local para resolver dudas y acompañarte durante todo el programa.",
+    },
+    {
+      title: "Acceso durante 6 meses",
+      desc: "Materiales y grabaciones disponibles 6 meses desde la finalización del curso.",
+    },
+    {
+      title: "Certificado de finalización",
+      desc: "Acreditación al completar el programa.",
+    },
+    {
+      title: "Trabajas sobre tu caso",
+      desc: "Terminas con una estrategia y una hoja de ruta aplicables a tu propio municipio.",
+    },
+  ],
+};
+
+/* ---- Por qué tres semanas (metodología) ---- */
+export const tresSemanas = {
+  eyebrow: "·· El formato",
+  title: "Por qué tres semanas",
+  accent: "tres semanas",
+  intro:
+    "Tres semanas es el tiempo justo: suficiente para trabajar en profundidad sobre tu municipio, sin alargarse tanto que lo dejes a medias. Una semana por bloque, un directo por semana, y terminas con una estrategia lista para aplicar.",
+  weeks: [
+    {
+      num: "Semana 1",
+      block: "El QUÉ",
+      desc: "Analizas y diagnosticas: de dónde partes y qué quieres conseguir en tu municipio.",
+    },
+    {
+      num: "Semana 2",
+      block: "El QUIÉN",
+      desc: "Organizas tu equipo y el mapa de actores: con quién cuentas y a quién debes llegar.",
+    },
+    {
+      num: "Semana 3",
+      block: "El CÓMO",
+      desc: "Conviertes el diagnóstico en proyecto, mensaje y un plan de acciones concretas.",
+    },
+  ],
+  note: "Cada semana: teoría a tu ritmo + una sesión en directo por Teams donde trabajamos tu caso real. Las sesiones se graban, así que no pierdes nada si no puedes asistir.",
 };
