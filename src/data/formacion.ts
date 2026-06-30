@@ -305,6 +305,64 @@ export const comoFunciona = {
   ],
 };
 
+/* ---- Metodología · hero + modelo (aprende paso a paso) ---- */
+export const methodHero = {
+  eyebrow: "·· Metodología",
+  title: "Todo lo que necesitas saber sobre política local",
+  accent: "sobre política local",
+  subtitle:
+    "Un modelo de formación flexible, práctico y aplicado para que cada responsable local construya su propio itinerario de aprendizaje.",
+  modelEyebrow: "·· El modelo",
+  modelTitle: "Aprende paso a paso",
+  modelAccent: "paso a paso",
+  modelParagraphs: [
+    "No creemos en formaciones largas donde aprendes de todo y acabas aplicando poco.",
+    "En ADN Local cada programa es una microcredencial: una formación especializada que desarrolla una competencia concreta para el ejercicio del gobierno local.",
+    "Puedes realizar un único programa o construir, poco a poco, un itinerario completo adaptado a tus necesidades.",
+  ],
+};
+
+/* ---- Metodología · competencias (microcredenciales) ---- */
+export const competencias = {
+  items: [
+    { label: "Estrategia local", icon: "target" },
+    { label: "Comunicación política", icon: "megaphone" },
+    { label: "Liderazgo", icon: "users" },
+    { label: "Gestión municipal", icon: "landmark" },
+    { label: "Participación ciudadana", icon: "chat" },
+    { label: "Comercio local", icon: "store" },
+    { label: "Urbanismo", icon: "city" },
+    { label: "Campaña electoral", icon: "ballot" },
+  ] as { label: string; icon: string }[],
+  footnote: "Tú decides qué programas necesitas y en qué orden.",
+  footnoteStrong: "Construye tu itinerario, paso a paso.",
+};
+
+/* ---- Metodología · así es aprender (rasgos) ---- */
+export const asiEsAprender = {
+  eyebrow: "·· Lo que nos define",
+  title: "Así es aprender en ADN Local",
+  accent: "en ADN Local",
+  items: [
+    { label: "Flexible", desc: "Aprende cuando puedas.", icon: "calendar" },
+    { label: "Práctica", desc: "Todo está pensado para aplicar.", icon: "wrench" },
+    { label: "Eficiente", desc: "Contenidos breves y directos.", icon: "bolt" },
+    { label: "Cercana", desc: "Acompañamiento durante todo el proceso.", icon: "heart" },
+    { label: "Especializada", desc: "Solo política y gestión local.", icon: "star" },
+    { label: "Aplicada", desc: "Metodologías basadas en casos reales.", icon: "check" },
+  ] as { label: string; desc: string; icon: string }[],
+};
+
+/* ---- Metodología · CTA construye tu itinerario ---- */
+export const construyeItinerario = {
+  title: "Construye tu propio itinerario",
+  desc: "Cada programa desarrolla una competencia concreta. Tú eliges por dónde empezar y cómo construir tu formación en gobierno local.",
+  ctaIntro: "Empieza ahora",
+  ctaSub: "Descubre los programas disponibles y elige el que mejor se adapta a tus necesidades.",
+  ctaLabel: "Ver programas disponibles",
+  ctaHref: "/programas",
+};
+
 /* ---- Por qué tres semanas (metodología) ---- */
 export const tresSemanas = {
   eyebrow: "·· El formato",

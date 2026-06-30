@@ -137,6 +137,109 @@ export function TeamsIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function TargetIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function MegaphoneIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" {...props}>
+      <path d="M4 10v4h3l7 4V6L7 10H4z" />
+      <path d="M17 9a4 4 0 0 1 0 6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function LandmarkIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 10l9-6 9 6z" />
+      <path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 21h18" />
+    </svg>
+  );
+}
+
+export function ChatIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" {...props}>
+      <path d="M21 11.5a8 8 0 0 1-8.5 8 9 9 0 0 1-4-1L3 20l1.5-4.5A8 8 0 1 1 21 11.5z" />
+    </svg>
+  );
+}
+
+export function StoreIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3.5 9 5 4h14l1.5 5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-5 0z" />
+      <path d="M5 11v9h14v-9M9 20v-5h6v5" />
+    </svg>
+  );
+}
+
+export function CityIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 21V9l6-3v15M9 21V4l11 4v13M3 21h18M13 11h2M13 15h2" />
+    </svg>
+  );
+}
+
+export function BallotIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="8" width="18" height="13" rx="2" />
+      <path d="M3 12h18M9 8V6a3 3 0 0 1 6 0v2" />
+    </svg>
+  );
+}
+
+export function CalendarIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="4.5" width="18" height="16" rx="2" />
+      <path d="M3 9h18M8 3v3M16 3v3" />
+    </svg>
+  );
+}
+
+export function WrenchIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9l-3.8 3.8z" />
+    </svg>
+  );
+}
+
+export function BoltIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" {...props}>
+      <path d="M13 2 3 14h8l-1 8 10-12h-8l1-8z" />
+    </svg>
+  );
+}
+
+export function HeartIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" {...props}>
+      <path d="M12 20s-7-4.4-9.3-9A5 5 0 0 1 12 6a5 5 0 0 1 9.3 5c-2.3 4.6-9.3 9-9.3 9z" />
+    </svg>
+  );
+}
+
+export function StarIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" {...props}>
+      <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" />
+    </svg>
+  );
+}
+
 /** Icono según formato de recurso. */
 export function FormatIcon({ format, ...props }: { format: string } & SVGProps<SVGSVGElement>) {
   switch (format) {

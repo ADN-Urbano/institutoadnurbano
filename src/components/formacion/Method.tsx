@@ -11,10 +11,10 @@ export default function Method() {
   return (
     <section>
       <SectionHead
-        eyebrow="·· Metodología"
+        eyebrow="·· La experiencia"
         title={
           <>
-            Aprende sobre <span className="text-turquoise">política local</span>
+            Formación <span className="text-turquoise">adaptada a tus necesidades</span>
           </>
         }
         subtitle="Tres pilares que combinan teoría flexible, casos reales en directo y trabajo aplicado a tu propio municipio."
