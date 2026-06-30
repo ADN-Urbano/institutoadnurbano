@@ -2,6 +2,7 @@ import Link from "next/link";
 import { programs, type Program, type PriceTone } from "@/data/formacion";
 import SectionHead from "@/components/ui/SectionHead";
 import AccentTitle from "@/components/ui/AccentTitle";
+import LeadForm from "@/components/marketing/LeadForm";
 import { UsersIcon, ShieldIcon, ArrowRight } from "@/components/ui/icons";
 
 const priceColor: Record<PriceTone, string> = {
@@ -100,11 +101,22 @@ function ProgramCard({ program }: { program: Program }) {
       )}
 
       {program.priority && (
-        <div className="bg-turquoise-soft rounded-2xl p-6 mt-auto">
-          <div className="font-display font-extrabold text-[22px] tracking-[-0.01em] uppercase text-turquoise-dark mb-2">
-            {program.priority.title}
+        <div className="mt-auto">
+          <div className="bg-turquoise-soft rounded-2xl p-6">
+            <div className="font-display font-extrabold text-[22px] tracking-[-0.01em] uppercase text-turquoise-dark mb-2">
+              {program.priority.title}
+            </div>
+            <p className="text-sm leading-[1.55] text-ink-soft">{program.priority.desc}</p>
           </div>
-          <p className="text-sm leading-[1.55] text-ink-soft">{program.priority.desc}</p>
+          {/* Captación de lista de espera (no hay ficha propia para este curso). */}
+          <LeadForm
+            type="lista-espera"
+            fields={["municipio"]}
+            courseSlug={program.id}
+            submitLabel="Quiero recibir información →"
+            successMessage="¡Hecho! Te avisaremos en cuanto abra la próxima edición."
+            className="mt-5"
+          />
         </div>
       )}
 
@@ -121,23 +133,75 @@ function ProgramCard({ program }: { program: Program }) {
   );
 }
 
-export default function Programs() {
+/** Tarjeta vacía de "próximo programa" (futuras formaciones aún sin definir). */
+function PlaceholderCard() {
   return (
-    <section id="programas" className="scroll-mt-24">
-      <SectionHead
-        eyebrow="·· Catálogo"
-        title={
-          <>
-            Nuestros <span className="text-turquoise">programas</span>
-          </>
-        }
-        subtitle="Diseñados para ayudarte a afrontar cada etapa de tu trayectoria."
-      />
-      <div className="grid grid-cols-1 gap-5 mb-24 lg:grid-cols-2 max-sm:mb-14">
-        {programs.map((p) => (
-          <ProgramCard key={p.id} program={p} />
-        ))}
-      </div>
-    </section>
+    <article className="border border-dashed border-rule rounded-3xl p-8 flex flex-col items-center justify-center text-center min-h-[260px]">
+      <span className="w-16 h-16 rounded-full border border-dashed border-ink-muted/40 flex items-center justify-center mb-5">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          className="w-7 h-7 text-ink-muted/50"
+          aria-hidden
+        >
+          <rect x="3" y="4.5" width="18" height="16" rx="2" />
+          <path d="M3 9h18M8 3v3M16 3v3" strokeLinecap="round" />
+        </svg>
+      </span>
+      <span className="font-mono text-[12px] text-ink-muted tracking-[0.06em] uppercase">
+        Próximo programa
+      </span>
+      <span className="w-8 h-px bg-turquoise mt-4" />
+    </article>
+  );
+}
+
+export default function Programs() {
+  const openPrograms = programs.filter((p) => p.badgeTone === "open");
+  const soonPrograms = programs.filter((p) => p.badgeTone === "soon");
+  // Rellenamos "próximos" hasta 3 columnas con placeholders.
+  const placeholders = Math.max(0, 3 - soonPrograms.length);
+
+  return (
+    <>
+      <section id="programas" className="scroll-mt-24">
+        <SectionHead
+          eyebrow="·· Catálogo"
+          title={
+            <>
+              Programas <span className="text-turquoise">abiertos</span>
+            </>
+          }
+          subtitle="Formación disponible para que empieces hoy tu desarrollo como líder local."
+        />
+        <div className="grid grid-cols-1 gap-5 mb-20 lg:grid-cols-2 max-sm:mb-14">
+          {openPrograms.map((p) => (
+            <ProgramCard key={p.id} program={p} />
+          ))}
+        </div>
+      </section>
+
+      <section id="proximos-programas" className="scroll-mt-24">
+        <SectionHead
+          eyebrow="·· Catálogo"
+          title={
+            <>
+              Próximos <span className="text-turquoise">programas</span>
+            </>
+          }
+          subtitle="Nuevas formaciones en desarrollo para seguir ampliando tus competencias como líder local."
+        />
+        <div className="grid grid-cols-1 gap-5 mb-24 lg:grid-cols-3 max-sm:mb-14">
+          {soonPrograms.map((p) => (
+            <ProgramCard key={p.id} program={p} />
+          ))}
+          {Array.from({ length: placeholders }).map((_, i) => (
+            <PlaceholderCard key={`placeholder-${i}`} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
