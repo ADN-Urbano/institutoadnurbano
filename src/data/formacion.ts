@@ -6,7 +6,7 @@
 
 /* ---- Hero ---- */
 export const hero = {
-  eyebrow: "Instituto ADN Local · Formación",
+  eyebrow: "ADN Local · Formación",
   title: "El espacio de referencia de los líderes locales",
   accent: "líderes locales",
   summary:
@@ -90,6 +90,7 @@ export type Program = {
   badgeTone: "open" | "soon";
   title: string;
   accent: string;
+  subtitle?: string;
   desc: string;
   tiers?: PriceTier[];
   limited?: string;
@@ -105,11 +106,12 @@ const limitedText = "Máximo 30 participantes por edición";
 export const programs: Program[] = [
   {
     id: "hacia-un-nuevo-mandato",
-    num: "Curso 01 · Edición julio 2026",
+    num: "Edición julio 2026",
     badge: "Inscripción abierta",
     badgeTone: "open",
     title: "Hacia un nuevo mandato",
     accent: "mandato",
+    subtitle: "Prepara el último año de legislatura.",
     href: "/curso/hacia-un-nuevo-mandato",
     desc: "Dirigido a alcaldes y equipos de gobierno en ejercicio, este programa te ayuda a preparar el cierre de la legislatura y afrontar con garantías el próximo ciclo electoral. Analiza tu legislatura, organiza tu equipo, construye tu proyecto de futuro y prepara la estrategia que te permitirá afrontar con garantías el próximo proceso electoral.",
     tiers: [
@@ -122,11 +124,12 @@ export const programs: Program[] = [
   },
   {
     id: "construir-la-alternativa",
-    num: "Curso 02 · Edición septiembre 2026",
+    num: "Edición septiembre 2026",
     badge: "Inscripción abierta",
     badgeTone: "open",
     title: "Construir la alternativa",
     accent: "alternativa",
+    subtitle: "Prepara la candidatura que tu municipio espera.",
     href: "/curso/construir-la-alternativa",
     desc: "Dirigido a concejales y equipos que ejercen la oposición y quieren convertirse en una alternativa sólida y creíble de gobierno. Aprende a analizar el contexto político, construir un proyecto capaz de ilusionar a los vecinos, organizar tu equipo y diseñar una estrategia que te permita ganar su confianza y optar al gobierno municipal.",
     tiers: [
@@ -139,7 +142,7 @@ export const programs: Program[] = [
   },
   {
     id: "gobernando-con-exito",
-    num: "Curso 03 · Próximas ediciones",
+    num: "Próximas ediciones",
     badge: "Reserva tu plaza",
     badgeTone: "soon",
     title: "Gobernando con éxito",
@@ -285,7 +288,7 @@ export const comoFunciona = {
     },
     {
       title: "Soporte directo por WhatsApp",
-      desc: "Acceso al grupo de WhatsApp de ADN Local para resolver dudas y acompañarte durante todo el programa.",
+      desc: "Acceso a nuestro contacto de Whatsapp de ADN Local para resolver dudas y acompañarte durante todo el programa.",
     },
     {
       title: "Acceso durante 6 meses",

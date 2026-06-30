@@ -12,15 +12,6 @@ const columns = [
     ],
   },
   {
-    title: "ADN Urbano",
-    items: [
-      { label: "Sobre nosotros", href: "/sobre-nosotros" },
-      { label: "Equipo", href: "/sobre-nosotros" },
-      { label: "Servicios", href: "https://adnurbano.es" },
-      { label: "Contacto", href: "mailto:hola@adnlocal.es" },
-    ],
-  },
-  {
     title: "Legal",
     items: [
       { label: "Aviso legal", href: "/aviso-legal" },
@@ -35,14 +26,13 @@ export default function Footer() {
   return (
     <footer className="bg-turquoise-deep text-white pt-16 pb-8 mt-20">
       <div className="max-w-[1320px] mx-auto px-8">
-        <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-12 pb-12 border-b border-white/15 mb-7 max-lg:grid-cols-2 max-sm:grid-cols-1">
+        <div className="grid grid-cols-[2fr_1fr_1fr] gap-12 pb-12 border-b border-white/15 mb-7 max-lg:grid-cols-2 max-sm:grid-cols-1">
           <div>
             <div className="mb-[18px]">
-              <BrandLogo tone="yellow" href={null} />
+              <BrandLogo tone="yellow" href={null} size="lg" />
             </div>
             <p className="text-sm leading-relaxed text-white/75 max-w-[280px]">
-              Una iniciativa de ADN Urbano. Política local, comercio, movilidad y espacio
-              público.
+              El espacio de referencia de los líderes locales.
             </p>
           </div>
 
@@ -56,6 +46,8 @@ export default function Footer() {
                   <li key={item.label}>
                     <Link
                       href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-[13px] text-white/75 transition-colors hover:text-white"
                     >
                       {item.label}
@@ -67,9 +59,8 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="flex justify-between font-mono text-[11px] text-white/50 tracking-[0.04em] uppercase max-sm:flex-col max-sm:gap-2">
+        <div className="font-mono text-[11px] text-white/50 tracking-[0.04em] uppercase">
           <span>© 2026 ADN Urbano · adnlocal.es</span>
-          <span>San Rafael &amp; Madrid</span>
         </div>
       </div>
     </footer>

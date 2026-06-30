@@ -9,7 +9,7 @@ export default function ProgramasTeaser() {
   return (
     <section className="mb-24 max-sm:mb-14">
       <SectionHead
-        eyebrow="·· Programas"
+        eyebrow="·· Microcredenciales"
         title={
           <>
             Nuestros <span className="text-turquoise">programas</span>
@@ -39,6 +39,9 @@ export default function ProgramasTeaser() {
               <h3 className="font-display font-extrabold text-[28px] leading-[0.95] uppercase tracking-[-0.02em] mb-2.5 max-sm:text-[24px]">
                 <AccentTitle title={p.title} accent={p.accent} />
               </h3>
+              {p.subtitle && (
+                <p className="text-[15px] font-semibold text-ink mb-2 leading-snug">{p.subtitle}</p>
+              )}
               <p className="text-sm leading-[1.55] text-ink-soft line-clamp-3">{p.desc}</p>
             </>
           );

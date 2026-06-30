@@ -6,12 +6,16 @@ import Image from "next/image";
  * trazo). tone="brand" (turquesa original, header) | tone="yellow" (footer
  * sobre fondo oscuro: se aclara a blanco para contraste).
  */
+const sizeClass = { sm: "h-9", md: "h-11", lg: "h-14" } as const;
+
 export default function BrandLogo({
   tone = "brand",
   href = "/",
+  size = "sm",
 }: {
   tone?: "brand" | "yellow";
   href?: string | null;
+  size?: keyof typeof sizeClass;
 }) {
   const mark = (
     <Image
@@ -20,7 +24,7 @@ export default function BrandLogo({
       width={580}
       height={308}
       priority
-      className={`h-9 w-auto ${tone === "yellow" ? "brightness-0 invert" : ""}`}
+      className={`${sizeClass[size]} w-auto ${tone === "yellow" ? "brightness-0 invert" : ""}`}
     />
   );
 

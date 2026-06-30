@@ -53,7 +53,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md backdrop-saturate-[1.8] border-b border-rule">
       <div className="max-w-[1320px] mx-auto px-8 h-[76px] flex items-center gap-10 max-md:px-5 max-md:gap-4">
-        <BrandLogo href="/" />
+        <BrandLogo href="/" size="md" />
 
         {/* Navegación de escritorio */}
         <nav className="flex items-center gap-0.5 flex-1 max-md:hidden">
