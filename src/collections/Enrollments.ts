@@ -54,5 +54,29 @@ export const Enrollments: CollectionConfig = {
         { name: "certificateUrl", type: "text", admin: { width: "50%", readOnly: true } },
       ],
     },
+    {
+      name: "source",
+      type: "group",
+      admin: {
+        description:
+          "Origen de la venta (heredado del Lead por email en el webhook de Stripe). Para reporting de ingresos por canal.",
+      },
+      fields: [
+        {
+          type: "row",
+          fields: [
+            { name: "source", type: "text", admin: { width: "50%", readOnly: true } },
+            { name: "medium", type: "text", admin: { width: "50%", readOnly: true } },
+          ],
+        },
+        {
+          type: "row",
+          fields: [
+            { name: "campaign", type: "text", admin: { width: "50%", readOnly: true } },
+            { name: "leadType", type: "text", admin: { width: "50%", readOnly: true } },
+          ],
+        },
+      ],
+    },
   ],
 };

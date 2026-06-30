@@ -10,6 +10,7 @@ import { Students } from "./collections/Students";
 import { Courses } from "./collections/Courses";
 import { CourseEditions } from "./collections/CourseEditions";
 import { Enrollments } from "./collections/Enrollments";
+import { Leads } from "./collections/Leads";
 import { Media } from "./collections/Media";
 
 const filename = fileURLToPath(import.meta.url);
@@ -23,7 +24,7 @@ export default buildConfig({
       titleSuffix: " · ADN Local",
     },
   },
-  collections: [Users, Students, Courses, CourseEditions, Enrollments, Media],
+  collections: [Users, Students, Courses, CourseEditions, Enrollments, Leads, Media],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

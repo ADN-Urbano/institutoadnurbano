@@ -4,6 +4,7 @@ import { getStripe, isFullRefund } from "@/lib/stripe";
 import { getPayloadClient } from "@/lib/payload";
 import { createMagicToken, newNonce } from "@/lib/session";
 import { sendWelcome } from "@/lib/email";
+import { sendCapiEvent } from "@/lib/meta-capi";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -128,7 +129,7 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     return;
   }
 
-  await payload.create({
+  const enrollment = await payload.create({
     collection: "enrollments",
     data: {
       student: student.id,
@@ -140,6 +141,30 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     },
   });
   console.log("[stripe webhook] inscripción creada", { email, courseId, editionId });
+
+  // Atribución hasta la venta: enlazar el Lead del comprador (por email) con
+  // esta inscripción y copiar su origen al Enrollment para reporting por canal.
+  // Best-effort: cualquier fallo aquí no debe romper el alta.
+  try {
+    await linkLeadToEnrollment(email, enrollment.id);
+  } catch (err) {
+    console.error("[stripe webhook] fallo al enlazar Lead↔Enrollment:", err);
+  }
+
+  // CAPI: evento Purchase (valor = total cobrado en euros). Degradación suave:
+  // sin creds de Meta no envía nada. No bloquea el alta.
+  try {
+    const value = typeof session.amount_total === "number" ? session.amount_total / 100 : undefined;
+    void sendCapiEvent({
+      eventName: "Purchase",
+      eventId: paymentId,
+      user: { email },
+      value,
+      currency: (session.currency ?? "eur").toUpperCase(),
+    });
+  } catch (err) {
+    console.error("[stripe webhook] fallo al disparar CAPI Purchase:", err);
+  }
 
   // Email de bienvenida con acceso directo (enlace mágico de un solo uso).
   try {
@@ -156,6 +181,46 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     // No bloquear el alta por un fallo de email; el alumno puede entrar por /acceder.
     console.error("[stripe webhook] fallo al enviar email de bienvenida:", err);
   }
+}
+
+/**
+ * Enlaza el Lead del comprador (el más reciente con su email) a la inscripción
+ * y copia su origen (first-touch + tipo de lead) al Enrollment, para el
+ * reporting de ingresos por canal. Si no hay Lead (compra sin registro previo),
+ * no hace nada. La búsqueda del email no es sensible a mayúsculas (ya normalizado).
+ */
+async function linkLeadToEnrollment(email: string, enrollmentId: number | string) {
+  const payload = await getPayloadClient();
+  const found = await payload.find({
+    collection: "leads",
+    where: { email: { equals: email } },
+    sort: "-createdAt",
+    limit: 1,
+    depth: 0,
+  });
+  const lead = found.docs[0] as
+    | { id: number | string; type?: string; firstTouch?: { source?: string; medium?: string; campaign?: string } }
+    | undefined;
+  if (!lead) return;
+
+  // (a) enlazar el lead con la inscripción.
+  await payload.update({ collection: "leads", id: lead.id, data: { enrollment: enrollmentId } });
+
+  // (b) copiar el origen al Enrollment.
+  const ft = lead.firstTouch ?? {};
+  await payload.update({
+    collection: "enrollments",
+    id: enrollmentId,
+    data: {
+      source: {
+        source: ft.source,
+        medium: ft.medium,
+        campaign: ft.campaign,
+        leadType: lead.type,
+      },
+    },
+  });
+  console.log("[stripe webhook] Lead enlazado a la inscripción", { leadId: lead.id, enrollmentId });
 }
 
 async function revokeRefund(charge: Stripe.Charge) {

@@ -23,6 +23,14 @@ export default function CookiesPage() {
           <strong>Analíticas (opcionales):</strong> nos ayudan a entender de forma agregada cómo se usa
           el sitio para mejorarlo. Solo se activan si las aceptas.
         </li>
+        <li>
+          <strong>Publicitarias / de medición (opcionales):</strong> usamos el píxel de Meta (Facebook
+          e Instagram) y el Insight Tag de LinkedIn para medir la eficacia de nuestras campañas y
+          mostrar contenidos relevantes. Estas tecnologías de terceros <strong>solo se cargan si
+          aceptas</strong> las cookies opcionales. Además, podemos enviar a estas plataformas eventos
+          de conversión desde nuestro servidor (Conversions API) con tu email cifrado (hash), para
+          medir registros y compras.
+        </li>
       </ul>
 
       <h2>3. Gestión del consentimiento</h2>

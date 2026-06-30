@@ -55,8 +55,8 @@ export default async function CursoPage({
       <Instructor instructor={course.instructor} />
       {/* 9 · FAQ */}
       <Faq faq={course.faq} />
-      {/* 10 · ¿Necesitas más información? (form presentacional) */}
-      <InfoContact programPdfLabel={course.programPdfLabel} />
+      {/* 10 · ¿Necesitas más información? (form → Lead) */}
+      <InfoContact programPdfLabel={course.programPdfLabel} courseSlug={course.slug} />
       {/* 11 · Webinar gratuito */}
       <WebinarCurso webinar={course.webinar} />
       {/* 12 · CTA final */}

@@ -27,6 +27,19 @@ export default function PrivacidadPage() {
           <strong>Newsletter y comunicaciones:</strong> email, si te suscribes, para enviarte
           contenidos e información sobre cursos. Puedes darte de baja en cualquier momento.
         </li>
+        <li>
+          <strong>Captación y webinars:</strong> los datos que nos facilitas al registrarte en un
+          webinar, descargar materiales, escribirnos o apuntarte a una lista de espera (email,
+          nombre, municipio, situación), para atender tu solicitud y enviarte comunicaciones
+          relacionadas. La base es tu consentimiento; puedes retirarlo cuando quieras.
+        </li>
+        <li>
+          <strong>Medición publicitaria:</strong> si aceptas las cookies opcionales, usamos el píxel
+          de Meta y el Insight Tag de LinkedIn y podemos enviar a estas plataformas eventos de
+          conversión (registro, compra) desde nuestro servidor con tu email cifrado mediante hash,
+          con el fin de medir y optimizar nuestras campañas. Puedes consultar las políticas de
+          privacidad de Meta y LinkedIn para más información.
+        </li>
       </ul>
 
       <h2>3. Legitimación</h2>
