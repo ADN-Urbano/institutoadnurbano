@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LandingHero from "@/components/formacion/LandingHero";
 import ParaQuien from "@/components/inicio/ParaQuien";
 import ProgramasTeaser from "@/components/inicio/ProgramasTeaser";
-import Cita from "@/components/inicio/Cita";
+import WhyAdn from "@/components/formacion/WhyAdn";
 import NextStep from "@/components/formacion/NextStep";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function InicioPage() {
       <LandingHero />
       <ParaQuien />
       <ProgramasTeaser />
-      <Cita />
+      <WhyAdn />
       <NextStep />
     </main>
   );

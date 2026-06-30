@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import SobreHero from "@/components/sobre/SobreHero";
-import WhyAdn from "@/components/formacion/WhyAdn";
 import QueHacemos from "@/components/sobre/QueHacemos";
 import Equipo from "@/components/sobre/Equipo";
 import AdnUrbano from "@/components/sobre/AdnUrbano";
@@ -16,7 +15,6 @@ export default function SobreNosotrosPage() {
   return (
     <main className="max-w-[1320px] mx-auto px-8 pt-14 pb-24 max-sm:px-5">
       <SobreHero />
-      <WhyAdn />
       <QueHacemos />
       <Equipo />
       <AdnUrbano />
