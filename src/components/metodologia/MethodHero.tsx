@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { methodHero } from "@/data/formacion";
 import AccentTitle from "@/components/ui/AccentTitle";
 
@@ -5,16 +6,29 @@ import AccentTitle from "@/components/ui/AccentTitle";
 export default function MethodHero() {
   return (
     <section className="mb-24 max-sm:mb-16">
-      <div className="max-w-[820px] mb-16 max-sm:mb-12">
-        <div className="font-mono text-[11px] font-medium text-coral tracking-[0.06em] uppercase mb-4">
-          {methodHero.eyebrow}
+      <div className="grid grid-cols-1 gap-12 items-center mb-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 max-sm:mb-12">
+        <div>
+          <div className="font-mono text-[11px] font-medium text-coral tracking-[0.06em] uppercase mb-4">
+            {methodHero.eyebrow}
+          </div>
+          <h1 className="font-display font-extrabold text-[42px] leading-[0.95] tracking-[-0.025em] uppercase mb-5 md:text-[54px] lg:text-[60px]">
+            <AccentTitle title={methodHero.title} accent={methodHero.accent} />
+          </h1>
+          <p className="text-[18px] leading-[1.55] text-ink-soft max-w-[560px] max-sm:text-base">
+            {methodHero.subtitle}
+          </p>
         </div>
-        <h1 className="font-display font-extrabold text-[68px] leading-[0.95] tracking-[-0.025em] uppercase mb-5 max-lg:text-[52px] max-sm:text-[38px]">
-          <AccentTitle title={methodHero.title} accent={methodHero.accent} />
-        </h1>
-        <p className="text-[18px] leading-[1.55] text-ink-soft max-w-[640px] max-sm:text-base">
-          {methodHero.subtitle}
-        </p>
+
+        <div className="relative w-full aspect-[4/3] rounded-[28px] overflow-hidden lg:aspect-[5/6] max-sm:aspect-[16/11]">
+          <Image
+            src="/img/metodologia.jpg"
+            alt="Edificio institucional de un municipio español"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 48vw"
+            className="object-cover"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] items-start border-t border-rule pt-16 max-sm:pt-12">
