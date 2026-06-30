@@ -41,8 +41,21 @@ export const Leads: CollectionConfig = {
   slug: "leads",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["email", "type", "situacion", "firstTouch.source", "createdAt"],
+    // Vista "por origen": source/campaign/content al frente. En el listado usa
+    // "Filters" para acotar (p. ej. firstTouch.source = instagram) y ordena por
+    // cualquier columna. firstTouch.content = el anuncio concreto (utm_content).
+    defaultColumns: [
+      "email",
+      "type",
+      "firstTouch.source",
+      "firstTouch.campaign",
+      "firstTouch.content",
+      "situacion",
+      "createdAt",
+    ],
     group: "Marketing",
+    description:
+      "Origen de cada lead en las columnas first touch. Filtra por 'Firsttouch → Source' (instagram/linkedin/…) y 'Firsttouch → Content' (el anuncio) para ver qué creatividad trae cada lead. El origen llega a la venta vía el campo Enrollment.",
   },
   access: {
     create: () => true, // la crea el endpoint público /api/leads
