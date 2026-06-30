@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { paraQuien } from "@/data/formacion";
 import SectionHead from "@/components/ui/SectionHead";
 
@@ -13,16 +14,28 @@ export default function ParaQuien() {
           </>
         }
       />
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {paraQuien.profiles.map((p) => (
-          <div
-            key={p.title}
-            className="border border-rule rounded-2xl p-6 transition-colors hover:border-turquoise"
-          >
-            <h3 className="font-heading font-bold text-[17px] leading-tight mb-2">{p.title}</h3>
-            <p className="text-sm leading-[1.55] text-ink-muted">{p.desc}</p>
-          </div>
-        ))}
+      <div className="grid grid-cols-1 gap-8 items-stretch lg:grid-cols-[1.6fr_1fr] lg:gap-10">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {paraQuien.profiles.map((p) => (
+            <div
+              key={p.title}
+              className="border border-rule rounded-2xl p-6 transition-colors hover:border-turquoise"
+            >
+              <h3 className="font-heading font-bold text-[17px] leading-tight mb-2">{p.title}</h3>
+              <p className="text-sm leading-[1.55] text-ink-muted">{p.desc}</p>
+            </div>
+          ))}
+        </div>
+        {/* Imagen lateral (acompaña los perfiles, ocupa toda la altura). */}
+        <div className="relative rounded-[24px] overflow-hidden min-h-[280px] lg:min-h-0 max-lg:aspect-[16/10]">
+          <Image
+            src="/img/para-quien.jpg"
+            alt="Edificio institucional de un municipio español"
+            fill
+            sizes="(max-width: 1024px) 100vw, 40vw"
+            className="object-cover"
+          />
+        </div>
       </div>
     </section>
   );

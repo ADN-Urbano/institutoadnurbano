@@ -1,10 +1,12 @@
+import Image from "next/image";
 import { why } from "@/data/formacion";
 
-/** Sección "¿Por qué ADN Local?": texto explicativo + cita destacada. */
+/** Sección "¿Por qué ADN Local?": texto explicativo + cita destacada + imagen. */
 export default function WhyAdn() {
   return (
-    <section className="grid grid-cols-1 gap-12 items-start mb-24 lg:grid-cols-[1.4fr_1fr] lg:gap-16 max-sm:mb-14">
-      <div>
+    <section className="mb-24 max-sm:mb-14">
+      <div className="grid grid-cols-1 gap-12 items-start lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+        <div>
         <h2 className="font-display font-extrabold text-[52px] leading-[0.95] tracking-[-0.02em] uppercase mb-8 max-lg:text-[40px] max-sm:text-[34px]">
           ¿Por qué <span className="text-turquoise">ADN Local</span>?
         </h2>
@@ -29,7 +31,18 @@ export default function WhyAdn() {
             </span>
           ))}
         </blockquote>
-      </figure>
+        </figure>
+      </div>
+
+      <div className="relative w-full aspect-[21/8] rounded-[24px] overflow-hidden mt-12 max-sm:aspect-[3/2] max-sm:mt-8">
+        <Image
+          src="/img/municipio.jpg"
+          alt="Vista de un municipio español"
+          fill
+          sizes="(max-width: 1320px) 100vw, 1320px"
+          className="object-cover"
+        />
+      </div>
     </section>
   );
 }
