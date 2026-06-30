@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { CourseDetail } from "@/data/curso";
 import AccentTitle from "@/components/ui/AccentTitle";
 import PurchaseCard from "@/components/curso/PurchaseCard";
+import LeadForm from "@/components/marketing/LeadForm";
 
 export default function CourseHero({ course }: { course: CourseDetail }) {
   return (
@@ -45,17 +46,17 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
           </div>
         </div>
 
-        {course.defaultEditionId ? <PurchaseCard course={course} /> : <ComingSoonCard />}
+        {course.defaultEditionId ? <PurchaseCard course={course} /> : <ComingSoonCard slug={course.slug} />}
       </div>
     </>
   );
 }
 
 /**
- * Tarjeta cuando no hay edición abierta a la venta (P1, Fase 1): informativa,
- * sin botón de compra. La captura de email/lista de espera es Fase 2.
+ * Tarjeta cuando no hay edición abierta a la venta: informativa + captura de
+ * lista de espera (Lead `lista-espera`).
  */
-function ComingSoonCard() {
+function ComingSoonCard({ slug }: { slug: string }) {
   return (
     <aside className="bg-white border-2 border-ink rounded-3xl p-8 sticky top-[100px] self-start shadow-[var(--shadow-md)] max-lg:static max-sm:p-6">
       <div className="inline-flex items-center gap-2 bg-yellow-soft text-[#9a7b15] px-3 py-[5px] rounded-full font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-[22px]">
@@ -63,12 +64,19 @@ function ComingSoonCard() {
         <span>Próximamente</span>
       </div>
       <div className="font-display font-extrabold text-[34px] leading-[0.95] tracking-[-0.02em] uppercase mb-3">
-        Inscripción cerrada
+        Acceso prioritario
       </div>
-      <p className="text-[15px] leading-[1.55] text-ink-soft">
-        Ahora mismo no hay una convocatoria abierta para este programa. Estamos preparando la
-        próxima edición: vuelve pronto para conocer fechas y plazas.
+      <p className="text-[15px] leading-[1.55] text-ink-soft mb-6">
+        Aún no hay convocatoria abierta para este programa. Déjanos tus datos y te avisamos antes
+        que nadie cuando abra la próxima edición.
       </p>
+      <LeadForm
+        type="lista-espera"
+        fields={["name", "municipio"]}
+        courseSlug={slug}
+        submitLabel="Avísame →"
+        successMessage="¡Hecho! Te avisaremos cuando abra la edición."
+      />
     </aside>
   );
 }

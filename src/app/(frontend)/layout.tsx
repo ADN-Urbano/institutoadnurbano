@@ -9,6 +9,8 @@ import "../globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CookieBanner from "@/components/CookieBanner";
+import AttributionInit from "@/components/marketing/AttributionInit";
+import PixelLoader from "@/components/marketing/PixelLoader";
 
 /* Sustitutos de las tipografías de pago del brandbook.
    Para cambiar a las oficiales (Fold-No.21, Basier Circle, Basier Circle Mono)
@@ -54,6 +56,8 @@ export default function RootLayout({
       <body
         className={`${bigShoulders.variable} ${archivo.variable} ${dmSans.variable} ${dmMono.variable} antialiased`}
       >
+        <AttributionInit />
+        <PixelLoader />
         <Header />
         {children}
         <Footer />

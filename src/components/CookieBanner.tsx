@@ -22,6 +22,14 @@ export default function CookieBanner() {
     } catch {
       /* noop */
     }
+    // Avisa al PixelLoader para que cargue los píxeles sin recargar la página.
+    if (value === "accepted") {
+      try {
+        window.dispatchEvent(new Event("adn-consent"));
+      } catch {
+        /* noop */
+      }
+    }
     setShow(false);
   }
 

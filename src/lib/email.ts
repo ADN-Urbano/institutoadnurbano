@@ -69,3 +69,184 @@ export async function sendWelcome(email: string, link: string, courseTitle: stri
   }
   return true;
 }
+
+/* ----------------------------------------------------------------------------
+ * Emails de captación (leads). Drip SIN cron: la secuencia del webinar se
+ * programa al registrar usando `scheduledAt` de Resend (offsets desde "ahora").
+ * COPY: borradores pendientes de aprobación por el cliente.
+ * -------------------------------------------------------------------------- */
+
+const WEBINAR_VER_PATH = "/webinar/ver";
+
+function serverUrl(): string {
+  const raw = (process.env.NEXT_PUBLIC_SERVER_URL || "https://www.adnlocal.es").trim().replace(/\/+$/, "");
+  return /^https?:\/\//.test(raw) ? raw : `https://${raw}`;
+}
+
+/** ISO de (ahora + horas) para programar un email con Resend (`scheduledAt`). */
+function inHours(h: number): string {
+  return new Date(Date.now() + h * 60 * 60 * 1000).toISOString();
+}
+
+/**
+ * Secuencia del webinar (4 emails) programada de golpe al registrar:
+ *  1. inmediato      → acceso a "ver el webinar"
+ *  2. +24 h          → valor + recordatorio
+ *  3. +48 h          → oferta (-40%) + deadline
+ *  4. +66 h          → últimas horas (la oferta caduca a las 72 h)
+ * Degradación suave: sin RESEND_API_KEY no envía nada (devuelve false).
+ * COPY borrador — pendiente de aprobación del cliente.
+ */
+export async function sendWebinarSequence(email: string): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+  const watch = `${serverUrl()}${WEBINAR_VER_PATH}`;
+
+  const steps: { subject: string; html: string; scheduledAt?: string }[] = [
+    {
+      subject: "Tu acceso al webinar gratuito · ADN Local",
+      html: shell(
+        "Ya puedes ver el webinar",
+        "Gracias por registrarte. Tienes acceso inmediato a la grabación: ¿cómo transformar tu municipio con una estrategia local que funciona? Tu oferta exclusiva caduca en 72 horas.",
+        { href: watch, label: "Ver el webinar →" },
+        "Si no te has registrado, puedes ignorar este email.",
+      ),
+    },
+    {
+      subject: "Lo que más nos preguntan tras el webinar",
+      scheduledAt: inHours(24),
+      html: shell(
+        "¿Ya lo viste?",
+        "Si aún no has visto el webinar, este es un buen momento. Dentro te contamos el método que aplican los municipios que mejor están haciendo las cosas, paso a paso.",
+        { href: watch, label: "Retomar el webinar →" },
+        "Tu oferta exclusiva sigue activa, pero no por mucho tiempo.",
+      ),
+    },
+    {
+      subject: "Tu -40% exclusivo del webinar (caduca pronto)",
+      scheduledAt: inHours(48),
+      html: shell(
+        "Tu oferta del webinar",
+        "Como asistente del webinar, tienes un -40% sobre el precio del programa. Es un bonus exclusivo y limitado: la oferta caduca a las 72 horas desde tu registro.",
+        { href: watch, label: "Aprovechar mi -40% →" },
+        "El descuento se aplica desde la página del webinar antes del deadline.",
+      ),
+    },
+    {
+      subject: "Últimas horas de tu oferta -40%",
+      scheduledAt: inHours(66),
+      html: shell(
+        "Tu oferta termina hoy",
+        "Tu -40% exclusivo del webinar está a punto de caducar. Si quieres dar el paso con el programa completo, este es el momento.",
+        { href: watch, label: "Reservar mi plaza con -40% →" },
+        "Cuando caduque, el precio vuelve a su tarifa habitual.",
+      ),
+    },
+  ];
+
+  let ok = true;
+  for (const step of steps) {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: email,
+      subject: step.subject,
+      html: step.html,
+      ...(step.scheduledAt ? { scheduledAt: step.scheduledAt } : {}),
+    });
+    if (error) {
+      console.error("[email] fallo al programar paso de la secuencia del webinar:", error);
+      ok = false;
+    }
+  }
+  return ok;
+}
+
+/** Descarga del programa en PDF: enlace al folleto (placeholder hasta tenerlo). */
+export async function sendProgramPdf(email: string, pdfUrl: string, courseTitle?: string): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+  const html = shell(
+    "Aquí tienes el programa",
+    `Gracias por tu interés${courseTitle ? ` en <strong>${courseTitle}</strong>` : ""}. Descarga el programa completo en PDF desde el botón. Si tienes dudas, responde a este email y te ayudamos.`,
+    { href: pdfUrl, label: "Descargar el programa →" },
+    "ADN Local · formación para líderes locales.",
+  );
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: "Tu programa en PDF · ADN Local",
+    html,
+  });
+  if (error) {
+    console.error("[email] fallo al enviar el PDF del programa:", error);
+    return false;
+  }
+  return true;
+}
+
+/** Autoresponder al lead de contacto + aviso interno al equipo. */
+export async function sendContactEmails(
+  lead: { email: string; name?: string; message?: string },
+): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+
+  const auto = shell(
+    "Hemos recibido tu mensaje",
+    `Gracias por escribirnos${lead.name ? `, ${lead.name}` : ""}. Te responderemos lo antes posible. Mientras tanto, puedes explorar nuestros programas.`,
+    { href: `${serverUrl()}/formacion`, label: "Ver los programas →" },
+    "ADN Local · formación para líderes locales.",
+  );
+
+  let ok = true;
+  const { error: autoErr } = await resend.emails.send({
+    from: FROM,
+    to: lead.email,
+    subject: "Hemos recibido tu mensaje · ADN Local",
+    html: auto,
+  });
+  if (autoErr) {
+    console.error("[email] fallo al enviar autoresponder de contacto:", autoErr);
+    ok = false;
+  }
+
+  // Aviso interno al buzón del equipo (EMAIL_FROM).
+  const internalTo = (process.env.EMAIL_FROM || FROM).replace(/^.*<([^>]+)>.*$/, "$1");
+  const internal = `<p><strong>Nuevo contacto</strong></p>
+    <p>Email: ${lead.email}<br/>Nombre: ${lead.name ?? "—"}</p>
+    <p>Mensaje:<br/>${(lead.message ?? "—").replace(/\n/g, "<br/>")}</p>`;
+  const { error: intErr } = await resend.emails.send({
+    from: FROM,
+    to: internalTo,
+    subject: `Nuevo contacto: ${lead.email}`,
+    html: internal,
+  });
+  if (intErr) {
+    console.error("[email] fallo al enviar aviso interno de contacto:", intErr);
+    ok = false;
+  }
+  return ok;
+}
+
+/** Confirmación de lista de espera ("te avisaremos cuando abra la edición"). */
+export async function sendWaitlistConfirm(email: string, courseTitle?: string): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+  const html = shell(
+    "Estás en la lista de espera",
+    `Te avisaremos por email en cuanto abra la próxima edición${courseTitle ? ` de <strong>${courseTitle}</strong>` : ""}. Serás de los primeros en conocer fechas y plazas.`,
+    { href: `${serverUrl()}/formacion`, label: "Ver los programas →" },
+    "ADN Local · formación para líderes locales.",
+  );
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: "Estás en la lista de espera · ADN Local",
+    html,
+  });
+  if (error) {
+    console.error("[email] fallo al enviar confirmación de lista de espera:", error);
+    return false;
+  }
+  return true;
+}
