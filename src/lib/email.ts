@@ -228,6 +228,29 @@ export async function sendContactEmails(
   return ok;
 }
 
+/** Confirmación de alta en la newsletter ("no te pierdas nada"). */
+export async function sendNewsletterConfirm(email: string): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+  const html = shell(
+    "¡Bienvenido/a a la newsletter de ADN Local!",
+    "Gracias por suscribirte. A partir de ahora recibirás nuevos programas, webinars y recursos para líderes locales, sin saturar tu bandeja.",
+    { href: `${serverUrl()}/programas`, label: "Ver los programas →" },
+    "Puedes darte de baja cuando quieras desde cualquiera de nuestros emails.",
+  );
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: "Te has suscrito a ADN Local",
+    html,
+  });
+  if (error) {
+    console.error("[email] fallo al enviar confirmación de newsletter:", error);
+    return false;
+  }
+  return true;
+}
+
 /** Confirmación de lista de espera ("te avisaremos cuando abra la edición"). */
 export async function sendWaitlistConfirm(email: string, courseTitle?: string): Promise<boolean> {
   const resend = getResend();

@@ -87,6 +87,7 @@ export const Leads: CollectionConfig = {
         { label: "Descarga PDF", value: "descarga-pdf" },
         { label: "Contacto", value: "contacto" },
         { label: "Lista de espera", value: "lista-espera" },
+        { label: "Newsletter", value: "newsletter" },
       ],
     },
     {

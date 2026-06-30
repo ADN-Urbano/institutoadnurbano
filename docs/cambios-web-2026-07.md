@@ -15,7 +15,7 @@
 - [ ] 🔧 **Quitar la columna "ADN Urbano"** (Sobre nosotros / Equipo / Servicios / Contacto) — array `columns` líneas 14-22. Quedan FORMACIÓN + LEGAL.
 - [ ] ✏️ **Cambiar el texto bajo el logo** (líneas 43-46) por: **"El espacio de referencia de los líderes locales."**
 - [ ] ✏️ **Eliminar "San Rafael & Madrid"** (línea 72).
-- [ ] 🔧 **Todos los enlaces del footer → nueva pestaña** (`target="_blank" rel="noopener noreferrer"`), líneas 57-62. *(Nota: inusual para enlaces internos, pero es lo pedido.)*
+- [x] ~~Todos los enlaces del footer → nueva pestaña~~ **DESCARTADO** (30-jun): mala práctica de UX/accesibilidad para enlaces internos. Se mantiene navegación normal.
 
 ### A2 · Header (`src/components/layout/Header.tsx`)
 - [ ] 🔧 **Agrandar el logo** del header (`BrandLogo`, línea 56; hoy `h-9`). *(Logo en `src/components/ui/BrandLogo.tsx` → probablemente añadir prop de tamaño y usarla en header + footer.)*

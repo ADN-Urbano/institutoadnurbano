@@ -15,6 +15,7 @@ import {
   sendProgramPdf,
   sendContactEmails,
   sendWaitlistConfirm,
+  sendNewsletterConfirm,
 } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -22,7 +23,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Captación de leads. Único endpoint para todos los lead magnets (vía `type`):
- * webinar · descarga-pdf · contacto · lista-espera.
+ * webinar · descarga-pdf · contacto · lista-espera · newsletter.
  *
  * - Valida email + type + anti-spam (honeypot + rate-limit suave en memoria).
  * - Crea el Lead (Local API) con la atribución recibida (first/last touch + click IDs).
@@ -184,6 +185,9 @@ export async function POST(req: Request) {
         break;
       case "lista-espera":
         void sendWaitlistConfirm(normEmail);
+        break;
+      case "newsletter":
+        void sendNewsletterConfirm(normEmail);
         break;
     }
   }

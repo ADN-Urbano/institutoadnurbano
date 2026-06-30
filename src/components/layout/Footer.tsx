@@ -46,8 +46,6 @@ export default function Footer() {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-[13px] text-white/75 transition-colors hover:text-white"
                     >
                       {item.label}

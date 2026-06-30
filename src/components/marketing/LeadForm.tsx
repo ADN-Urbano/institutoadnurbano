@@ -15,7 +15,6 @@ type FieldKey = "name" | "phone" | "municipio" | "situacion" | "comoNosConociste
 
 const inputClass =
   "w-full rounded-xl border border-rule bg-white px-4 py-3 text-[15px] outline-none transition-colors focus:border-turquoise";
-const labelClass = "flex flex-col gap-2 text-[13px] font-semibold text-ink-soft";
 
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
@@ -49,6 +48,7 @@ export default function LeadForm({
   submitLabel = "Enviar →",
   successMessage = "¡Listo! Te hemos enviado un email.",
   className = "",
+  onDark = false,
 }: {
   type: LeadType;
   fields: FieldKey[];
@@ -56,10 +56,14 @@ export default function LeadForm({
   submitLabel?: string;
   successMessage?: string;
   className?: string;
+  onDark?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const labelClass = `flex flex-col gap-2 text-[13px] font-semibold ${
+    onDark ? "text-white/90" : "text-ink-soft"
+  }`;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -124,7 +128,12 @@ export default function LeadForm({
 
   if (done) {
     return (
-      <div className={`rounded-xl bg-turquoise-soft text-turquoise-dark px-5 py-4 text-[15px] font-semibold ${className}`} role="status">
+      <div
+        className={`rounded-xl px-5 py-4 text-[15px] font-semibold ${
+          onDark ? "bg-white/15 text-white" : "bg-turquoise-soft text-turquoise-dark"
+        } ${className}`}
+        role="status"
+      >
         {successMessage}
       </div>
     );
@@ -150,8 +159,14 @@ export default function LeadForm({
       )}
 
       <label className={labelClass}>
-        Email
-        <input type="email" name="email" required className={inputClass} placeholder="tu@email.com" />
+        <span className={onDark ? "sr-only" : ""}>Email</span>
+        <input
+          type="email"
+          name="email"
+          required
+          className={inputClass}
+          placeholder={onDark ? "Introduce tu email" : "tu@email.com"}
+        />
       </label>
 
       {fields.includes("phone") && (
@@ -201,7 +216,9 @@ export default function LeadForm({
       <button
         type="submit"
         disabled={loading}
-        className="justify-self-start bg-ink text-white px-7 py-4 rounded-xl text-sm font-bold transition-all hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)] disabled:opacity-60 disabled:cursor-wait"
+        className={`bg-ink text-white px-7 py-4 rounded-xl text-sm font-bold transition-all hover:-translate-y-px hover:shadow-[var(--shadow-md)] disabled:opacity-60 disabled:cursor-wait ${
+          onDark ? "w-full justify-center hover:bg-turquoise-deep" : "justify-self-start hover:bg-turquoise"
+        }`}
       >
         {loading ? "Enviando…" : submitLabel}
       </button>

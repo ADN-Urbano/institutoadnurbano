@@ -7,7 +7,7 @@ import { createHash } from "crypto";
  */
 
 /** Tipos de lead que maneja la colección `Leads` y el endpoint /api/leads. */
-export const LEAD_TYPES = ["webinar", "descarga-pdf", "contacto", "lista-espera"] as const;
+export const LEAD_TYPES = ["webinar", "descarga-pdf", "contacto", "lista-espera", "newsletter"] as const;
 export type LeadType = (typeof LEAD_TYPES)[number];
 
 export function isLeadType(value: unknown): value is LeadType {
