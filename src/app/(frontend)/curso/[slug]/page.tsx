@@ -56,7 +56,7 @@ export default async function CursoPage({
       {/* 9 · FAQ */}
       <Faq faq={course.faq} />
       {/* 10 · ¿Necesitas más información? (form → Lead) */}
-      <InfoContact programPdfLabel={course.programPdfLabel} courseSlug={course.slug} />
+      <InfoContact courseSlug={course.slug} />
       {/* 11 · Programa completo (descarga-pdf) */}
       <ProgramaCta courseSlug={course.slug} />
       {/* 12 · CTA final */}

@@ -54,6 +54,7 @@ type LeadBody = {
   name?: string;
   phone?: string;
   municipio?: string;
+  pais?: string;
   situacion?: string;
   comoNosConociste?: string;
   message?: string;
@@ -141,6 +142,7 @@ export async function POST(req: Request) {
           name: body.name?.trim() || undefined,
           phone: body.phone?.trim() || undefined,
           municipio: body.municipio?.trim() || undefined,
+          pais: body.pais?.trim() || undefined,
           situacion,
           comoNosConociste: body.comoNosConociste?.trim() || undefined,
           message: body.message?.trim() || undefined,

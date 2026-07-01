@@ -11,7 +11,16 @@ import type { LeadType } from "@/lib/leads";
  * En `type:webinar`, al éxito redirige a `data.redirect` (página de visionado).
  */
 
-type FieldKey = "name" | "phone" | "municipio" | "situacion" | "comoNosConociste" | "message";
+type FieldKey =
+  | "name"
+  | "nombre"
+  | "apellidos"
+  | "pais"
+  | "phone"
+  | "municipio"
+  | "situacion"
+  | "comoNosConociste"
+  | "message";
 
 const inputClass =
   "w-full rounded-xl border border-rule bg-white px-4 py-3 text-[15px] outline-none transition-colors focus:border-turquoise";
@@ -88,6 +97,10 @@ export default function LeadForm({
       const v = fd.get(key);
       if (v != null) payload[key] = String(v);
     }
+    // Nombre + apellidos separados → se combinan en `name` para el backend.
+    if (fields.includes("nombre")) {
+      payload.name = `${String(payload.nombre ?? "")} ${String(payload.apellidos ?? "")}`.trim();
+    }
 
     try {
       const res = await fetch("/api/leads", {
@@ -151,6 +164,20 @@ export default function LeadForm({
         className="absolute left-[-9999px] h-0 w-0 opacity-0"
       />
 
+      {fields.includes("nombre") && (
+        <label className={labelClass}>
+          Nombre
+          <input type="text" name="nombre" className={inputClass} placeholder="Tu nombre" />
+        </label>
+      )}
+
+      {fields.includes("apellidos") && (
+        <label className={labelClass}>
+          Apellidos
+          <input type="text" name="apellidos" className={inputClass} placeholder="Tus apellidos" />
+        </label>
+      )}
+
       {fields.includes("name") && (
         <label className={labelClass}>
           Nombre y apellidos
@@ -180,6 +207,13 @@ export default function LeadForm({
         <label className={labelClass}>
           Municipio
           <input type="text" name="municipio" className={inputClass} placeholder="Tu municipio" />
+        </label>
+      )}
+
+      {fields.includes("pais") && (
+        <label className={labelClass}>
+          País
+          <input type="text" name="pais" className={inputClass} placeholder="Tu país" />
         </label>
       )}
 

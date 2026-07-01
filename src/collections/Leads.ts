@@ -78,6 +78,7 @@ export const Leads: CollectionConfig = {
         { name: "municipio", type: "text", admin: { width: "50%" } },
       ],
     },
+    { name: "pais", type: "text", admin: { description: "País (formulario de contacto)." } },
     {
       name: "type",
       type: "select",
