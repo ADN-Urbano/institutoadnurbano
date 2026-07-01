@@ -47,6 +47,8 @@ export default async function CursoPage({
       <TeamsBox teams={course.teams} />
       {/* 5 · Programa (acordeón) */}
       <Curriculum course={course} />
+      {/* 5b · Recibe el programa completo (descarga-pdf) */}
+      <ProgramaCta courseSlug={course.slug} />
       {/* 6 · Es / No es para ti */}
       <ForYou forYes={course.forYes} forNo={course.forNo} />
       {/* 7 · Al terminar tendrás listo */}
@@ -57,8 +59,6 @@ export default async function CursoPage({
       <Faq faq={course.faq} />
       {/* 10 · ¿Necesitas más información? (form → Lead) */}
       <InfoContact courseSlug={course.slug} />
-      {/* 11 · Programa completo (descarga-pdf) */}
-      <ProgramaCta courseSlug={course.slug} />
       {/* 12 · CTA final */}
       <CourseCta finalCta={course.finalCta} />
     </main>

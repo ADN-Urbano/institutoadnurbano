@@ -23,7 +23,7 @@ type FieldKey =
   | "message";
 
 const inputClass =
-  "w-full rounded-xl border border-rule bg-white px-4 py-3 text-[15px] outline-none transition-colors focus:border-turquoise";
+  "w-full rounded-xl border border-rule bg-white px-4 py-3 text-[15px] text-ink outline-none transition-colors focus:border-turquoise";
 
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;

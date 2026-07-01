@@ -8,7 +8,10 @@ import LeadForm from "@/components/marketing/LeadForm";
  */
 export default function ProgramaCta({ courseSlug }: { courseSlug: string }) {
   return (
-    <section className="relative overflow-hidden bg-turquoise text-white rounded-[24px] px-10 py-12 mb-24 grid grid-cols-1 gap-10 items-center lg:grid-cols-2 max-sm:px-7 max-sm:py-9 max-sm:mb-14">
+    <section
+      id="programa"
+      className="scroll-mt-24 relative overflow-hidden bg-turquoise text-white rounded-[24px] px-10 py-12 mb-24 grid grid-cols-1 gap-10 items-center lg:grid-cols-2 max-sm:px-7 max-sm:py-9 max-sm:mb-14"
+    >
       <span
         aria-hidden
         className="absolute -top-[100px] -right-[100px] w-80 h-80 rounded-full bg-white/[0.08]"
