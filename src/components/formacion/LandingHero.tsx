@@ -20,16 +20,16 @@ export default function LandingHero() {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              href="/webinar"
+              href="/programas"
               className="inline-flex items-center justify-center bg-ink text-white px-7 py-4 rounded-xl text-sm font-bold transition-all hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)]"
             >
-              Reserva tu plaza · webinar gratuito →
+              Ver programas →
             </Link>
             <Link
-              href="/programas"
+              href="/metodologia"
               className="inline-flex items-center justify-center bg-turquoise-soft text-turquoise-dark px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-px hover:shadow-[var(--shadow-sm)]"
             >
-              Ver programas
+              Nuestra metodología
             </Link>
           </div>
         </div>

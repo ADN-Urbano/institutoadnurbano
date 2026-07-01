@@ -24,7 +24,7 @@ export default function NextStep() {
           No te pierdas nada
         </div>
         <p className="text-base leading-[1.6] text-white/90 mb-5 max-w-[42ch]">
-          Recibe nuevos programas, webinars y recursos para líderes locales.
+          Recibe nuevos programas y recursos para líderes locales.
         </p>
         <LeadForm
           type="newsletter"

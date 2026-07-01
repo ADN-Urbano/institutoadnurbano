@@ -10,7 +10,7 @@ import Outcomes from "@/components/curso/Outcomes";
 import Instructor from "@/components/curso/Instructor";
 import Faq from "@/components/curso/Faq";
 import InfoContact from "@/components/curso/InfoContact";
-import WebinarCurso from "@/components/curso/WebinarCurso";
+import ProgramaCta from "@/components/curso/ProgramaCta";
 import CourseCta from "@/components/curso/CourseCta";
 
 export async function generateMetadata({
@@ -57,8 +57,8 @@ export default async function CursoPage({
       <Faq faq={course.faq} />
       {/* 10 · ¿Necesitas más información? (form → Lead) */}
       <InfoContact programPdfLabel={course.programPdfLabel} courseSlug={course.slug} />
-      {/* 11 · Webinar gratuito */}
-      <WebinarCurso webinar={course.webinar} />
+      {/* 11 · Programa completo (descarga-pdf) */}
+      <ProgramaCta courseSlug={course.slug} />
       {/* 12 · CTA final */}
       <CourseCta finalCta={course.finalCta} />
     </main>

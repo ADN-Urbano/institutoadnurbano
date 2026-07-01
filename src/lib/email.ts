@@ -161,20 +161,32 @@ export async function sendWebinarSequence(email: string): Promise<boolean> {
   return ok;
 }
 
-/** Descarga del programa en PDF: enlace al folleto (placeholder hasta tenerlo). */
+/**
+ * Descarga del programa. Si `pdfUrl` es una URL real (http/https) enlaza el PDF;
+ * si no (placeholder), envía una confirmación "te lo enviaremos" sin enlace roto
+ * — el cliente está preparando el PDF y se enchufa cuando esté disponible.
+ */
 export async function sendProgramPdf(email: string, pdfUrl: string, courseTitle?: string): Promise<boolean> {
   const resend = getResend();
   if (!resend) return false;
-  const html = shell(
-    "Aquí tienes el programa",
-    `Gracias por tu interés${courseTitle ? ` en <strong>${courseTitle}</strong>` : ""}. Descarga el programa completo en PDF desde el botón. Si tienes dudas, responde a este email y te ayudamos.`,
-    { href: pdfUrl, label: "Descargar el programa →" },
-    "ADN Local · formación para líderes locales.",
-  );
+  const hasPdf = /^https?:\/\//.test(pdfUrl);
+  const html = hasPdf
+    ? shell(
+        "Aquí tienes el programa",
+        `Gracias por tu interés${courseTitle ? ` en <strong>${courseTitle}</strong>` : ""}. Descarga el programa completo en PDF desde el botón. Si tienes dudas, responde a este email y te ayudamos.`,
+        { href: pdfUrl, label: "Descargar el programa →" },
+        "ADN Local · formación para líderes locales.",
+      )
+    : shell(
+        "Recibirás el programa muy pronto",
+        `Gracias por tu interés${courseTitle ? ` en <strong>${courseTitle}</strong>` : ""}. Estamos ultimando el programa completo y te lo enviaremos por email en cuanto esté listo. Mientras, puedes ver todos los detalles en la web.`,
+        { href: `${serverUrl()}/programas`, label: "Ver los programas →" },
+        "ADN Local · formación para líderes locales.",
+      );
   const { error } = await resend.emails.send({
     from: FROM,
     to: email,
-    subject: "Tu programa en PDF · ADN Local",
+    subject: "Tu programa · ADN Local",
     html,
   });
   if (error) {
