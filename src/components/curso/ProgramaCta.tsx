@@ -32,7 +32,7 @@ export default function ProgramaCta({ courseSlug }: { courseSlug: string }) {
       <div className="relative z-[1]">
         <LeadForm
           type="descarga-pdf"
-          fields={["name"]}
+          fields={["name", "situacion"]}
           courseSlug={courseSlug}
           onDark
           submitLabel="Recibe el programa por email →"
