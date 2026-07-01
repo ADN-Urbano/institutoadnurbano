@@ -79,7 +79,7 @@ export default function Header() {
             href={me.loggedIn ? "/area" : "/acceder"}
             className="px-3.5 py-2 text-sm font-medium text-ink-soft rounded-lg transition-all hover:text-ink hover:bg-bg-soft max-md:hidden"
           >
-            {me.loggedIn ? "Mi área" : "Acceder"}
+            {me.loggedIn ? "Mi área" : "Campus"}
           </Link>
           {me.loggedIn && (
             <Link
@@ -132,7 +132,7 @@ export default function Header() {
               onClick={() => setOpen(false)}
               className="px-3.5 py-2.5 text-[15px] font-medium text-ink-soft rounded-lg text-center border border-rule"
             >
-              {me.loggedIn ? "Mi área" : "Acceder"}
+              {me.loggedIn ? "Mi área" : "Campus"}
             </Link>
             {me.loggedIn && (
               <Link

@@ -17,6 +17,9 @@ export default function NextStep() {
       </div>
 
       <div className="relative z-[1]">
+        <div className="font-mono text-[11px] font-medium text-white/70 tracking-[0.08em] uppercase mb-3">
+          Suscríbete a la newsletter
+        </div>
         <div className="font-display font-extrabold text-[24px] tracking-[-0.01em] uppercase mb-2.5 text-white">
           No te pierdas nada
         </div>

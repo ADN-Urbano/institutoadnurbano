@@ -48,7 +48,7 @@ export default function AccederPage() {
         {/* Formulario */}
         <div className="bg-white p-10 flex flex-col justify-center max-sm:p-7">
           <h2 className="font-display font-extrabold text-[32px] leading-none tracking-[-0.02em] uppercase mb-1">
-            Accede a tu cuenta
+            Accede a tu campus virtual
           </h2>
           <p className="text-sm text-ink-muted mb-7">
             Sin contraseñas: te enviamos un enlace de acceso a tu email.
