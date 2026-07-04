@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { CourseDetail } from "@/data/curso";
 
 /** "Quién te acompaña": foto del profesor + bio larga + especialidades. */
@@ -14,13 +13,13 @@ export default function Instructor({ instructor }: { instructor: CourseDetail["i
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[320px_1fr] max-lg:gap-8">
         <div>
-          {/* Foto del profesor (estática en /public; Payload media no persiste en Vercel). */}
-          <Image
+          {/* Foto del profesor. <img> normal (no next/image) para respetar la
+              orientación EXIF del original; el optimizador de Next la ignora. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={instructor.photoUrl || "/img/gerardo.jpg"}
             alt={instructor.name}
-            width={320}
-            height={400}
-            className="w-full aspect-[4/5] object-cover object-[50%_20%] rounded-3xl"
+            className="w-full aspect-[4/5] object-cover object-top rounded-3xl"
           />
           <div className="mt-4">
             <div className="text-[20px] font-bold">{instructor.name}</div>

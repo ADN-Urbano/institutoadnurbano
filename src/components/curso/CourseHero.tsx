@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { CourseDetail } from "@/data/curso";
 import { programs } from "@/data/formacion";
 import AccentTitle from "@/components/ui/AccentTitle";
@@ -44,12 +43,11 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
           </a>
           <div className="flex items-center gap-4 p-5 bg-bg-soft rounded-[16px]">
             <span className="relative w-14 h-14 rounded-full shrink-0 overflow-hidden">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src="/img/gerardo.jpg"
                 alt={course.instructor.name}
-                fill
-                sizes="56px"
-                className="object-cover object-[50%_16%]"
+                className="absolute inset-0 h-full w-full object-cover object-top"
               />
             </span>
             <div>
