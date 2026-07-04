@@ -36,7 +36,8 @@ export type PriceTier = {
   discount?: string; // "-40%" / "-20%"
   oldPrice?: string;
   price: string;
-  editionLabel: string; // etiqueta de la edición ("Curso 01 · Edición julio 2026")
+  editionLabel: string; // etiqueta de la edición ("Edición julio 2026")
+  startLabel?: string; // "Comienza el 29 de julio" (de startDate), si hay fecha
   tone: PriceTone;
   purchasable: boolean; // edición comprable (open/soon + fecha futura + precio válido)
   isDefault: boolean; // edición preseleccionada por defecto

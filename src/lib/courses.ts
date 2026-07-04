@@ -150,6 +150,14 @@ export function editionLabelClean(label: string): string {
   return label.replace(/^\s*curso\s+\d+\s*·\s*/i, "").trim();
 }
 
+/** "Comienza el 29 de julio" a partir del startDate de la edición (o undefined). */
+export function startLabel(startDate?: string | null): string | undefined {
+  if (!startDate) return undefined;
+  const d = new Date(startDate);
+  if (Number.isNaN(d.getTime())) return undefined;
+  return `Comienza el ${d.toLocaleDateString("es-ES", { day: "numeric", month: "long" })}`;
+}
+
 export function toPriceTiers(editions: EditionDoc[], now: number = Date.now()): PriceTier[] {
   const purchasable = editions.filter((e) => isPurchasableEdition(e, now));
   const defaultEdition = defaultPurchasableEdition(purchasable, now);
@@ -163,6 +171,7 @@ export function toPriceTiers(editions: EditionDoc[], now: number = Date.now()): 
       oldPrice: edition.oldPriceCents ? euros(edition.oldPriceCents) : undefined,
       price: euros(edition.priceCents),
       editionLabel: editionLabelClean(edition.editionLabel ?? ""),
+      startLabel: startLabel(edition.startDate),
       tone,
       purchasable: true,
       isDefault: defaultEdition != null && edition === defaultEdition,

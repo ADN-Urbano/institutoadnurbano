@@ -283,8 +283,8 @@ export const comoFunciona = {
   accent: "incluye",
   items: [
     {
-      title: "Directos por Microsoft Teams",
-      desc: "Una sesión por bloque (3 en total) para resolver casos reales. Si no puedes asistir, se graban y quedan en tu área en menos de 24 horas.",
+      title: "Sesiones en directo",
+      desc: "Una sesión por bloque (3 en total) para resolver casos reales. El enlace al directo estará en tu campus virtual; si no puedes asistir, se graban y quedan en menos de 24 horas.",
     },
     {
       title: "Campus Virtual",

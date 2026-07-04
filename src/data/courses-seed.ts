@@ -37,8 +37,8 @@ const landingVideoIntro = {
 };
 
 const landingTeams = {
-  title: "Las clases en directo se imparten por Microsoft Teams",
-  desc: "Todos los miércoles a las 19:00 (CET) durante las 3 semanas. Si no puedes asistir, las sesiones se graban y se publican en tu área en menos de 24 horas.",
+  title: "El enlace a las clases en directo estará en tu campus virtual",
+  desc: "Todos los miércoles a las 19:00 (CET) durante las 3 semanas. Encontrarás el enlace de acceso en tu campus virtual. Si no puedes asistir, las sesiones se graban y se publican en tu área en menos de 24 horas.",
 };
 
 const landingFeats = [

@@ -87,6 +87,11 @@ export default function EditionPurchase({
               <div className="font-mono text-[10px] text-ink-muted tracking-[0.03em] mt-2 leading-[1.3]">
                 {t.editionLabel}
               </div>
+              {t.startLabel && (
+                <div className="text-[11px] font-semibold text-turquoise mt-1 leading-[1.2]">
+                  {t.startLabel}
+                </div>
+              )}
             </button>
           );
         })}
