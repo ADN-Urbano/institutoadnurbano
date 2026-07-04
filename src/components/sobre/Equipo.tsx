@@ -17,9 +17,11 @@ export default function Equipo() {
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr] lg:gap-14 items-start">
         {/* Foto (placeholder) + nombre */}
         <div>
-          <div
-            aria-hidden
-            className="w-full aspect-square rounded-[20px] bg-[linear-gradient(135deg,var(--color-turquoise),var(--color-turquoise-dark))] mb-4 max-lg:max-w-[260px]"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/img/gerardo.jpg"
+            alt={director.name}
+            className="w-full aspect-square rounded-[20px] object-cover object-top mb-4 max-lg:max-w-[260px]"
           />
           <div className="font-heading font-bold text-[19px] leading-tight">{director.name}</div>
           <div className="font-mono text-[11px] text-ink-muted tracking-[0.04em] uppercase mt-1">

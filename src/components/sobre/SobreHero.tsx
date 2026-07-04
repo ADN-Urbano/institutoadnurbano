@@ -22,11 +22,11 @@ export default function SobreHero() {
         <div className="relative w-full aspect-[4/3] rounded-[28px] overflow-hidden lg:aspect-[5/6] max-sm:aspect-[16/11]">
           <Image
             src="/img/sobre.jpg"
-            alt="Equipo de trabajo de ADN Local"
+            alt="Gerardo, director de ADN Local, en un foro urbano"
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 48vw"
-            className="object-cover"
+            className="object-cover object-[50%_28%]"
           />
         </div>
       </div>

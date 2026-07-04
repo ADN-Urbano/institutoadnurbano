@@ -12,3 +12,4 @@ next-env.d.ts
 # Subidas locales de Payload (en producción van a R2)
 /media
 /public/media
+public/img/seleccion/
