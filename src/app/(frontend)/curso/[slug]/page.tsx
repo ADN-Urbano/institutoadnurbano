@@ -42,7 +42,7 @@ export default async function CursoPage({
       {/* 1 + 2 · Hero + tarjeta de compra (roadmap de ediciones) */}
       <CourseHero course={course} />
       {/* 3 · Vídeo presentación */}
-      <VideoIntro videoIntro={course.videoIntro} />
+      <VideoIntro videoIntro={course.videoIntro} courseSlug={course.slug} />
       {/* 4 · Clases en directo por Teams */}
       <TeamsBox teams={course.teams} />
       {/* 5 · Programa (acordeón) */}
