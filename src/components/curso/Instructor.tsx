@@ -14,18 +14,14 @@ export default function Instructor({ instructor }: { instructor: CourseDetail["i
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[320px_1fr] max-lg:gap-8">
         <div>
-          {/* Foto del profesor: placeholder con degradado mientras no se sube */}
-          {instructor.photoUrl ? (
-            <Image
-              src={instructor.photoUrl}
-              alt={instructor.name}
-              width={320}
-              height={380}
-              className="w-full aspect-[4/5] object-cover rounded-3xl"
-            />
-          ) : (
-            <div className="w-full aspect-[4/5] rounded-3xl bg-[linear-gradient(135deg,var(--color-turquoise),var(--color-turquoise-deep))]" />
-          )}
+          {/* Foto del profesor (estática en /public; Payload media no persiste en Vercel). */}
+          <Image
+            src={instructor.photoUrl || "/img/gerardo.jpg"}
+            alt={instructor.name}
+            width={320}
+            height={400}
+            className="w-full aspect-[4/5] object-cover object-[50%_20%] rounded-3xl"
+          />
           <div className="mt-4">
             <div className="text-[20px] font-bold">{instructor.name}</div>
             {instructor.experienceLabel && (

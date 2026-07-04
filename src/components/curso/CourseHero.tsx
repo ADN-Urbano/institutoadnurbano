@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { CourseDetail } from "@/data/curso";
 import { programs } from "@/data/formacion";
 import AccentTitle from "@/components/ui/AccentTitle";
@@ -42,7 +43,15 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
             Recibe el programa completo →
           </a>
           <div className="flex items-center gap-4 p-5 bg-bg-soft rounded-[16px]">
-            <span className="w-14 h-14 rounded-full shrink-0 bg-[linear-gradient(135deg,var(--color-turquoise),var(--color-turquoise-dark))]" />
+            <span className="relative w-14 h-14 rounded-full shrink-0 overflow-hidden">
+              <Image
+                src="/img/gerardo.jpg"
+                alt={course.instructor.name}
+                fill
+                sizes="56px"
+                className="object-cover object-[50%_16%]"
+              />
+            </span>
             <div>
               <div className="font-mono text-[10px] text-ink-muted tracking-[0.04em] uppercase mb-1">
                 Imparte

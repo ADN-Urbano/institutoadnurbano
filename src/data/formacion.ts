@@ -157,6 +157,34 @@ export const programs: Program[] = [
       desc: "Déjanos tus datos y te avisaremos antes que nadie cuando se abran las inscripciones de la próxima edición.",
     },
   },
+  {
+    id: "comunicar-para-gobernar",
+    num: "Próximas ediciones",
+    categoria: "Saber comunicarlo",
+    badge: "Reserva tu plaza",
+    badgeTone: "soon",
+    title: "Comunicar para gobernar",
+    accent: "gobernar",
+    desc: "Un programa para dominar la comunicación pública del cargo electo: el mensaje, las redes sociales institucionales, la relación con los medios y la comunicación de crisis. Conecta con tus vecinos y defiende tu gestión con estrategia.",
+    priority: {
+      title: "Acceso prioritario",
+      desc: "Déjanos tus datos y te avisaremos antes que nadie cuando se abran las inscripciones de la próxima edición.",
+    },
+  },
+  {
+    id: "participacion-que-transforma",
+    num: "Próximas ediciones",
+    categoria: "Liderar a tus vecinos",
+    badge: "Reserva tu plaza",
+    badgeTone: "soon",
+    title: "La participación que transforma",
+    accent: "transforma",
+    desc: "Un programa para diseñar participación ciudadana que funciona: implica a tu tejido social, construye consensos y convierte a los vecinos en aliados de tu proyecto de municipio.",
+    priority: {
+      title: "Acceso prioritario",
+      desc: "Déjanos tus datos y te avisaremos antes que nadie cuando se abran las inscripciones de la próxima edición.",
+    },
+  },
 ];
 
 /* ---- CTA final ---- */
