@@ -24,8 +24,8 @@ export default function ProgramasTeaser() {
           const inner = (
             <>
               <div className="flex justify-between items-center gap-3 mb-4">
-                <span className="font-mono text-[11px] text-ink-muted tracking-[0.04em] uppercase">
-                  {p.num}
+                <span className="font-mono text-[11px] text-turquoise tracking-[0.04em] uppercase">
+                  {p.categoria}
                 </span>
                 <span
                   className={`font-mono text-[10px] px-2.5 py-1 rounded-full inline-flex items-center gap-1.5 tracking-[0.04em] uppercase whitespace-nowrap ${

@@ -86,6 +86,7 @@ export type PriceTier = {
 export type Program = {
   id: string;
   num: string;
+  categoria: string;
   badge: string;
   badgeTone: "open" | "soon";
   title: string;
@@ -107,6 +108,7 @@ export const programs: Program[] = [
   {
     id: "hacia-un-nuevo-mandato",
     num: "Edición julio 2026",
+    categoria: "Estrategia y mandato",
     badge: "Inscripción abierta",
     badgeTone: "open",
     title: "Hacia un nuevo mandato",
@@ -125,6 +127,7 @@ export const programs: Program[] = [
   {
     id: "construir-la-alternativa",
     num: "Edición septiembre 2026",
+    categoria: "Estrategia y mandato",
     badge: "Inscripción abierta",
     badgeTone: "open",
     title: "Construir la alternativa",
@@ -143,6 +146,7 @@ export const programs: Program[] = [
   {
     id: "gobernando-con-exito",
     num: "Próximas ediciones",
+    categoria: "Gestionar tu ayuntamiento",
     badge: "Reserva tu plaza",
     badgeTone: "soon",
     title: "Gobernando con éxito",

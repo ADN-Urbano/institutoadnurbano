@@ -25,8 +25,8 @@ function ProgramCard({ program }: { program: Program }) {
       className="scroll-mt-24 bg-white border border-rule rounded-3xl p-8 flex flex-col transition-all hover:border-turquoise hover:shadow-[var(--shadow-md)] max-sm:p-6"
     >
       <div className="flex justify-between items-center gap-3 mb-5">
-        <span className="font-mono text-[11px] font-medium text-ink-muted tracking-[0.04em] uppercase">
-          {program.num}
+        <span className="font-mono text-[11px] font-medium text-turquoise tracking-[0.04em] uppercase">
+          {program.categoria}
         </span>
         <span
           className={`font-mono text-[11px] font-medium px-3 py-[5px] rounded-full inline-flex items-center gap-1.5 tracking-[0.04em] uppercase whitespace-nowrap ${
