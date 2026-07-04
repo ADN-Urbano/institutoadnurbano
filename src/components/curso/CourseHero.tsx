@@ -1,10 +1,13 @@
 import Link from "next/link";
 import type { CourseDetail } from "@/data/curso";
+import { programs } from "@/data/formacion";
 import AccentTitle from "@/components/ui/AccentTitle";
 import PurchaseCard from "@/components/curso/PurchaseCard";
 import LeadForm from "@/components/marketing/LeadForm";
 
 export default function CourseHero({ course }: { course: CourseDetail }) {
+  // Categoría (área del catálogo) por slug; fallback a la etiqueta de edición.
+  const categoria = programs.find((p) => p.id === course.slug)?.categoria ?? course.editionLabel;
   return (
     <>
       <div className="font-mono text-xs text-ink-muted mb-6 tracking-[0.04em] uppercase">
@@ -21,9 +24,9 @@ export default function CourseHero({ course }: { course: CourseDetail }) {
 
       <div className="grid grid-cols-1 gap-14 pb-16 mb-14 border-b border-rule lg:grid-cols-[1.4fr_1fr] max-lg:gap-10 max-sm:pb-10 max-sm:mb-10">
         <div>
-          {course.editionLabel && (
+          {categoria && (
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-turquoise-soft text-turquoise-dark rounded-full font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-6">
-              {course.editionLabel}
+              {categoria}
             </div>
           )}
           <h1 className="font-display font-extrabold text-[76px] leading-[0.92] tracking-[-0.025em] uppercase mb-5 md:text-[64px] lg:text-[76px] max-md:text-[48px] max-sm:text-[40px]">
