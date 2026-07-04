@@ -55,7 +55,7 @@ const landingFaq = [
   {
     question: "¿Y si no puedo asistir a un directo?",
     answer:
-      "No hay problema. Las tres sesiones magistrales de resolución de casos se graban y se suben al campus en menos de 24 horas. Podrás verlas cuando quieras y plantear tus dudas a través del foro de la comunidad.",
+      "No hay problema. Las tres sesiones prácticas de resolución de casos se graban y se suben al campus en menos de 24 horas. Podrás verlas cuando quieras y plantear tus dudas a través del foro de la comunidad.",
   },
   {
     question: "¿Cuánto tiempo tendré acceso a los materiales?",
@@ -65,7 +65,7 @@ const landingFaq = [
   {
     question: "¿Cuándo y cómo son las sesiones en directo?",
     answer:
-      "Se realiza una sesión en directo por módulo (3 en total) centrada en la resolución de casos prácticos. Las sesiones se realizan a través de videoconferencia y tienen una duración aproximada de dos horas.",
+      "Se realiza una sesión en directo por módulo (3 en total) centrada en la resolución de casos prácticos. Las sesiones se realizan a través del campus virtual y tienen una duración aproximada de dos horas.",
   },
   {
     question: "¿Necesito instalar algún software especial?",
@@ -75,7 +75,7 @@ const landingFaq = [
   {
     question: "¿Cómo se imparte el contenido teórico?",
     answer:
-      "Todo el material está alojado en un Campus Virtual (LMS). Cada tema consta de lecturas estructuradas, vídeos cortos de entre 5 y 15 minutos y un test de fijación de conocimientos para asegurar que asimilas los conceptos clave de forma ágil.",
+      "Todo el material está alojado en el Campus Virtual. El programa consta de lecturas estructuradas, vídeos cortos de entre 5 y 15 minutos y un test de fijación de conocimientos para asegurar que asimilas los conceptos clave de forma ágil.",
   },
 ];
 
