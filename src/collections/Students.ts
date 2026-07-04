@@ -26,7 +26,7 @@ export const Students: CollectionConfig = {
       type: "row",
       fields: [
         { name: "phone", type: "text", admin: { width: "50%", description: "Teléfono (checkout)." } },
-        { name: "pais", type: "text", admin: { width: "50%", description: "País ISO-3166 (checkout)." } },
+        { name: "pais", type: "text", admin: { width: "50%", description: "País (checkout)." } },
       ],
     },
     {

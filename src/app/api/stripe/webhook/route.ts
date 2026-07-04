@@ -78,7 +78,7 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
   const email = (session.customer_details?.email || session.customer_email)?.toLowerCase().trim();
   const name = session.customer_details?.name ?? undefined;
   const phone = session.customer_details?.phone ?? undefined;
-  const pais = session.customer_details?.address?.country ?? undefined;
+  const pais = customField(session, "pais");
   const municipio = customField(session, "municipio");
   const cargo = customField(session, "cargo");
   const customerId = typeof session.customer === "string" ? session.customer : undefined;

@@ -92,14 +92,18 @@ export async function POST(req: Request) {
         },
       ],
       allow_promotion_codes: true,
-      // Datos del participante: país (dirección validada) + teléfono nativos, y
-      // municipio + cargo como campos personalizados. El webhook los guarda en el Student.
-      billing_address_collection: "required",
+      // Datos del participante: teléfono nativo + municipio/país/cargo como
+      // campos personalizados (sin dirección completa). El webhook los guarda en el Student.
       phone_number_collection: { enabled: true },
       custom_fields: [
         {
           key: "municipio",
           label: { type: "custom", custom: "Municipio" },
+          type: "text",
+        },
+        {
+          key: "pais",
+          label: { type: "custom", custom: "País" },
           type: "text",
         },
         {
