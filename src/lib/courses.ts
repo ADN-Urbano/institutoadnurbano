@@ -145,6 +145,11 @@ function tierDiscount(edition: EditionDoc): string | undefined {
  * amber, 3ª+ = ink. Marca `isDefault` en la edición preseleccionada (la `open`,
  * o la comprable más próxima). Las ediciones running/past no aparecen.
  */
+/** Quita el prefijo "Curso NN · " de una etiqueta de edición (dato de Payload). */
+export function editionLabelClean(label: string): string {
+  return label.replace(/^\s*curso\s+\d+\s*·\s*/i, "").trim();
+}
+
 export function toPriceTiers(editions: EditionDoc[], now: number = Date.now()): PriceTier[] {
   const purchasable = editions.filter((e) => isPurchasableEdition(e, now));
   const defaultEdition = defaultPurchasableEdition(purchasable, now);
@@ -157,7 +162,7 @@ export function toPriceTiers(editions: EditionDoc[], now: number = Date.now()): 
       discount: tierDiscount(edition),
       oldPrice: edition.oldPriceCents ? euros(edition.oldPriceCents) : undefined,
       price: euros(edition.priceCents),
-      editionLabel: edition.editionLabel ?? "",
+      editionLabel: editionLabelClean(edition.editionLabel ?? ""),
       tone,
       purchasable: true,
       isDefault: defaultEdition != null && edition === defaultEdition,
@@ -193,7 +198,7 @@ export function toCourseDetail(
 ): CourseDetail {
   return {
     slug: doc.slug,
-    editionLabel: edition?.editionLabel ?? "",
+    editionLabel: editionLabelClean(edition?.editionLabel ?? ""),
     startDate: edition?.startDate ?? null,
     accessState: edition ? computeAccessState(edition.startDate, now) : "pending",
     hasOpenEdition: edition?.status === "open",

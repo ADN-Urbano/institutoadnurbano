@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getPayloadClient } from "@/lib/payload";
 import { getCurrentStudent } from "@/lib/session";
-import { getCourseEditions, resolvePurchasableEdition, type CourseDoc } from "@/lib/courses";
+import {
+  getCourseEditions,
+  resolvePurchasableEdition,
+  editionLabelClean,
+  type CourseDoc,
+} from "@/lib/courses";
 
 export const dynamic = "force-dynamic";
 
@@ -78,13 +83,40 @@ export async function POST(req: Request) {
             currency: "eur",
             unit_amount: edition.priceCents,
             product_data: {
-              name: edition.editionLabel ? `${course.title} · ${edition.editionLabel}` : course.title,
+              name: edition.editionLabel
+                ? `${course.title} · ${editionLabelClean(edition.editionLabel)}`
+                : course.title,
               description: course.summary?.slice(0, 300) || undefined,
             },
           },
         },
       ],
       allow_promotion_codes: true,
+      // Datos del participante: país (dirección validada) + teléfono nativos, y
+      // municipio + cargo como campos personalizados. El webhook los guarda en el Student.
+      billing_address_collection: "required",
+      phone_number_collection: { enabled: true },
+      custom_fields: [
+        {
+          key: "municipio",
+          label: { type: "custom", custom: "Municipio" },
+          type: "text",
+        },
+        {
+          key: "cargo",
+          label: { type: "custom", custom: "Tu cargo" },
+          type: "dropdown",
+          dropdown: {
+            options: [
+              { label: "En gobierno (alcalde/concejal)", value: "gobierno" },
+              { label: "En la oposición", value: "oposicion" },
+              { label: "Candidato/a", value: "candidato" },
+              { label: "Técnico/a municipal", value: "tecnico" },
+              { label: "Otro", value: "otro" },
+            ],
+          },
+        },
+      ],
       // Para activar IVA automático: descomenta y habilita Stripe Tax en el dashboard.
       // automatic_tax: { enabled: true },
       ...(stripeCustomerId

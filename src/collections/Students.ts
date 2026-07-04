@@ -10,7 +10,7 @@ export const Students: CollectionConfig = {
   slug: "students",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["name", "email", "createdAt"],
+    defaultColumns: ["name", "email", "municipio", "cargo", "createdAt"],
     group: "Alumnado",
   },
   access: {
@@ -22,6 +22,31 @@ export const Students: CollectionConfig = {
   fields: [
     { name: "email", type: "email", required: true, unique: true, index: true },
     { name: "name", type: "text" },
+    {
+      type: "row",
+      fields: [
+        { name: "phone", type: "text", admin: { width: "50%", description: "Teléfono (checkout)." } },
+        { name: "pais", type: "text", admin: { width: "50%", description: "País ISO-3166 (checkout)." } },
+      ],
+    },
+    {
+      type: "row",
+      fields: [
+        { name: "municipio", type: "text", admin: { width: "50%", description: "Municipio (checkout)." } },
+        {
+          name: "cargo",
+          type: "select",
+          admin: { width: "50%", description: "Cargo / situación (checkout)." },
+          options: [
+            { label: "En gobierno", value: "gobierno" },
+            { label: "Oposición", value: "oposicion" },
+            { label: "Candidato/a", value: "candidato" },
+            { label: "Técnico/a municipal", value: "tecnico" },
+            { label: "Otro", value: "otro" },
+          ],
+        },
+      ],
+    },
     {
       name: "stripeCustomerId",
       type: "text",

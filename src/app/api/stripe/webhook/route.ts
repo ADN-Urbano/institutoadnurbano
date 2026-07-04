@@ -62,12 +62,25 @@ export async function POST(req: Request) {
   return NextResponse.json({ received: true });
 }
 
+/** Lee el valor de un campo personalizado de la Checkout Session (texto o desplegable). */
+function customField(session: Stripe.Checkout.Session, key: string): string | undefined {
+  const f = session.custom_fields?.find((x) => x.key === key);
+  if (!f) return undefined;
+  if (f.type === "dropdown") return f.dropdown?.value ?? undefined;
+  if (f.type === "text") return f.text?.value ?? undefined;
+  return undefined;
+}
+
 async function fulfillCheckout(session: Stripe.Checkout.Session) {
   // La metadata de Stripe es siempre texto; los IDs de Payload son integer.
   const courseId = Number(session.metadata?.courseId);
   const editionId = Number(session.metadata?.editionId);
   const email = (session.customer_details?.email || session.customer_email)?.toLowerCase().trim();
   const name = session.customer_details?.name ?? undefined;
+  const phone = session.customer_details?.phone ?? undefined;
+  const pais = session.customer_details?.address?.country ?? undefined;
+  const municipio = customField(session, "municipio");
+  const cargo = customField(session, "cargo");
   const customerId = typeof session.customer === "string" ? session.customer : undefined;
   const paymentId =
     typeof session.payment_intent === "string" ? session.payment_intent : session.id;
@@ -91,17 +104,22 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     limit: 1,
   });
   let student = found.docs[0];
+  const participante = { name, phone, pais, municipio, cargo };
   if (!student) {
     student = await payload.create({
       collection: "students",
-      data: { email, name, stripeCustomerId: customerId },
+      data: { email, ...participante, stripeCustomerId: customerId },
     });
-  } else if (customerId && !(student as { stripeCustomerId?: string }).stripeCustomerId) {
-    student = await payload.update({
-      collection: "students",
-      id: student.id,
-      data: { stripeCustomerId: customerId },
-    });
+  } else {
+    // Refresca los datos del participante presentes en el checkout (sin pisar con vacíos).
+    const data: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(participante)) if (v != null) data[k] = v;
+    if (customerId && !(student as { stripeCustomerId?: string }).stripeCustomerId) {
+      data.stripeCustomerId = customerId;
+    }
+    if (Object.keys(data).length > 0) {
+      student = await payload.update({ collection: "students", id: student.id, data });
+    }
   }
 
   // 2) Enrollment idempotente por (alumno, edición); no duplicar en reintentos.
