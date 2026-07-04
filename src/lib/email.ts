@@ -78,7 +78,7 @@ export async function sendWelcome(email: string, link: string, courseTitle: stri
 
 const WEBINAR_VER_PATH = "/webinar/ver";
 
-function serverUrl(): string {
+export function serverUrl(): string {
   const raw = (process.env.NEXT_PUBLIC_SERVER_URL || "https://www.adnlocal.es").trim().replace(/\/+$/, "");
   return /^https?:\/\//.test(raw) ? raw : `https://${raw}`;
 }

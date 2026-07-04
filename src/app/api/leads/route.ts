@@ -16,7 +16,9 @@ import {
   sendContactEmails,
   sendWaitlistConfirm,
   sendNewsletterConfirm,
+  serverUrl,
 } from "@/lib/email";
+import { programs } from "@/data/formacion";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,7 +36,12 @@ export const dynamic = "force-dynamic";
  * El PDF del folleto es un placeholder hasta que el cliente lo aporte.
  */
 
-const PDF_PLACEHOLDER_URL = "/programa-adn-local.pdf"; // placeholder: el cliente sube el folleto
+const PDF_PLACEHOLDER_URL = "/programa-adn-local.pdf"; // placeholder si el curso no tiene folleto
+// Folleto del programa por curso (en /public/programas). El email enlaza el PDF real.
+const PDF_BY_SLUG: Record<string, string> = {
+  "hacia-un-nuevo-mandato": "/programas/hacia-un-nuevo-mandato.pdf",
+  "construir-la-alternativa": "/programas/construir-la-alternativa.pdf",
+};
 
 // Rate-limit suave en memoria (best-effort; el disco de Vercel es efímero y el
 // runtime puede reiniciarse). No es una defensa fuerte, solo frena el spam burdo.
@@ -179,9 +186,14 @@ export async function POST(req: Request) {
       case "webinar":
         void sendWebinarSequence(normEmail);
         break;
-      case "descarga-pdf":
-        void sendProgramPdf(normEmail, `${PDF_PLACEHOLDER_URL}`, undefined);
+      case "descarga-pdf": {
+        const slug = body.courseSlug?.trim();
+        const pdfPath = slug ? PDF_BY_SLUG[slug] : undefined;
+        const pdfUrl = pdfPath ? `${serverUrl()}${pdfPath}` : PDF_PLACEHOLDER_URL;
+        const title = slug ? programs.find((p) => p.id === slug)?.title : undefined;
+        void sendProgramPdf(normEmail, pdfUrl, title);
         break;
+      }
       case "contacto":
         void sendContactEmails({ email: normEmail, name: body.name?.trim(), message: body.message?.trim() });
         break;
