@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import LandingHero from "@/components/formacion/LandingHero";
 import ParaQuien from "@/components/inicio/ParaQuien";
+import MetodologiaTeaser from "@/components/inicio/MetodologiaTeaser";
 import ProgramasTeaser from "@/components/inicio/ProgramasTeaser";
 import WhyAdn from "@/components/formacion/WhyAdn";
 import NextStep from "@/components/formacion/NextStep";
@@ -18,6 +19,7 @@ export default function InicioPage() {
     <main className="max-w-[1320px] mx-auto px-8 pt-14 pb-24 max-sm:px-5">
       <LandingHero />
       <ParaQuien />
+      <MetodologiaTeaser />
       <ProgramasTeaser />
       <WhyAdn />
       <NextStep />

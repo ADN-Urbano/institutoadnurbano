@@ -3,7 +3,15 @@
 import { useState } from "react";
 
 /** Botón de inscripción: crea una Checkout Session y redirige a Stripe. */
-export default function CheckoutButton({ slug, editionId }: { slug: string; editionId?: string }) {
+export default function CheckoutButton({
+  slug,
+  editionId,
+  label = "Inscribirme al curso →",
+}: {
+  slug: string;
+  editionId?: string;
+  label?: string;
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +44,7 @@ export default function CheckoutButton({ slug, editionId }: { slug: string; edit
         disabled={loading}
         className="block w-full bg-ink text-white text-center p-4 rounded-xl font-bold text-[15px] cursor-pointer transition-all mb-3 hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)] disabled:opacity-60 disabled:cursor-wait"
       >
-        {loading ? "Redirigiendo a pago…" : "Inscribirme al curso →"}
+        {loading ? "Redirigiendo a pago…" : label}
       </button>
       {error && (
         <div className="text-center text-[13px] text-coral mb-3" role="alert">

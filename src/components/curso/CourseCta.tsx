@@ -1,7 +1,9 @@
 import type { CourseDetail } from "@/data/curso";
+import CheckoutButton from "@/components/curso/CheckoutButton";
 
-/** CTA final del curso: bloque turquesa con título + plazas. Botón presentacional (Fase 2). */
-export default function CourseCta({ finalCta }: { finalCta: CourseDetail["finalCta"] }) {
+/** CTA final del curso: bloque turquesa con título + plazas + "Reservar mi plaza". */
+export default function CourseCta({ course }: { course: CourseDetail }) {
+  const { finalCta } = course;
   if (!finalCta.title && !finalCta.desc) return null;
   return (
     <section className="relative overflow-hidden bg-turquoise text-white rounded-[28px] px-12 py-16 mb-8 grid grid-cols-2 gap-12 items-center max-lg:grid-cols-1 max-lg:gap-10 max-sm:px-6 max-sm:py-10">
@@ -21,12 +23,20 @@ export default function CourseCta({ finalCta }: { finalCta: CourseDetail["finalC
           {finalCta.seatsTitle}
         </div>
         <p className="text-[15px] leading-[1.55] text-white/85 mb-6">{finalCta.seatsDesc}</p>
-        <a
-          href="#"
-          className="group bg-ink text-white px-6 py-4 rounded-xl text-sm font-semibold inline-flex items-center justify-center gap-3 transition-all hover:bg-turquoise-deep hover:-translate-y-px"
-        >
-          {finalCta.cta} →
-        </a>
+        {course.defaultEditionId ? (
+          <CheckoutButton
+            slug={course.slug}
+            editionId={course.defaultEditionId}
+            label="Reservar mi plaza →"
+          />
+        ) : (
+          <a
+            href="#programa"
+            className="group block w-full bg-ink text-white text-center px-6 py-4 rounded-xl text-sm font-semibold transition-all hover:bg-turquoise-deep hover:-translate-y-px"
+          >
+            Recibe el programa completo →
+          </a>
+        )}
       </div>
     </section>
   );

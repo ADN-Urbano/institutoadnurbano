@@ -59,8 +59,8 @@ export default async function CursoPage({
       <Faq faq={course.faq} />
       {/* 10 · ¿Necesitas más información? (form → Lead) */}
       <InfoContact courseSlug={course.slug} />
-      {/* 12 · CTA final */}
-      <CourseCta finalCta={course.finalCta} />
+      {/* 12 · CTA final (Reservar mi plaza → checkout) */}
+      <CourseCta course={course} />
     </main>
   );
 }
