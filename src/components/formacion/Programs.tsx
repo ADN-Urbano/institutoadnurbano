@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { programs, type Program, type PriceTone } from "@/data/formacion";
+import type { PriceTier as LivePriceTier } from "@/data/curso";
+import { getCourseBySlug } from "@/lib/courses";
 import SectionHead from "@/components/ui/SectionHead";
 import AccentTitle from "@/components/ui/AccentTitle";
 import LeadForm from "@/components/marketing/LeadForm";
@@ -17,8 +19,47 @@ const discountBadge: Record<PriceTone, string> = {
   ink: "bg-bg-soft text-ink-soft",
 };
 
-function ProgramCard({ program }: { program: Program }) {
+/** Tramo de precio normalizado para pintar (de Payload en vivo o del dato estático). */
+type RenderTier = {
+  key: string;
+  label: string;
+  discount?: string;
+  oldPrice?: string;
+  price: string;
+  edition: string;
+  startLabel?: string;
+  tone: PriceTone;
+};
+
+/**
+ * Tarjeta de programa. Los precios/fechas se pintan de `liveTiers` (Payload,
+ * sincronizado con /admin) si se pasan; si no, de los `tiers` estáticos.
+ */
+function ProgramCard({ program, liveTiers }: { program: Program; liveTiers?: LivePriceTier[] }) {
   const open = program.badgeTone === "open";
+
+  const tiers: RenderTier[] =
+    liveTiers && liveTiers.length
+      ? liveTiers.map((t) => ({
+          key: t.editionId || t.editionLabel,
+          label: t.label,
+          discount: t.discount,
+          oldPrice: t.oldPrice,
+          price: t.price,
+          edition: t.editionLabel,
+          startLabel: t.startLabel,
+          tone: t.tone as PriceTone,
+        }))
+      : (program.tiers ?? []).map((t) => ({
+          key: t.label,
+          label: t.label,
+          discount: t.discount,
+          oldPrice: t.oldPrice,
+          price: t.price,
+          edition: t.edition,
+          tone: t.tone,
+        }));
+
   return (
     <article
       id={program.id}
@@ -43,11 +84,11 @@ function ProgramCard({ program }: { program: Program }) {
       </h3>
       <p className="text-sm leading-[1.6] text-ink-soft mb-6">{program.desc}</p>
 
-      {program.tiers && (
+      {tiers.length > 0 && (
         <>
           <div className="grid grid-cols-3 gap-3 mb-5 max-sm:grid-cols-1">
-            {program.tiers.map((t) => (
-              <div key={t.label} className="bg-bg-soft rounded-2xl p-4 flex flex-col">
+            {tiers.map((t) => (
+              <div key={t.key} className="bg-bg-soft rounded-2xl p-4 flex flex-col">
                 <div className="flex items-center justify-between gap-2 mb-3 min-h-[34px]">
                   <span className="font-mono text-[10px] font-medium text-ink-muted tracking-[0.04em] uppercase leading-[1.2]">
                     {t.label}
@@ -73,6 +114,11 @@ function ProgramCard({ program }: { program: Program }) {
                 <div className="font-mono text-[10px] text-ink-muted tracking-[0.03em] mt-2 leading-[1.3]">
                   {t.edition}
                 </div>
+                {t.startLabel && (
+                  <div className="text-[11px] font-semibold text-turquoise mt-1 leading-[1.2]">
+                    {t.startLabel}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -158,11 +204,17 @@ function PlaceholderCard() {
   );
 }
 
-export default function Programs() {
+export default async function Programs() {
   const openPrograms = programs.filter((p) => p.badgeTone === "open");
   const soonPrograms = programs.filter((p) => p.badgeTone === "soon");
   // Rellenamos "próximos" hasta 3 columnas con placeholders.
   const placeholders = Math.max(0, 3 - soonPrograms.length);
+
+  // Ediciones reales (Payload) de cada curso abierto → precios/fechas sincronizados
+  // con /admin. Si el curso no está en Payload, se cae al tier estático.
+  const liveTiers = await Promise.all(
+    openPrograms.map((p) => getCourseBySlug(p.id).then((d) => d?.priceTiers ?? null)),
+  );
 
   return (
     <>
@@ -177,8 +229,8 @@ export default function Programs() {
           subtitle="Formación disponible para que empieces hoy tu desarrollo como líder local."
         />
         <div className="grid grid-cols-1 gap-5 mb-20 lg:grid-cols-2 max-sm:mb-14">
-          {openPrograms.map((p) => (
-            <ProgramCard key={p.id} program={p} />
+          {openPrograms.map((p, i) => (
+            <ProgramCard key={p.id} program={p} liveTiers={liveTiers[i] ?? undefined} />
           ))}
         </div>
       </section>

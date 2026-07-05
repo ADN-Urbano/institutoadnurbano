@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Programs from "@/components/formacion/Programs";
 import NextStep from "@/components/formacion/NextStep";
 
+// Lee precios/fechas de Payload en cada visita → refleja los cambios de /admin.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Programas · Instituto ADN Local",
   description:
