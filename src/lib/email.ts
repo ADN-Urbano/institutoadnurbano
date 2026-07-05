@@ -52,17 +52,49 @@ export async function sendMagicLink(email: string, link: string): Promise<boolea
   return true;
 }
 
-/** Bienvenida tras la compra, con acceso directo al curso. */
-export async function sendWelcome(email: string, link: string, courseTitle: string): Promise<boolean> {
+/**
+ * Bienvenida tras la compra. Si la edición aún no ha empezado (`startsAt` en el
+ * futuro), envía un email de "plaza reservada · empieza el <fecha>" en vez del
+ * de acceso inmediato (el contenido y la comunidad se abren en la fecha de inicio).
+ */
+export async function sendWelcome(
+  email: string,
+  link: string,
+  courseTitle: string,
+  startsAt?: string | null,
+): Promise<boolean> {
   const resend = getResend();
   if (!resend) return false;
-  const html = shell(
-    "¡Bienvenido/a a tu formación!",
-    `Tu inscripción en <strong>${courseTitle}</strong> está confirmada. Entra a tu área del alumno para empezar. El enlace caduca en 15 minutos; después podrás volver a entrar desde <a href="https://www.adnlocal.es/acceder">adnlocal.es/acceder</a> con tu email.`,
-    { href: link, label: "Acceder al curso →" },
-    "Gracias por confiar en ADN Local.",
-  );
-  const { error } = await resend.emails.send({ from: FROM, to: email, subject: `Acceso a ${courseTitle} · ADN Local`, html });
+
+  const startsMs = startsAt ? new Date(startsAt).getTime() : NaN;
+  const future = !Number.isNaN(startsMs) && startsMs > Date.now();
+  const fecha = !Number.isNaN(startsMs)
+    ? new Intl.DateTimeFormat("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "Europe/Madrid",
+      }).format(new Date(startsMs))
+    : null;
+
+  const html = future
+    ? shell(
+        "¡Plaza reservada!",
+        `Tu inscripción en <strong>${courseTitle}</strong> está confirmada. El curso <strong>empieza el ${fecha}</strong>: ese día se abre el contenido en tu campus y el acceso a la comunidad, y te avisaremos por email. Mientras tanto, puedes entrar a tu área para ver tu plaza.`,
+        { href: link, label: "Ver mi plaza →" },
+        "Gracias por confiar en ADN Local. Si tienes cualquier duda, responde a este email.",
+      )
+    : shell(
+        "¡Bienvenido/a a tu formación!",
+        `Tu inscripción en <strong>${courseTitle}</strong> está confirmada. Entra a tu área del alumno para empezar. El enlace caduca en 15 minutos; después podrás volver a entrar desde <a href="https://www.adnlocal.es/acceder">adnlocal.es/acceder</a> con tu email.`,
+        { href: link, label: "Acceder al curso →" },
+        "Gracias por confiar en ADN Local.",
+      );
+
+  const subject = future
+    ? `Plaza reservada · ${courseTitle}`
+    : `Acceso a ${courseTitle} · ADN Local`;
+  const { error } = await resend.emails.send({ from: FROM, to: email, subject, html });
   if (error) {
     console.error("[email] fallo al enviar bienvenida:", error);
     return false;

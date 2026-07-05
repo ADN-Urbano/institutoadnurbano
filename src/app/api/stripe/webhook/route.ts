@@ -194,7 +194,15 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     const link = `${base}/api/auth/verify?token=${encodeURIComponent(token)}`;
     const course = await payload.findByID({ collection: "courses", id: courseId, depth: 0 });
     const title = (course as { title?: string }).title ?? "tu curso";
-    await sendWelcome(email, link, title);
+    // Fecha de inicio de la edición: si es futura, el email es de "plaza reservada".
+    let startsAt: string | null = null;
+    try {
+      const ed = await payload.findByID({ collection: "course-editions", id: editionId, depth: 0 });
+      startsAt = (ed as { startDate?: string }).startDate ?? null;
+    } catch {
+      // best-effort: sin fecha, se envía el email de acceso normal.
+    }
+    await sendWelcome(email, link, title, startsAt);
   } catch (err) {
     // No bloquear el alta por un fallo de email; el alumno puede entrar por /acceder.
     console.error("[stripe webhook] fallo al enviar email de bienvenida:", err);
