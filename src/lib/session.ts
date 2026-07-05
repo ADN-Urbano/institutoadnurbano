@@ -51,6 +51,26 @@ export function verifyMagicToken(token: string): { studentId: string; nonce: str
   return { studentId, nonce };
 }
 
+/**
+ * Inspecciona un token de enlace mágico SIN consumirlo (no rota el nonce).
+ * Solo para diagnóstico: distingue firma inválida vs caducado vs datos.
+ */
+export function inspectMagicToken(token: string): {
+  signatureOk: boolean;
+  expired: boolean;
+  studentId: string | null;
+  nonce: string | null;
+  ageMin: number | null;
+} {
+  const value = unsign(token);
+  if (!value) return { signatureOk: false, expired: false, studentId: null, nonce: null, ageMin: null };
+  const [studentId, nonce, expiryStr] = value.split(":");
+  const expiry = Number(expiryStr);
+  const expired = Number.isFinite(expiry) ? Date.now() > expiry : true;
+  const ageMin = Number.isFinite(expiry) ? Math.round((MAGIC_TTL_MS - (expiry - Date.now())) / 60000) : null;
+  return { signatureOk: true, expired, studentId: studentId ?? null, nonce: nonce ?? null, ageMin };
+}
+
 export function sessionCookieValue(studentId: string): string {
   return sign(`s:${studentId}`);
 }

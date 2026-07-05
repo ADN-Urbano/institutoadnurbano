@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { SESSION_COOKIE, studentIdFromSession, sessionCookieOptions } from "@/lib/session";
+import {
+  SESSION_COOKIE,
+  studentIdFromSession,
+  sessionCookieOptions,
+  inspectMagicToken,
+} from "@/lib/session";
 import { getPayloadClient } from "@/lib/payload";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +22,46 @@ export const dynamic = "force-dynamic";
  * si funciona sobre una respuesta de REDIRECT (como hace /api/auth/verify).
  */
 export async function GET(req: Request) {
-  const action = new URL(req.url).searchParams.get("action");
+  const params = new URL(req.url).searchParams;
+  const action = params.get("action");
+
+  // Inspecciona un token de enlace mágico real (sin consumirlo): dice por qué
+  // fallaría `verify`. Uso: cambia "/api/auth/verify?token=…" por "/api/auth/debug?token=…".
+  const token = params.get("token");
+  if (token) {
+    const insp = inspectMagicToken(token);
+    let studentFound = false;
+    let storedNoncePresent = false;
+    let nonceMatches = false;
+    let error: string | null = null;
+    if (insp.signatureOk && insp.studentId) {
+      try {
+        const payload = await getPayloadClient();
+        const s = await payload.findByID({
+          collection: "students",
+          id: insp.studentId,
+          depth: 0,
+        });
+        studentFound = Boolean(s);
+        const stored = (s as { loginNonce?: string })?.loginNonce ?? null;
+        storedNoncePresent = Boolean(stored);
+        nonceMatches = stored != null && stored === insp.nonce;
+      } catch (e) {
+        error = e instanceof Error ? e.message : String(e);
+      }
+    }
+    return NextResponse.json({
+      signatureOk: insp.signatureOk,
+      expired: insp.expired,
+      ageMin: insp.ageMin,
+      studentIdInToken: insp.studentId,
+      studentFound,
+      storedNoncePresent,
+      nonceMatches,
+      wouldSucceed: insp.signatureOk && !insp.expired && studentFound && nonceMatches,
+      error,
+    });
+  }
 
   if (action === "set-200") {
     const res = NextResponse.json({ set: "200", note: "cookie adn_test puesta en 200" });
