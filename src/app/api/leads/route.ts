@@ -168,42 +168,48 @@ export async function POST(req: Request) {
   }
 
   // Email + CAPI: solo si NO es un duplicado reciente (idempotencia suave).
-  // No bloquean la respuesta; sus fallos se registran pero no rompen el flujo.
+  // IMPORTANTE: en serverless (Vercel) hay que AWAITAR estos envíos. Si se hacen
+  // "fire-and-forget" (void), la función puede congelarse tras responder y la
+  // llamada a Resend/Meta nunca se ejecuta. Se lanzan en paralelo (allSettled)
+  // para no serializar la latencia; sus fallos se registran sin romper el flujo.
   if (!recentDuplicate) {
     const eventSourceUrl = req.headers.get("referer") ?? undefined;
     const fbclid = body.clickIds?.fbclid;
     const clientUserAgent = req.headers.get("user-agent") ?? undefined;
 
-    // CAPI: Lead para todos; CompleteRegistration para el webinar (registro).
-    void sendCapiEvent({
-      eventName: type === "webinar" ? "CompleteRegistration" : "Lead",
-      eventSourceUrl,
-      user: { email: normEmail, fbclid, clientUserAgent },
-    });
+    const jobs: Promise<unknown>[] = [
+      // CAPI: Lead para todos; CompleteRegistration para el webinar (registro).
+      sendCapiEvent({
+        eventName: type === "webinar" ? "CompleteRegistration" : "Lead",
+        eventSourceUrl,
+        user: { email: normEmail, fbclid, clientUserAgent },
+      }),
+    ];
 
-    // Email según tipo.
     switch (type) {
       case "webinar":
-        void sendWebinarSequence(normEmail);
+        jobs.push(sendWebinarSequence(normEmail));
         break;
       case "descarga-pdf": {
         const slug = body.courseSlug?.trim();
         const pdfPath = slug ? PDF_BY_SLUG[slug] : undefined;
         const pdfUrl = pdfPath ? `${serverUrl()}${pdfPath}` : PDF_PLACEHOLDER_URL;
         const title = slug ? programs.find((p) => p.id === slug)?.title : undefined;
-        void sendProgramPdf(normEmail, pdfUrl, title);
+        jobs.push(sendProgramPdf(normEmail, pdfUrl, title));
         break;
       }
       case "contacto":
-        void sendContactEmails({ email: normEmail, name: body.name?.trim(), message: body.message?.trim() });
+        jobs.push(sendContactEmails({ email: normEmail, name: body.name?.trim(), message: body.message?.trim() }));
         break;
       case "lista-espera":
-        void sendWaitlistConfirm(normEmail);
+        jobs.push(sendWaitlistConfirm(normEmail));
         break;
       case "newsletter":
-        void sendNewsletterConfirm(normEmail);
+        jobs.push(sendNewsletterConfirm(normEmail));
         break;
     }
+
+    await Promise.allSettled(jobs);
   }
 
   if (type === "webinar") {

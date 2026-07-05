@@ -173,7 +173,8 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
   // sin creds de Meta no envía nada. No bloquea el alta.
   try {
     const value = typeof session.amount_total === "number" ? session.amount_total / 100 : undefined;
-    void sendCapiEvent({
+    // await (no void): en serverless el fire-and-forget se pierde tras responder.
+    await sendCapiEvent({
       eventName: "Purchase",
       eventId: paymentId,
       user: { email },
