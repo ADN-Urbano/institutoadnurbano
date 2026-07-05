@@ -106,9 +106,12 @@ export async function POST(req: Request) {
 
   const payload = await getPayloadClient();
 
-  // Idempotencia suave: mismo email+type en <24 h → no duplicar el email; sí
-  // refrescar el last-touch del lead existente.
+  // Idempotencia suave: mismo email + type (+ curso, si lo hay) en <24 h → no
+  // duplicar el email; sí refrescar el last-touch. El curso forma parte de la
+  // clave: pedir el programa de OTRO curso no es un duplicado (debe enviarse su
+  // folleto y registrarse como lead nuevo).
   const since = new Date(now - 24 * 60 * 60 * 1000).toISOString();
+  const dupSlug = body.courseSlug?.trim();
   let recentDuplicate = false;
   let existingId: string | number | null = null;
   try {
@@ -119,6 +122,7 @@ export async function POST(req: Request) {
           { email: { equals: normEmail } },
           { type: { equals: type } },
           { createdAt: { greater_than: since } },
+          ...(dupSlug ? [{ courseSlug: { equals: dupSlug } }] : []),
         ],
       },
       sort: "-createdAt",
