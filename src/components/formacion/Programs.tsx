@@ -157,7 +157,7 @@ function ProgramCard({ program, liveTiers }: { program: Program; liveTiers?: Liv
           {/* Captación de lista de espera (no hay ficha propia para este curso). */}
           <LeadForm
             type="lista-espera"
-            fields={["municipio"]}
+            fields={["municipio", "pais"]}
             courseSlug={program.id}
             submitLabel="Quiero recibir información →"
             successMessage="¡Hecho! Te avisaremos en cuanto abra la próxima edición."

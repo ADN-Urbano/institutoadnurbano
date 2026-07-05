@@ -205,9 +205,11 @@ export async function POST(req: Request) {
       case "contacto":
         jobs.push(sendContactEmails({ email: normEmail, name: body.name?.trim(), message: body.message?.trim() }));
         break;
-      case "lista-espera":
-        jobs.push(sendWaitlistConfirm(normEmail));
+      case "lista-espera": {
+        const waitTitle = dupSlug ? programs.find((p) => p.id === dupSlug)?.title : undefined;
+        jobs.push(sendWaitlistConfirm(normEmail, waitTitle));
         break;
+      }
       case "newsletter":
         jobs.push(sendNewsletterConfirm(normEmail));
         break;
