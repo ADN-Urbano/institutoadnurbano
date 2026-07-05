@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { paraQuien } from "@/data/formacion";
 import SectionHead from "@/components/ui/SectionHead";
 
@@ -28,12 +27,11 @@ export default function ParaQuien() {
         </div>
         {/* Imagen lateral (acompaña los perfiles, ocupa toda la altura). */}
         <div className="relative rounded-[24px] overflow-hidden min-h-[280px] lg:min-h-0 max-lg:aspect-[16/10]">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/img/para-quien.jpg"
-            alt="Edificio institucional de un municipio español"
-            fill
-            sizes="(max-width: 1024px) 100vw, 40vw"
-            className="object-cover"
+            alt="Pueblo blanco andaluz"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
       </div>

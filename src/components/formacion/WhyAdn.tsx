@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { why } from "@/data/formacion";
 
 /** Sección "¿Por qué ADN Local?": texto explicativo + cita destacada + imagen. */
@@ -35,12 +34,11 @@ export default function WhyAdn() {
       </div>
 
       <div className="relative w-full aspect-[21/8] rounded-[24px] overflow-hidden mt-12 max-sm:aspect-[3/2] max-sm:mt-8">
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/img/municipio.jpg"
-          alt="Vista de un municipio español"
-          fill
-          sizes="(max-width: 1320px) 100vw, 1320px"
-          className="object-cover"
+          alt="Vida en la calle de un municipio"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
     </section>

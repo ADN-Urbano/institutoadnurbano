@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import AccentTitle from "@/components/ui/AccentTitle";
 import { hero } from "@/data/formacion";
 
@@ -35,13 +34,11 @@ export default function LandingHero() {
         </div>
 
         <div className="relative w-full aspect-[4/3] rounded-[28px] overflow-hidden lg:aspect-[5/6] max-sm:aspect-[16/11]">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/img/portada.jpg"
-            alt="Plaza de un municipio español"
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 48vw"
-            className="object-cover"
+            alt="Vista del Albaicín, Granada"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
       </div>
