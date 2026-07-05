@@ -26,7 +26,14 @@ export async function POST(req: Request) {
   const nonce = newNonce();
   await payload.update({ collection: "students", id: student.id, data: { loginNonce: nonce } });
 
-  const base = process.env.NEXT_PUBLIC_SERVER_URL || new URL(req.url).origin;
+  // Normaliza la base: quita espacios/barras y garantiza protocolo (una env con
+  // espacios al final rompía el enlace: "…adnlocal.es%20%20/api/auth/verify").
+  const rawBase = (process.env.NEXT_PUBLIC_SERVER_URL ?? "").trim().replace(/\/+$/, "");
+  const base = rawBase
+    ? /^https?:\/\//.test(rawBase)
+      ? rawBase
+      : `https://${rawBase}`
+    : new URL(req.url).origin;
   const link = `${base}/api/auth/verify?token=${encodeURIComponent(createMagicToken(String(student.id), nonce))}`;
 
   const sent = await sendMagicLink(email, link);
