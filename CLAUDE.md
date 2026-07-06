@@ -29,7 +29,7 @@ Dev admin login at `/admin`. Test student flow: `/acceder` → enter `alumno@adn
 
 ## Environment
 
-Copy `.env.example` → `.env.local`. Key vars: `DATABASE_URI`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, plus Stripe (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`), Resend (`RESEND_API_KEY`, `EMAIL_FROM`), `SLACK_INVITE_URL`.
+Copy `.env.example` → `.env.local`. Key vars: `DATABASE_URI`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, plus Stripe (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`), Resend (`RESEND_API_KEY`, `EMAIL_FROM`).
 
 - **Dev DB**: local Homebrew Postgres over Unix socket to avoid SCRAM password: `DATABASE_URI=postgresql://santi@localhost:5432/adnlocal?host=/tmp`. Do NOT change the `santi` role password.
 - **Prod DB**: Neon EU. Schema is pushed by running `dev` against Neon (Payload only auto-pushes in dev, never in prod). Connecting to Neon from local Node needs `NODE_OPTIONS="--no-network-family-autoselection --dns-result-order=ipv4first"` (IPv6/autoSelectFamily bug); not needed on Vercel.

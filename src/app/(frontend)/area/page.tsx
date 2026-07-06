@@ -4,12 +4,9 @@ import { redirect } from "next/navigation";
 import { getCurrentStudent } from "@/lib/session";
 import { getStudentCourses } from "@/lib/courses";
 import { ArrowRight } from "@/components/ui/icons";
-import SlackCard from "@/components/area/SlackCard";
 
 export const metadata: Metadata = { title: "Tu área · ADN Local" };
 export const dynamic = "force-dynamic";
-
-const SLACK_URL = process.env.SLACK_INVITE_URL || "#";
 
 const accessDateFmt = new Intl.DateTimeFormat("es-ES", {
   day: "numeric",
@@ -126,10 +123,6 @@ export default async function AreaPage() {
           ))}
         </div>
       )}
-
-      <div className="mt-12 grid grid-cols-2 gap-5 max-lg:grid-cols-1">
-        <SlackCard url={SLACK_URL} />
-      </div>
     </main>
   );
 }

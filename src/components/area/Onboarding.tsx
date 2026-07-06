@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { CloseIcon } from "@/components/ui/icons";
 
-export default function Onboarding({ slug, slackUrl }: { slug: string; slackUrl: string }) {
+export default function Onboarding({ slug }: { slug: string }) {
   const KEY = `adn_onboarding_${slug}`;
   const [show, setShow] = useState(false);
 
@@ -40,22 +39,14 @@ export default function Onboarding({ slug, slackUrl }: { slug: string; slackUrl:
         ¡Bienvenido/a al curso!
       </div>
       <p className="text-[15px] leading-[1.6] opacity-95 max-w-[620px] mb-4">
-        Así funciona: ves los vídeos y las lecturas a tu ritmo, cada semana hay una{" "}
-        <strong>sesión en directo por Teams</strong> (la verás justo aquí arriba), y la comunidad está
-        en <strong>Slack</strong>. Marca las lecciones como completadas para seguir tu progreso.
+        Así funciona: ves los vídeos y las lecturas a tu ritmo y cada semana hay una{" "}
+        <strong>sesión en directo por Teams</strong> (la verás justo aquí arriba). Marca las
+        lecciones como completadas para seguir tu progreso.
       </p>
       <div className="flex gap-2.5 flex-wrap">
-        <Link
-          href={slackUrl}
-          target={slackUrl.startsWith("http") ? "_blank" : undefined}
-          rel="noreferrer"
-          className="bg-white text-ink px-4 py-2.5 rounded-lg text-sm font-semibold transition-transform hover:-translate-y-px"
-        >
-          Unirme a Slack
-        </Link>
         <button
           onClick={dismiss}
-          className="border border-white/25 text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors hover:bg-white/10"
+          className="bg-white text-ink px-4 py-2.5 rounded-lg text-sm font-semibold transition-transform hover:-translate-y-px"
         >
           Entendido
         </button>

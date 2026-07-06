@@ -22,8 +22,6 @@ import CourseResources from "@/components/area/CourseResources";
 export const metadata: Metadata = { title: "Curso · Tu área · ADN Local" };
 export const dynamic = "force-dynamic";
 
-const SLACK_URL = process.env.SLACK_INVITE_URL || "#";
-
 const pendingDateFmt = new Intl.DateTimeFormat("es-ES", {
   weekday: "long",
   day: "numeric",
@@ -93,8 +91,7 @@ export default async function AreaCoursePage({
           </div>
           <p className="text-[15px] leading-[1.6] opacity-95 max-w-[640px] mb-6">
             El curso aún no ha empezado. El acceso al contenido y a las clases en directo se abrirá
-            el día de inicio. Te avisaremos por email; mientras tanto, puedes unirte a la comunidad
-            de Slack.
+            el día de inicio. Te avisaremos por email.
           </p>
           <div className="flex flex-wrap gap-4">
             <div className="rounded-xl bg-white/10 px-5 py-4">
@@ -116,7 +113,7 @@ export default async function AreaCoursePage({
           </div>
         </section>
 
-        <Onboarding slug={slug} slackUrl={SLACK_URL} />
+        <Onboarding slug={slug} />
         <Announcements items={announcements} />
       </main>
     );
@@ -146,7 +143,7 @@ export default async function AreaCoursePage({
         {course.headline}
       </h1>
 
-      <Onboarding slug={slug} slackUrl={SLACK_URL} />
+      <Onboarding slug={slug} />
       {session && <NextSession session={session} />}
       <Announcements items={announcements} />
 

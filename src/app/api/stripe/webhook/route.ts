@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 /**
  * Webhook de Stripe. En `checkout.session.completed`: upsert del Student +
  * creación del Enrollment (idempotente). El email de bienvenida (acceso
- * magic-link + Slack) se conectará con Resend en el hito 4.6.
+ * magic-link) se conectará con Resend en el hito 4.6.
  *
  * Verifica la firma con STRIPE_WEBHOOK_SECRET. En dev, ese secreto lo da el
  * Stripe CLI: `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
