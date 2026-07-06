@@ -5,7 +5,9 @@ import {
   studentIdFromSession,
   sessionCookieOptions,
   inspectMagicToken,
+  getCurrentStudent,
 } from "@/lib/session";
+import { getStudentCourses } from "@/lib/courses";
 import { getPayloadClient } from "@/lib/payload";
 
 export const dynamic = "force-dynamic";
@@ -59,6 +61,42 @@ export async function GET(req: Request) {
       storedNoncePresent,
       nonceMatches,
       wouldSucceed: insp.signatureOk && !insp.expired && studentFound && nonceMatches,
+      error,
+    });
+  }
+
+  // Replica la lógica de /area/curso/[slug]: qué ve la página del curso estando
+  // tú logueado. Uso (logueado): /api/auth/debug?course=<slug-del-curso>
+  const course = params.get("course");
+  if (course) {
+    const student = await getCurrentStudent();
+    if (!student) {
+      return NextResponse.json({
+        sessionOk: false,
+        note: "getCurrentStudent() devolvió null AQUÍ → la página del curso redirige a /acceder",
+      });
+    }
+    let enrolledSlugs: unknown = null;
+    let mineFound = false;
+    let error: string | null = null;
+    try {
+      const enrolled = await getStudentCourses(String(student.id));
+      enrolledSlugs = enrolled.map((c) => ({
+        slug: c.slug,
+        accessState: c.accessState,
+        editionId: c.editionId,
+      }));
+      mineFound = enrolled.some((c) => c.slug === course);
+    } catch (e) {
+      error = e instanceof Error ? e.message : String(e);
+    }
+    return NextResponse.json({
+      sessionOk: true,
+      studentId: String(student.id),
+      slugRequested: course,
+      enrolledSlugs,
+      mineFound,
+      redirectTo: mineFound ? null : "/area (mine no encontrado)",
       error,
     });
   }
