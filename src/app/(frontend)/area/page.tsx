@@ -41,6 +41,7 @@ export default async function AreaPage() {
             Mi cuenta
           </Link>
           <Link
+            prefetch={false}
             href="/api/auth/logout"
             className="text-sm font-medium text-ink-muted hover:text-ink"
           >
