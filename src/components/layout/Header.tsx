@@ -14,6 +14,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [me, setMe] = useState<{ loggedIn: boolean; name?: string }>({ loggedIn: false });
   const [nextCourseHref, setNextCourseHref] = useState("/programas");
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -22,6 +23,14 @@ export default function Header() {
       .then(setMe)
       .catch(() => {});
   }, [pathname]);
+
+  // Logo grande al entrar (arriba del todo); se encoge al hacer scroll.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Próximo curso disponible (se resuelve solo según las ediciones).
   useEffect(() => {
@@ -52,8 +61,18 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md backdrop-saturate-[1.8] border-b border-rule">
-      <div className="max-w-[1320px] mx-auto px-8 h-[76px] flex items-center gap-10 max-md:px-5 max-md:gap-4">
-        <BrandLogo href="/" size="md" />
+      <div
+        className={`max-w-[1320px] mx-auto px-8 flex items-center gap-10 max-md:px-5 max-md:gap-4 transition-[height] duration-300 ease-out ${
+          scrolled ? "h-[76px]" : "h-[76px] md:h-[92px]"
+        }`}
+      >
+        <div
+          className={`origin-left transition-transform duration-300 ease-out ${
+            scrolled ? "scale-100" : "scale-100 md:scale-[1.3]"
+          }`}
+        >
+          <BrandLogo href="/" size="md" />
+        </div>
 
         {/* Navegación de escritorio */}
         <nav className="flex items-center gap-0.5 flex-1 max-md:hidden">
