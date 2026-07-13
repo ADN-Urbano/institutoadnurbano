@@ -25,12 +25,14 @@ export default function ParaQuien() {
             </div>
           ))}
         </div>
-        {/* Imagen lateral (acompaña los perfiles, ocupa toda la altura). */}
-        <div className="relative rounded-[24px] overflow-hidden min-h-[280px] lg:min-h-0 max-lg:aspect-[16/10]">
+        {/* Imagen lateral (acompaña los perfiles, ocupa toda la altura en lg).
+            En móvil solo la proporción define la altura: NO usar min-height con
+            aspect-ratio a la vez (min-h × ratio impone un ancho que desborda). */}
+        <div className="relative rounded-[24px] overflow-hidden lg:min-h-0 max-lg:aspect-[16/10]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/img/para-quien.jpg"
-            alt="Pueblo blanco andaluz"
+            alt="Alcaldesa conversando con vecinos frente al ayuntamiento"
             className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
