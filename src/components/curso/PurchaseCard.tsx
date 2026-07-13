@@ -5,7 +5,7 @@ import EditionPurchase from "@/components/curso/EditionPurchase";
 
 const LIMITED_TEXT = "Máximo 30 participantes por edición";
 const GUARANTEE_TEXT =
-  "Privacidad y anonimato garantizados. Tu identidad y tu participación en este programa permanecerán siempre confidenciales.";
+  "Privacidad y anonimato garantizados. Tu identidad y participación en este programa permanecerán siempre confidenciales.";
 
 export default function PurchaseCard({ course }: { course: CourseDetail }) {
   return (

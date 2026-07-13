@@ -101,7 +101,7 @@ export type Program = {
 };
 
 const guaranteeText =
-  "Nos reservamos el derecho de cancelar el programa si no se alcanza el mínimo.";
+  "Privacidad y anonimato garantizados. Tu identidad y participación en este programa permanecerán siempre confidenciales.";
 const limitedText = "Máximo 30 participantes por edición";
 
 export const programs: Program[] = [

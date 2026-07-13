@@ -91,7 +91,7 @@ function ProgramCard({ program, liveTiers }: { program: Program; liveTiers?: Liv
               <div key={t.key} className="bg-bg-soft rounded-2xl p-4 flex flex-col">
                 <div className="flex items-center justify-between gap-2 mb-3 min-h-[34px]">
                   <span className="font-mono text-[10px] font-medium text-ink-muted tracking-[0.04em] uppercase leading-[1.2]">
-                    {t.label}
+                    {t.edition || t.label}
                   </span>
                   {t.discount && (
                     <span
@@ -110,9 +110,6 @@ function ProgramCard({ program, liveTiers }: { program: Program; liveTiers?: Liv
                   className={`font-display font-extrabold text-[34px] leading-none tracking-[-0.02em] ${priceColor[t.tone]}`}
                 >
                   {t.price}
-                </div>
-                <div className="font-mono text-[10px] text-ink-muted tracking-[0.03em] mt-2 leading-[1.3]">
-                  {t.edition}
                 </div>
                 {t.startLabel && (
                   <div className="text-[11px] font-semibold text-turquoise mt-1 leading-[1.2]">
