@@ -19,13 +19,13 @@ export default function LandingHero() {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              href="/programas"
+              href="/programas#programas"
               className="inline-flex items-center justify-center bg-ink text-white px-7 py-4 rounded-xl text-sm font-bold transition-all hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)]"
             >
               Ver programas →
             </Link>
             <Link
-              href="/metodologia"
+              href="/metodologia#el-modelo"
               className="inline-flex items-center justify-center bg-turquoise-soft text-turquoise-dark px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-px hover:shadow-[var(--shadow-sm)]"
             >
               Nuestra metodología

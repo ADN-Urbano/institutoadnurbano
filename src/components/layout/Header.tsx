@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BrandLogo from "@/components/ui/BrandLogo";
-import { ArrowRight, SearchIcon, MenuIcon, CloseIcon } from "@/components/ui/icons";
+import { ArrowRight, MenuIcon, CloseIcon } from "@/components/ui/icons";
 
 const itemBase = "px-3.5 py-2 text-sm rounded-lg transition-all";
 const itemOn = "text-turquoise bg-turquoise-soft font-semibold";
@@ -32,7 +32,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Próximo curso disponible (se resuelve solo según las ediciones).
+  // Próximo programa disponible (se resuelve solo según las ediciones).
   useEffect(() => {
     fetch("/api/next-course")
       .then((r) => r.json())
@@ -88,15 +88,9 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2.5 ml-auto max-md:gap-2">
-          <button
-            aria-label="Buscar"
-            className="w-[38px] h-[38px] border border-rule bg-white rounded-lg flex items-center justify-center text-ink-soft transition-all hover:border-turquoise hover:text-turquoise"
-          >
-            <SearchIcon className="w-3.5 h-3.5" />
-          </button>
           <Link
             href={me.loggedIn ? "/area" : "/acceder"}
-            className="px-3.5 py-2 text-sm font-medium text-ink-soft rounded-lg transition-all hover:text-ink hover:bg-bg-soft max-md:hidden"
+            className="px-3.5 py-2 text-sm font-semibold text-coral rounded-lg transition-all hover:bg-coral-soft max-md:hidden"
           >
             {me.loggedIn ? "Mi campus" : "Campus"}
           </Link>
@@ -113,7 +107,7 @@ export default function Header() {
             href={nextCourseHref}
             className="bg-ink text-white px-[18px] py-2.5 rounded-lg text-sm font-semibold transition-all inline-flex items-center gap-2 hover:bg-turquoise hover:-translate-y-px hover:shadow-[var(--shadow-md)] max-md:hidden"
           >
-            Próximo curso
+            Próximo programa
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
 
@@ -149,7 +143,7 @@ export default function Header() {
             <Link
               href={me.loggedIn ? "/area" : "/acceder"}
               onClick={() => setOpen(false)}
-              className="px-3.5 py-2.5 text-[15px] font-medium text-ink-soft rounded-lg text-center border border-rule"
+              className="px-3.5 py-2.5 text-[15px] font-semibold text-coral rounded-lg text-center border border-coral-soft"
             >
               {me.loggedIn ? "Mi campus" : "Campus"}
             </Link>
@@ -168,7 +162,7 @@ export default function Header() {
               onClick={() => setOpen(false)}
               className="bg-ink text-white px-[18px] py-3 rounded-lg text-[15px] font-semibold inline-flex items-center justify-center gap-2"
             >
-              Próximo curso
+              Próximo programa
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

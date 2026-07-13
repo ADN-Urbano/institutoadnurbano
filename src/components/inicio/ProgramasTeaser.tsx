@@ -16,7 +16,7 @@ export default function ProgramasTeaser() {
           </>
         }
         subtitle="Cursos prácticos de tres semanas para cada etapa de tu trayectoria."
-        link={{ label: "Ver todos →", href: "/programas" }}
+        link={{ label: "Ver todos →", href: "/programas#programas" }}
       />
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         {programs.filter((p) => p.href).map((p) => {

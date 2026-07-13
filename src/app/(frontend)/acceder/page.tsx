@@ -6,7 +6,7 @@ import AccederForm from "@/components/acceder/AccederForm";
 
 export const metadata: Metadata = {
   title: "Acceder · ADN Local",
-  description: "Accede a tu área de alumno del Instituto ADN Local.",
+  description: "Accede a tu área de alumno de ADN Local.",
 };
 
 const perks = [

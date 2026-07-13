@@ -19,7 +19,7 @@ export default function MetodologiaTeaser() {
           </>
         }
         subtitle="Un modelo flexible y aplicado: teoría a tu ritmo, casos reales en directo y todo llevado a tu propio municipio."
-        link={{ label: "Ver metodología →", href: "/metodologia" }}
+        link={{ label: "Ver metodología →", href: "/metodologia#el-modelo" }}
       />
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {method.map((m) => (

@@ -28,7 +28,7 @@ export default function MethodHero() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] items-start border-t border-rule pt-16 max-sm:pt-12">
+      <div id="el-modelo" className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] items-start border-t border-rule pt-16 scroll-mt-24 max-sm:pt-12">
         <div>
           <div className="font-mono text-[11px] font-medium text-coral tracking-[0.06em] uppercase mb-3">
             {methodHero.modelEyebrow}

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import BrandLogo from "@/components/ui/BrandLogo";
+import FooterLink from "@/components/layout/FooterLink";
 
 const columns = [
   {
@@ -44,12 +44,12 @@ export default function Footer() {
               <ul className="flex flex-col gap-2">
                 {col.items.map((item) => (
                   <li key={item.label}>
-                    <Link
+                    <FooterLink
                       href={item.href}
                       className="text-[13px] text-white/75 transition-colors hover:text-white"
                     >
                       {item.label}
-                    </Link>
+                    </FooterLink>
                   </li>
                 ))}
               </ul>

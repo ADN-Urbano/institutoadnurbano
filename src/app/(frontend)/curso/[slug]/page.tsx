@@ -22,7 +22,7 @@ export async function generateMetadata({
   const course = await getCourseBySlug(slug);
   if (!course) return { title: "Curso no encontrado · ADN Local" };
   return {
-    title: `${course.title} · Instituto ADN Local`,
+    title: `${course.title} · ADN Local`,
     description: course.summary,
   };
 }

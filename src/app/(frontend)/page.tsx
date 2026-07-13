@@ -7,7 +7,7 @@ import WhyAdn from "@/components/formacion/WhyAdn";
 import NextStep from "@/components/formacion/NextStep";
 
 export const metadata: Metadata = {
-  title: "Instituto ADN Local · Formación para líderes locales",
+  title: "ADN Local · Formación para líderes locales",
   description:
     "La escuela de los líderes locales: formación práctica, estrategia y acompañamiento para alcaldes, concejales, candidatos y responsables municipales.",
 };

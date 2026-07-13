@@ -7,7 +7,7 @@ import ComoFunciona from "@/components/metodologia/ComoFunciona";
 import ConstruyeItinerario from "@/components/metodologia/ConstruyeItinerario";
 
 export const metadata: Metadata = {
-  title: "Metodología · Instituto ADN Local",
+  title: "Metodología · ADN Local",
   description:
     "Un modelo flexible, práctico y aplicado: microcredenciales por competencia para que construyas tu propio itinerario de gobierno local.",
 };

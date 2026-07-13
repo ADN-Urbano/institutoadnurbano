@@ -6,7 +6,7 @@ import AdnUrbano from "@/components/sobre/AdnUrbano";
 import SobreCta from "@/components/sobre/SobreCta";
 
 export const metadata: Metadata = {
-  title: "Sobre nosotros · Instituto ADN Local",
+  title: "Sobre nosotros · ADN Local",
   description:
     "ADN Local es la escuela de los líderes locales. Nace de ADN Urbano, consultora de transformación urbana, para llevar años de experiencia de campo a la formación de cargos públicos.",
 };
