@@ -24,7 +24,7 @@ export default function ProgramaCta({ courseSlug }: { courseSlug: string }) {
           Recibe el programa completo
         </h2>
         <p className="text-[15px] leading-[1.6] text-white/90 max-w-[46ch]">
-          Déjanos tu email y te enviamos el temario detallado de este curso: módulos, sesiones en
+          Déjanos tu email y te enviamos el temario detallado de este programa: módulos, sesiones en
           directo y todo lo que incluye.
         </p>
       </div>

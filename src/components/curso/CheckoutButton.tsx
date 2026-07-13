@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function CheckoutButton({
   slug,
   editionId,
-  label = "Inscribirme al curso →",
+  label = "Inscribirme al programa →",
 }: {
   slug: string;
   editionId?: string;

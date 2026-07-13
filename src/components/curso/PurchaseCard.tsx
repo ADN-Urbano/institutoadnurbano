@@ -4,11 +4,12 @@ import AccentTitle from "@/components/ui/AccentTitle";
 import EditionPurchase from "@/components/curso/EditionPurchase";
 
 const LIMITED_TEXT = "Máximo 30 participantes por edición";
-const GUARANTEE_TEXT = "Nos reservamos el derecho de cancelar el curso si no se alcanza el mínimo.";
+const GUARANTEE_TEXT =
+  "Privacidad y anonimato garantizados. Tu identidad y tu participación en este programa permanecerán siempre confidenciales.";
 
 export default function PurchaseCard({ course }: { course: CourseDetail }) {
   return (
-    <aside className="bg-white border-2 border-ink rounded-3xl p-8 sticky top-[100px] self-start shadow-[var(--shadow-md)] max-lg:static max-sm:p-6">
+    <aside id="reservar" className="bg-white border-2 border-ink rounded-3xl p-8 sticky top-[100px] self-start scroll-mt-24 shadow-[var(--shadow-md)] max-lg:static max-sm:p-6">
       <div className="inline-flex items-center gap-2 bg-green-soft text-[#5C6B26] px-3 py-[5px] rounded-full font-mono text-[11px] font-medium tracking-[0.04em] uppercase mb-[22px]">
         <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse-dot" />
         <span>Inscripción abierta</span>

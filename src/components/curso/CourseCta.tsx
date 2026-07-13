@@ -1,5 +1,4 @@
 import type { CourseDetail } from "@/data/curso";
-import CheckoutButton from "@/components/curso/CheckoutButton";
 
 /** CTA final del curso: bloque turquesa con título + plazas + "Reservar mi plaza". */
 export default function CourseCta({ course }: { course: CourseDetail }) {
@@ -24,11 +23,12 @@ export default function CourseCta({ course }: { course: CourseDetail }) {
         </div>
         <p className="text-[15px] leading-[1.55] text-white/85 mb-6">{finalCta.seatsDesc}</p>
         {course.defaultEditionId ? (
-          <CheckoutButton
-            slug={course.slug}
-            editionId={course.defaultEditionId}
-            label="Reservar mi plaza →"
-          />
+          <a
+            href="#reservar"
+            className="group block w-full bg-ink text-white text-center px-6 py-4 rounded-xl text-sm font-semibold transition-all hover:bg-turquoise-deep hover:-translate-y-px"
+          >
+            Reservar mi plaza →
+          </a>
         ) : (
           <a
             href="#programa"

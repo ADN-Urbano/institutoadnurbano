@@ -64,7 +64,7 @@ export default function EditionPurchase({
             >
               <div className="flex items-center justify-between gap-2 mb-3 min-h-[34px]">
                 <span className="font-mono text-[10px] font-medium text-ink-muted tracking-[0.04em] uppercase leading-[1.2]">
-                  {t.label}
+                  {t.editionLabel || t.label}
                 </span>
                 {t.discount && (
                   <span
@@ -84,9 +84,6 @@ export default function EditionPurchase({
               >
                 {t.price}
               </div>
-              <div className="font-mono text-[10px] text-ink-muted tracking-[0.03em] mt-2 leading-[1.3]">
-                {t.editionLabel}
-              </div>
               {t.startLabel && (
                 <div className="text-[11px] font-semibold text-turquoise mt-1 leading-[1.2]">
                   {t.startLabel}
@@ -100,6 +97,12 @@ export default function EditionPurchase({
       {children}
 
       <CheckoutButton slug={slug} editionId={selectedEditionId || undefined} />
+      <a
+        href="#programa"
+        className="block w-full text-center border border-rule text-ink-soft p-3.5 rounded-xl font-semibold text-sm transition-colors hover:border-turquoise hover:text-turquoise"
+      >
+        Recibe el programa completo
+      </a>
     </>
   );
 }
