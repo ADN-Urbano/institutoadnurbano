@@ -18,7 +18,8 @@ export default function InfoContact({ courseSlug }: { courseSlug?: string }) {
       <LeadForm
         type="contacto"
         courseSlug={courseSlug}
-        fields={["nombre", "apellidos", "pais", "municipio", "situacion"]}
+        fields={["nombre", "apellidos", "pais", "municipio", "situacion", "message"]}
+        consent
         submitLabel="Enviar →"
         successMessage="¡Gracias! Hemos recibido tus datos y te contactaremos pronto."
         className="lg:grid-cols-2"

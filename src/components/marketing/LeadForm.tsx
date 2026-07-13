@@ -58,6 +58,7 @@ export default function LeadForm({
   successMessage = "¡Listo! Te hemos enviado un email.",
   className = "",
   onDark = false,
+  consent = false,
 }: {
   type: LeadType;
   fields: FieldKey[];
@@ -66,6 +67,7 @@ export default function LeadForm({
   successMessage?: string;
   className?: string;
   onDark?: boolean;
+  consent?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -243,7 +245,40 @@ export default function LeadForm({
       {fields.includes("message") && (
         <label className={labelClass}>
           Mensaje
-          <textarea name="message" rows={4} className={inputClass} placeholder="¿En qué podemos ayudarte?" />
+          <textarea
+            name="message"
+            rows={4}
+            required
+            className={inputClass}
+            placeholder="¿En qué podemos ayudarte?"
+          />
+        </label>
+      )}
+
+      {consent && (
+        <label
+          className={`flex items-start gap-2.5 text-[12px] font-medium leading-snug ${
+            onDark ? "text-white/80" : "text-ink-muted"
+          }`}
+        >
+          <input
+            type="checkbox"
+            name="consent"
+            required
+            className="mt-0.5 h-4 w-4 shrink-0 accent-turquoise"
+          />
+          <span>
+            Acepto recibir comunicaciones de ADN Local y he leído la{" "}
+            <a
+              href="/privacidad"
+              target="_blank"
+              rel="noreferrer"
+              className={`underline ${onDark ? "text-white" : "text-turquoise"}`}
+            >
+              política de privacidad
+            </a>
+            .
+          </span>
         </label>
       )}
 

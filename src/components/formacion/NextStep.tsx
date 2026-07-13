@@ -30,10 +30,10 @@ export default function NextStep() {
           type="newsletter"
           fields={[]}
           onDark
+          consent
           submitLabel="Suscribirme →"
           successMessage="¡Listo! Te avisaremos de nuevos programas y recursos."
         />
-        <p className="mt-3 text-[12px] text-white/70">No compartimos tu información.</p>
       </div>
     </section>
   );
