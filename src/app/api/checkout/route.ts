@@ -74,8 +74,9 @@ export async function POST(req: Request) {
     const stripe = getStripe();
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      // Sin payment_method_types: Stripe ofrece los métodos habilitados en el
-      // dashboard (tarjeta, Bizum, Klarna…) según elegibilidad.
+      // Métodos de pago fijados: solo tarjeta y Bizum (evita que Stripe ofrezca
+      // otros como Klarna). Ambos deben estar habilitados en el dashboard.
+      payment_method_types: ["card", "bizum"],
       line_items: [
         {
           quantity: 1,

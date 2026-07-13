@@ -83,13 +83,6 @@ export default function AccountForm({
           Datos y privacidad
         </h2>
         <div className="flex flex-col gap-3 items-start">
-          <a
-            href="/api/account/export"
-            className="inline-flex items-center gap-2 border border-rule px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors hover:border-turquoise hover:text-turquoise"
-          >
-            Descargar mis datos
-          </a>
-
           {!confirming ? (
             <button
               onClick={() => setConfirming(true)}
