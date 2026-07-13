@@ -28,6 +28,9 @@ export default async function CuentaPage() {
       <AccountForm
         initialName={(student.name as string) ?? ""}
         email={(student.email as string) ?? ""}
+        initialPhone={(student.phone as string) ?? ""}
+        initialMunicipio={(student.municipio as string) ?? ""}
+        initialPais={(student.pais as string) ?? ""}
       />
     </main>
   );

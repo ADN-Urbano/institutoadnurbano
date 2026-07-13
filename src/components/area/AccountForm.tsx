@@ -2,18 +2,38 @@
 
 import { useState } from "react";
 
+const inputClass =
+  "border border-rule rounded-xl px-4 py-3 text-[15px] outline-none transition-colors focus:border-turquoise";
+const labelClass = "font-mono text-[11px] text-ink-soft tracking-[0.04em] uppercase";
+
 export default function AccountForm({
   initialName,
   email,
+  initialPhone,
+  initialMunicipio,
+  initialPais,
 }: {
   initialName: string;
   email: string;
+  initialPhone: string;
+  initialMunicipio: string;
+  initialPais: string;
 }) {
   const [name, setName] = useState(initialName);
+  const [phone, setPhone] = useState(initialPhone);
+  const [municipio, setMunicipio] = useState(initialMunicipio);
+  const [pais, setPais] = useState(initialPais);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  /** Cambia un campo y descarta el "Guardado ✓" previo. */
+  const bind =
+    (setter: (v: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+      setSaved(false);
+    };
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -23,7 +43,7 @@ export default function AccountForm({
       await fetch("/api/account/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, phone, municipio, pais }),
       });
       setSaved(true);
     } finally {
@@ -46,7 +66,7 @@ export default function AccountForm({
       {/* Datos */}
       <form onSubmit={save} className="flex flex-col gap-4 max-w-[480px]">
         <label className="flex flex-col gap-1.5">
-          <span className="font-mono text-[11px] text-ink-soft tracking-[0.04em] uppercase">Email</span>
+          <span className={labelClass}>Email</span>
           <input
             value={email}
             disabled
@@ -54,16 +74,20 @@ export default function AccountForm({
           />
         </label>
         <label className="flex flex-col gap-1.5">
-          <span className="font-mono text-[11px] text-ink-soft tracking-[0.04em] uppercase">Nombre</span>
-          <input
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setSaved(false);
-            }}
-            placeholder="Tu nombre"
-            className="border border-rule rounded-xl px-4 py-3 text-[15px] outline-none transition-colors focus:border-turquoise"
-          />
+          <span className={labelClass}>Nombre y apellidos</span>
+          <input value={name} onChange={bind(setName)} placeholder="Tu nombre y apellidos" className={inputClass} />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Teléfono</span>
+          <input value={phone} onChange={bind(setPhone)} placeholder="Tu teléfono" className={inputClass} />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Municipio</span>
+          <input value={municipio} onChange={bind(setMunicipio)} placeholder="Tu municipio" className={inputClass} />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>País</span>
+          <input value={pais} onChange={bind(setPais)} placeholder="Tu país" className={inputClass} />
         </label>
         <div className="flex items-center gap-3">
           <button
