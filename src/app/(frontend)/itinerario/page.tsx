@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { especializaciones } from "@/data/catalogo";
-import Niveles from "@/components/itinerario/Niveles";
 import EstrategiaMatriz from "@/components/itinerario/EstrategiaMatriz";
 import Especializacion from "@/components/itinerario/Especializacion";
 import Sectorial from "@/components/itinerario/Sectorial";
@@ -40,7 +39,6 @@ export default function ItinerarioPage() {
         </div>
       </section>
 
-      <Niveles />
       <EstrategiaMatriz />
       {especializaciones.map((area) => (
         <Especializacion key={area.n} area={area} />
