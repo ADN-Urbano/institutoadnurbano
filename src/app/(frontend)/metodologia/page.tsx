@@ -9,7 +9,7 @@ import ConstruyeItinerario from "@/components/metodologia/ConstruyeItinerario";
 export const metadata: Metadata = {
   title: "Metodología · ADN Local",
   description:
-    "Un modelo flexible, práctico y aplicado: microcredenciales por competencia para que construyas tu propio itinerario de gobierno local.",
+    "Un modelo flexible, práctico y aplicado, por competencias, para que construyas tu propio itinerario de gobierno local.",
 };
 
 export default function MetodologiaPage() {

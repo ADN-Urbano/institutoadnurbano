@@ -312,11 +312,11 @@ export const comoFunciona = {
   items: [
     {
       title: "Sesiones en directo",
-      desc: "Una sesión por bloque (3 en total) para resolver casos reales. El enlace al directo estará en tu campus virtual; si no puedes asistir, se graban y quedan en menos de 24 horas.",
+      desc: "Una sesión por bloque para resolver casos reales. El enlace al directo estará en tu campus virtual; si no puedes asistir, se graban y quedan en menos de 24 horas.",
     },
     {
       title: "Campus Virtual",
-      desc: "Lecturas estructuradas, vídeos cortos de 5 a 15 minutos y un test de fijación por tema, para asimilar lo importante de forma ágil.",
+      desc: "Lecturas estructuradas, vídeos cortos de 5 a 15 minutos y tests de fijación de conocimientos, para asimilar lo importante de forma ágil.",
     },
     {
       title: "Soporte directo por WhatsApp",
@@ -349,7 +349,7 @@ export const methodHero = {
   modelAccent: "paso a paso",
   modelParagraphs: [
     "No creemos en formaciones largas donde aprendes de todo y acabas aplicando poco.",
-    "En ADN Local cada programa es una microcredencial: una formación especializada que desarrolla una competencia concreta para el ejercicio del gobierno local.",
+    "En ADN Local cada programa es una formación especializada que desarrolla una competencia concreta para el ejercicio del gobierno local.",
     "Puedes realizar un único programa o construir, poco a poco, un itinerario completo adaptado a tus necesidades.",
   ],
 };

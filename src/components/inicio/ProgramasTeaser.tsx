@@ -9,7 +9,7 @@ export default function ProgramasTeaser() {
   return (
     <section className="mb-24 max-sm:mb-14">
       <SectionHead
-        eyebrow="·· Microcredenciales"
+        eyebrow="·· Formación por competencias"
         title={
           <>
             Nuestros <span className="text-turquoise">programas</span>

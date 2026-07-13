@@ -56,17 +56,15 @@ export const equipo = {
       "Municipios de 5.000 a 50.000 habitantes",
     ],
   },
-  teamNote:
-    "Junto a la red multidisciplinar de ADN Urbano: arquitectos, urbanistas y especialistas en derecho y economía que sostienen cada programa con criterio técnico real.",
 };
 
 export const adnUrbano = {
   eyebrow: "·· De dónde venimos",
   title: "Somos ADN Urbano",
   accent: "ADN Urbano",
-  tagline: "Innovación y desarrollo urbano sostenible",
+  tagline: "Agencia de innovación local",
   paragraphs: [
-    "ADN Urbano es una consultora especializada en transformación urbana y desarrollo territorial sostenible: ciudades y territorios más amables, atractivos y accesibles.",
+    "ADN Urbano es una consultora especializada en transformación urbana y desarrollo territorial: ciudades y territorios más amables, atractivos y accesibles.",
     "Trabajamos desde una mirada humanista, impulsando el liderazgo público, la participación ciudadana y proyectos integrales junto a ayuntamientos y equipos de gobierno. ADN Local es la forma de llevar todo ese conocimiento de campo a la formación.",
   ],
   areas: [

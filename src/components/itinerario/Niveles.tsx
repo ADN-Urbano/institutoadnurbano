@@ -9,7 +9,7 @@ export default function Niveles() {
         eyebrow="·· Cómo se organiza"
         title={
           <>
-            Cuatro <span className="text-turquoise">niveles</span>
+            Los <span className="text-turquoise">niveles</span>
           </>
         }
         subtitle="De la pieza más pequeña al recorrido completo. Puedes hacer una sola o construir tu itinerario."

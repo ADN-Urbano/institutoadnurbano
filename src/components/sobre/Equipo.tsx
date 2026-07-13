@@ -45,9 +45,6 @@ export default function Equipo() {
               </span>
             ))}
           </div>
-          <p className="text-[15px] leading-[1.6] text-ink-soft border-l-2 border-turquoise pl-5 max-w-[62ch]">
-            {equipo.teamNote}
-          </p>
         </div>
       </div>
     </section>

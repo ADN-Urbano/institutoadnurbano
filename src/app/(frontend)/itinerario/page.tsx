@@ -9,7 +9,7 @@ import NextStep from "@/components/formacion/NextStep";
 export const metadata: Metadata = {
   title: "Itinerario formativo · ADN Local",
   description:
-    "El catálogo completo de ADN Local: por competencias y momentos del mandato. Cuatro niveles (clave, módulo, programa, especialización) para construir tu propio itinerario de gobierno local.",
+    "El catálogo completo de ADN Local: por competencias y momentos del mandato, para construir tu propio itinerario de gobierno local.",
 };
 
 export default function ItinerarioPage() {
