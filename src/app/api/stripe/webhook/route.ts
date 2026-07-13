@@ -76,11 +76,12 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
   const courseId = Number(session.metadata?.courseId);
   const editionId = Number(session.metadata?.editionId);
   const email = (session.customer_details?.email || session.customer_email)?.toLowerCase().trim();
-  const name = session.customer_details?.name ?? undefined;
+  // Nombre pedido explícitamente en el checkout (más fiable que el del titular
+  // de la tarjeta); si no viene, se usa el del pago como respaldo.
+  const name = customField(session, "nombre") ?? session.customer_details?.name ?? undefined;
   const phone = session.customer_details?.phone ?? undefined;
   const pais = customField(session, "pais");
   const municipio = customField(session, "municipio");
-  const cargo = customField(session, "cargo");
   const customerId = typeof session.customer === "string" ? session.customer : undefined;
   const paymentId =
     typeof session.payment_intent === "string" ? session.payment_intent : session.id;
@@ -104,7 +105,7 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     limit: 1,
   });
   let student = found.docs[0];
-  const participante = { name, phone, pais, municipio, cargo };
+  const participante = { name, phone, pais, municipio };
   if (!student) {
     student = await payload.create({
       collection: "students",

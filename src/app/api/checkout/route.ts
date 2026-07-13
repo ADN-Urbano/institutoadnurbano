@@ -93,10 +93,16 @@ export async function POST(req: Request) {
         },
       ],
       allow_promotion_codes: true,
-      // Datos del participante: teléfono nativo + municipio/país/cargo como
-      // campos personalizados (sin dirección completa). El webhook los guarda en el Student.
+      // Datos del participante: teléfono nativo + nombre y apellidos/municipio/
+      // país como campos personalizados. El webhook los guarda en el Student (el
+      // nombre pedido aquí es más fiable que el del titular de la tarjeta).
       phone_number_collection: { enabled: true },
       custom_fields: [
+        {
+          key: "nombre",
+          label: { type: "custom", custom: "Nombre y apellidos" },
+          type: "text",
+        },
         {
           key: "municipio",
           label: { type: "custom", custom: "Municipio" },
@@ -106,20 +112,6 @@ export async function POST(req: Request) {
           key: "pais",
           label: { type: "custom", custom: "País" },
           type: "text",
-        },
-        {
-          key: "cargo",
-          label: { type: "custom", custom: "Tu cargo" },
-          type: "dropdown",
-          dropdown: {
-            options: [
-              { label: "En gobierno (alcalde/concejal)", value: "gobierno" },
-              { label: "En la oposición", value: "oposicion" },
-              { label: "Candidato/a", value: "candidato" },
-              { label: "Técnico/a municipal", value: "tecnico" },
-              { label: "Otro", value: "otro" },
-            ],
-          },
         },
       ],
       // Para activar IVA automático: descomenta y habilita Stripe Tax en el dashboard.
