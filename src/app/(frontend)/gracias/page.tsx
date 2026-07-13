@@ -24,7 +24,7 @@ export default async function GraciasPage() {
       </h1>
       <p className="text-[16px] text-ink-muted max-w-[500px] mx-auto mb-8">
         {loggedIn
-          ? "Tu inscripción se ha registrado correctamente. Ya tienes el curso disponible en tu área del alumno."
+          ? "Tu inscripción se ha registrado correctamente. Ya tienes el programa disponible en tu área del alumno."
           : "Tu inscripción se ha registrado correctamente. Te enviaremos un email con tu enlace de acceso al aula. Si ya conoces el área del alumno, entra con tu email cuando quieras."}
       </p>
       <div className="flex gap-3 justify-center flex-wrap">
@@ -39,7 +39,7 @@ export default async function GraciasPage() {
           href="/formacion"
           className="px-5 py-3 rounded-lg text-sm font-semibold border border-rule transition-colors hover:border-turquoise hover:text-turquoise"
         >
-          Ver más cursos
+          Ver más programas
         </Link>
       </div>
     </main>

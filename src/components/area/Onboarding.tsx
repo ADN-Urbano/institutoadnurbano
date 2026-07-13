@@ -36,7 +36,7 @@ export default function Onboarding({ slug }: { slug: string }) {
         <CloseIcon className="w-4 h-4" />
       </button>
       <div className="font-display font-extrabold text-[26px] leading-none tracking-[-0.02em] uppercase mb-3 pr-10">
-        ¡Bienvenido/a al curso!
+        ¡Bienvenido/a al programa!
       </div>
       <p className="text-[15px] leading-[1.6] opacity-95 max-w-[620px] mb-4">
         Así funciona: ves los vídeos y las lecturas a tu ritmo y cada semana hay una{" "}

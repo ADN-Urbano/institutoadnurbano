@@ -48,12 +48,12 @@ export default async function AreaPage() {
       </header>
 
       <h2 className="font-mono text-[11px] font-medium text-ink-soft tracking-[0.06em] uppercase mb-5">
-        Tus cursos
+        Tus programas
       </h2>
 
       {courses.length === 0 ? (
         <div className="border border-rule rounded-3xl p-10 text-center">
-          <p className="text-[17px] text-ink mb-2">Aún no tienes cursos.</p>
+          <p className="text-[17px] text-ink mb-2">Aún no tienes programas.</p>
           <p className="text-sm text-ink-muted mb-6">
             Cuando te inscribas en un programa, aparecerá aquí con tu progreso.
           </p>

@@ -231,7 +231,7 @@ export function toCourseDetail(
     videoIntro: {
       title: doc.videoIntro?.title ?? "Descubre más sobre el programa",
       desc: doc.videoIntro?.desc ?? "",
-      label: doc.videoIntro?.label ?? "Vídeo presentación curso",
+      label: doc.videoIntro?.label ?? "Vídeo presentación programa",
     },
     modules: (doc.modules ?? []).map(
       (m): Module => ({

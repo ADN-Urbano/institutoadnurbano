@@ -101,7 +101,7 @@ export type Program = {
 };
 
 const guaranteeText =
-  "Nos reservamos el derecho de cancelar el curso si no se alcanza el mínimo.";
+  "Nos reservamos el derecho de cancelar el programa si no se alcanza el mínimo.";
 const limitedText = "Máximo 30 participantes por edición";
 
 export const programs: Program[] = [
@@ -219,7 +219,7 @@ export const itinerario: {
   title: "Un itinerario para gobernar lo local",
   accent: "gobernar lo local",
   subtitle:
-    "No son cursos sueltos: cada programa es un paso de una ruta completa de aprendizaje para cargos públicos.",
+    "No son programas sueltos: cada uno es un paso de una ruta completa de aprendizaje para cargos públicos.",
   areas: [
     {
       title: "Estrategia y mandato",
@@ -324,7 +324,7 @@ export const comoFunciona = {
     },
     {
       title: "Acceso durante 6 meses",
-      desc: "Materiales y grabaciones disponibles 6 meses desde la finalización del curso.",
+      desc: "Materiales y grabaciones disponibles 6 meses desde la finalización del programa.",
     },
     {
       title: "Certificado de finalización",

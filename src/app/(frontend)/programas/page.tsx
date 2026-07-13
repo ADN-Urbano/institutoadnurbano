@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Programas · ADN Local",
   description:
-    "Todos los programas de ADN Local: cursos activos y próximas ediciones para cada etapa de tu trayectoria política.",
+    "Todos los programas de ADN Local: programas activos y próximas ediciones para cada etapa de tu trayectoria política.",
 };
 
 export default function ProgramasPage() {

@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const body = (await req.json().catch(() => ({}))) as { slug?: string; editionId?: string | number };
   const slug = body.slug?.trim();
   if (!slug) {
-    return NextResponse.json({ error: "Falta el curso." }, { status: 400 });
+    return NextResponse.json({ error: "Falta el programa." }, { status: 400 });
   }
 
   const payload = await getPayloadClient();
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   });
   const course = res.docs[0] as unknown as (CourseDoc & { id: string }) | undefined;
   if (!course) {
-    return NextResponse.json({ error: "Curso no encontrado." }, { status: 404 });
+    return NextResponse.json({ error: "Programa no encontrado." }, { status: 404 });
   }
 
   // El precio NUNCA viene del cliente: se lee de la edición en Payload. El
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Esta edición no está disponible para inscripción." }, { status: 409 });
   }
   if (resolved.status === "none") {
-    return NextResponse.json({ error: "Este curso aún no está abierto a inscripción." }, { status: 409 });
+    return NextResponse.json({ error: "Este programa aún no está abierto a inscripción." }, { status: 409 });
   }
   const edition = resolved.edition;
   const editionId = edition.id;

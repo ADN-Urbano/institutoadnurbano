@@ -171,7 +171,7 @@ function ProgramCard({ program, liveTiers }: { program: Program; liveTiers?: Liv
           href={program.href}
           className="group mt-6 bg-ink text-white px-6 py-4 rounded-xl text-sm font-semibold inline-flex items-center justify-between gap-3 transition-all hover:bg-turquoise hover:-translate-y-px"
         >
-          Ver el curso
+          Ver el programa
           <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </Link>
       )}

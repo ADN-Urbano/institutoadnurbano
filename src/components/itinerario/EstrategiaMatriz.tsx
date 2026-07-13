@@ -24,7 +24,7 @@ function Cell({ cell, linea }: { cell: MatrizCell; linea: string }) {
       <p className="text-sm leading-[1.5] text-ink-soft">{cell.desc}</p>
       {available && (
         <span className="mt-3 inline-flex items-center gap-1.5 text-turquoise text-sm font-semibold">
-          Ver el curso <ArrowUpRight className="w-4 h-4" />
+          Ver el programa <ArrowUpRight className="w-4 h-4" />
         </span>
       )}
     </>

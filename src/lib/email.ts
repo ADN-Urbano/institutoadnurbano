@@ -80,14 +80,14 @@ export async function sendWelcome(
   const html = future
     ? shell(
         "¡Plaza reservada!",
-        `Tu inscripción en <strong>${courseTitle}</strong> está confirmada. El curso <strong>empieza el ${fecha}</strong>: ese día se abre el contenido en tu campus y el acceso a la comunidad, y te avisaremos por email. Mientras tanto, puedes entrar a tu área para ver tu plaza.`,
+        `Tu inscripción en <strong>${courseTitle}</strong> está confirmada. El programa <strong>empieza el ${fecha}</strong>: ese día se abre el contenido en tu campus y te avisaremos por email. Mientras tanto, puedes entrar a tu área para ver tu plaza.`,
         { href: link, label: "Ver mi plaza →" },
         "Gracias por confiar en ADN Local. Si tienes cualquier duda, responde a este email.",
       )
     : shell(
         "¡Bienvenido/a a tu formación!",
         `Tu inscripción en <strong>${courseTitle}</strong> está confirmada. Entra a tu área del alumno para empezar. El enlace caduca en 15 minutos; después podrás volver a entrar desde <a href="https://www.adnlocal.es/acceder">adnlocal.es/acceder</a> con tu email.`,
-        { href: link, label: "Acceder al curso →" },
+        { href: link, label: "Acceder al programa →" },
         "Gracias por confiar en ADN Local.",
       );
 

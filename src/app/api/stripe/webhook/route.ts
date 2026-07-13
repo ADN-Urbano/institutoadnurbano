@@ -194,7 +194,7 @@ async function fulfillCheckout(session: Stripe.Checkout.Session) {
     const base = /^https?:\/\//.test(rawBase) ? rawBase : `https://${rawBase}`;
     const link = `${base}/api/auth/verify?token=${encodeURIComponent(token)}`;
     const course = await payload.findByID({ collection: "courses", id: courseId, depth: 0 });
-    const title = (course as { title?: string }).title ?? "tu curso";
+    const title = (course as { title?: string }).title ?? "tu programa";
     // Fecha de inicio de la edición: si es futura, el email es de "plaza reservada".
     let startsAt: string | null = null;
     try {

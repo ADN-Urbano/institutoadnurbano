@@ -84,7 +84,7 @@ export default function AccederForm() {
         {loading ? "Enviando…" : "Enviar enlace de acceso"}
       </button>
       <p className="text-[13px] text-ink-muted leading-[1.5]">
-        Te enviamos un enlace para entrar sin contraseña. Si acabas de comprar un curso, usa el
+        Te enviamos un enlace para entrar sin contraseña. Si acabas de comprar un programa, usa el
         email de la compra.
       </p>
     </form>

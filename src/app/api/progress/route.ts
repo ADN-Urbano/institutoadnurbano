@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   if (editionId != null && editionId !== "") {
     const edition = await getEditionById(editionId);
     if (edition?.startDate && computeAccessState(edition.startDate) === "pending") {
-      return NextResponse.json({ error: "El curso aún no ha empezado." }, { status: 403 });
+      return NextResponse.json({ error: "El programa aún no ha empezado." }, { status: 403 });
     }
   }
 

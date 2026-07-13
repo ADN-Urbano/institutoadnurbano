@@ -26,7 +26,7 @@ export default function ItinerarioPage() {
             </h1>
             <p className="text-[18px] leading-[1.55] text-ink-soft max-w-[560px] max-sm:text-base">
               Construye tu propio itinerario: elige por dónde empezar y avanza a tu ritmo por las
-              áreas del gobierno local. Estos son los cursos disponibles hoy y todo lo que va llegando.
+              áreas del gobierno local. Estos son los programas disponibles hoy y todo lo que va llegando.
             </p>
           </div>
           <div className="relative w-full aspect-[4/3] rounded-[28px] overflow-hidden lg:aspect-[5/6] max-sm:aspect-[16/11]">

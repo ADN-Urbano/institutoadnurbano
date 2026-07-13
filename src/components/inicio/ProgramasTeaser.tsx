@@ -15,7 +15,7 @@ export default function ProgramasTeaser() {
             Nuestros <span className="text-turquoise">programas</span>
           </>
         }
-        subtitle="Cursos prácticos de tres semanas para cada etapa de tu trayectoria."
+        subtitle="Programas prácticos de tres semanas para cada etapa de tu trayectoria."
         link={{ label: "Ver todos →", href: "/programas#programas" }}
       />
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -53,7 +53,7 @@ export default function ProgramasTeaser() {
             >
               {inner}
               <span className="mt-5 inline-flex items-center gap-1.5 text-turquoise text-sm font-semibold">
-                Ver el curso <ArrowUpRight className="w-4 h-4" />
+                Ver el programa <ArrowUpRight className="w-4 h-4" />
               </span>
             </Link>
           ) : (

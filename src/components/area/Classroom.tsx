@@ -95,7 +95,7 @@ export default function Classroom({
   if (!current) {
     return (
       <div className="border border-rule rounded-[14px] p-10 text-center text-ink-muted">
-        Este curso aún no tiene lecciones publicadas.
+        Este programa aún no tiene lecciones publicadas.
       </div>
     );
   }
@@ -281,7 +281,7 @@ export default function Classroom({
           </div>
         </div>
         <Link href="/area" className="inline-block mt-4 text-sm font-medium text-ink-soft hover:text-turquoise">
-          ← Volver a mis cursos
+          ← Volver a mis programas
         </Link>
       </aside>
     </div>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const perks = [
-  "Tus cursos y vídeos pregrabados",
+  "Tus programas y vídeos pregrabados",
   "Enlace a la próxima clase en directo por Teams",
   "Materiales y plantillas descargables",
   "Tu progreso y certificados",
@@ -32,7 +32,7 @@ export default function AccederPage() {
               Tu área de formación
             </h1>
             <p className="text-[15px] leading-[1.55] opacity-95 mt-4 max-w-[360px]">
-              Entra para seguir tus cursos, ver los directos y descargar tus materiales.
+              Entra para seguir tus programas, ver los directos y descargar tus materiales.
             </p>
           </div>
           <ul className="relative z-[1] flex flex-col gap-3">
@@ -59,7 +59,7 @@ export default function AccederPage() {
           <div className="mt-7 pt-6 border-t border-rule text-[13px] text-ink-muted leading-[1.5]">
             ¿Aún no tienes cuenta? El acceso se crea automáticamente al{" "}
             <Link href="/formacion" className="text-turquoise font-medium hover:underline">
-              comprar tu primer curso
+              comprar tu primer programa
             </Link>
             .
           </div>

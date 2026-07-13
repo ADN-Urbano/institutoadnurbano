@@ -42,7 +42,7 @@ export default function NextSession({ session }: { session: LiveSession }) {
     `/api/ics?title=${encodeURIComponent(session.title)}` +
     `&start=${encodeURIComponent(session.date)}&dur=90` +
     (session.teamsLink ? `&url=${encodeURIComponent(session.teamsLink)}` : "") +
-    `&desc=${encodeURIComponent("Sesión en directo del curso por Microsoft Teams.")}`;
+    `&desc=${encodeURIComponent("Sesión en directo del programa por Microsoft Teams.")}`;
 
   return (
     <div className="rounded-2xl bg-turquoise-deep text-white p-6 mb-8 flex items-center gap-6 max-md:flex-col max-md:items-start max-md:gap-4">
