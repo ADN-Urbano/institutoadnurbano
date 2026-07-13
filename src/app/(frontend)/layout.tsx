@@ -56,6 +56,19 @@ export default function RootLayout({
       <body
         className={`${bigShoulders.variable} ${archivo.variable} ${dmSans.variable} ${dmMono.variable} antialiased`}
       >
+        {/* Portada de bienvenida (una vez por sesión). Oculta por defecto con
+            style inline para que NO parpadee al recargar; el script la muestra
+            antes del primer pintado solo en la 1ª visita de la sesión. */}
+        <div id="adn-intro" style={{ display: "none" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/adn-local-logo.png" alt="ADN Local" className="intro-logo" />
+        </div>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(sessionStorage.getItem('adn_intro_seen'))return;sessionStorage.setItem('adn_intro_seen','1');var e=document.getElementById('adn-intro');if(!e)return;e.style.display='flex';var r=matchMedia('(prefers-reduced-motion: reduce)').matches;var c=function(){e.classList.add('intro-leaving');setTimeout(function(){e.style.display='none'},600)};e.addEventListener('click',c);setTimeout(c,r?500:1500)}catch(x){}})();",
+          }}
+        />
         <AttributionInit />
         <PixelLoader />
         <Header />

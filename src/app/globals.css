@@ -132,3 +132,46 @@
   width: 100%;
   height: auto;
 }
+
+/* Portada de bienvenida (una vez por sesión). El elemento va oculto con `style`
+   inline (display:none) para no parpadear al recargar; un script inline del
+   layout lo muestra (display:flex) antes del primer pintado solo en la primera
+   visita de la sesión. Aquí van posición, fondo y animación. */
+#adn-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-turquoise);
+  transition: opacity 0.6s ease;
+}
+#adn-intro.intro-leaving {
+  opacity: 0;
+}
+#adn-intro .intro-logo {
+  height: 80px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  animation: adnIntroLogo 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (min-width: 768px) {
+  #adn-intro .intro-logo {
+    height: 112px;
+  }
+}
+@keyframes adnIntroLogo {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #adn-intro .intro-logo {
+    animation: none;
+  }
+}
