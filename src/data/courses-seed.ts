@@ -33,7 +33,7 @@ const landingInstructor = {
 const landingVideoIntro = {
   title: "Descubre más sobre el programa",
   desc: "Conoce cómo está estructurado, qué trabajarás durante las tres semanas de formación y qué resultados obtendrás al finalizar.",
-  label: "Vídeo presentación curso",
+  label: "Vídeo presentación programa",
 };
 
 const landingTeams = {
@@ -43,10 +43,11 @@ const landingTeams = {
 
 const landingFeats = [
   "Formación online compatible con tu tiempo.",
-  "Vídeos de formación (5–15 min) y test de fijación",
+  "Vídeos de formación (5–15 min) y tests de fijación de conocimientos",
   "3 sesiones prácticas en directo aplicadas a tu caso",
   "Saldrás con una estrategia lista para aplicar en tu municipio",
-  "Acceso a Campus Virtual y comunidad",
+  "Soporte directo por WhatsApp",
+  "Acceso a Campus Virtual",
   "Certificado de finalización",
   "Acceso a todos los materiales y grabaciones durante 6 meses",
 ].map((feature) => ({ feature }));
@@ -55,17 +56,17 @@ const landingFaq = [
   {
     question: "¿Y si no puedo asistir a un directo?",
     answer:
-      "No hay problema. Las tres sesiones prácticas de resolución de casos se graban y se suben al campus en menos de 24 horas. Podrás verlas cuando quieras y plantear tus dudas a través del foro de la comunidad.",
+      "No hay problema. Las tres sesiones prácticas de resolución de casos se graban y se suben al campus en menos de 24 horas. Podrás verlas cuando quieras y plantear tus dudas por el canal de soporte del programa.",
   },
   {
     question: "¿Cuánto tiempo tendré acceso a los materiales?",
     answer:
-      "Tendrás acceso al campus virtual durante 6 meses desde la finalización del curso, para repasar los materiales y las grabaciones con calma.",
+      "Tendrás acceso al campus virtual durante 6 meses desde la finalización del programa, para repasar los materiales y las grabaciones con calma.",
   },
   {
     question: "¿Cuándo y cómo son las sesiones en directo?",
     answer:
-      "Se realiza una sesión en directo por módulo (3 en total) centrada en la resolución de casos prácticos. Las sesiones se realizan a través del campus virtual y tienen una duración aproximada de dos horas.",
+      "Se realiza una sesión en directo por módulo centrada en la resolución de casos prácticos. Las sesiones se realizan a través del campus virtual y tienen una duración aproximada de dos horas.",
   },
   {
     question: "¿Necesito instalar algún software especial?",
@@ -75,7 +76,7 @@ const landingFaq = [
   {
     question: "¿Cómo se imparte el contenido teórico?",
     answer:
-      "Todo el material está alojado en el Campus Virtual. El programa consta de lecturas estructuradas, vídeos cortos de entre 5 y 15 minutos y un test de fijación de conocimientos para asegurar que asimilas los conceptos clave de forma ágil.",
+      "Todo el material está alojado en el Campus Virtual. El programa consta de módulos con lecturas estructuradas, vídeos cortos de entre 5 y 15 minutos y tests de fijación de conocimientos para asegurar que asimilas los conceptos clave de forma ágil.",
   },
 ];
 
@@ -117,7 +118,7 @@ export const coursesSeed = [
     modules: [
       {
         num: "01",
-        name: "Gestionar: El QUÉ.",
+        name: "Gestionar",
         description:
           "De la lista de logros al hilo conductor. Aprenderás a construir un diagnóstico integrado del mandato (interno + territorial) que no sea un simple catálogo de obras, sino un relato con sentido.",
         lessons: temasToLessons([
@@ -127,7 +128,7 @@ export const coursesSeed = [
       },
       {
         num: "02",
-        name: "Dirigir: El QUIÉN.",
+        name: "Dirigir",
         description:
           "El diseño del equipo de campaña y el mapa de actores. Definirás tu núcleo de confianza y el plan de acercamiento a los colectivos clave del municipio para que ningún contacto sea fruto de la improvisación.",
         lessons: temasToLessons([
@@ -137,7 +138,7 @@ export const coursesSeed = [
       },
       {
         num: "03",
-        name: "Comunicar: El CÓMO.",
+        name: "Comunicar",
         description:
           "Proyecto de legislatura y mensaje marco. Transformarás el diagnóstico en una visión de futuro, definiendo tu eslogan de precampaña y un calendario de acciones visibles que generen confianza.",
         lessons: temasToLessons([
@@ -149,7 +150,7 @@ export const coursesSeed = [
     forYes: {
       title: "Quieres que tu gestión se convierta en votos",
       items: [
-        'Eres alcalde o concejal que se siente "ahogado por la gestión" diaria y necesita recuperar el control de su tiempo y su mensaje',
+        'Eres alcalde o concejal y te sientes "ahogado por la gestión" diaria, y necesitas recuperar el control de tu tiempo y tu mensaje',
         "Sientes que has hecho mucho, pero te falta un hilo conductor que dé sentido a tus logros ante los vecinos.",
         "Necesitas alinear a tu equipo bajo una estrategia única para evitar la improvisación electoral.",
         "Quieres pasar de la intuición a una metodología con datos para ganar votos en cada barrio.",
@@ -187,8 +188,7 @@ export const coursesSeed = [
     slug: "construir-la-alternativa",
     title: "Construir la alternativa",
     accent: "alternativa",
-    headline:
-      'Deja de ser "la oposición" para convertirte en la alternativa real de gobierno',
+    headline: "Conviértete en la alternativa real de gobierno",
     headlineAccent: "alternativa real",
     summary:
       "Las elecciones no se ganan en campaña; se ganan ahora. Tres semanas para analizar las vulnerabilidades del gobierno, construir tu equipo y prefigurar el cambio que el municipio necesita.",
@@ -274,10 +274,6 @@ export const coursesSeed = [
  * `startDate` en el pasado para que el alumno de prueba quede `active`.
  */
 
-// startDate del curso estrella: en el pasado (acceso ya abierto en dev).
-// Directos relativos a "ahora" para que NextSession muestre uno futuro en dev.
-const inDays = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString();
-
 export const editionsSeed = [
   /* ---- Ediciones · Hacia un nuevo mandato (3) ---- */
   {
@@ -325,41 +321,41 @@ export const editionsSeed = [
   /* ---- Ediciones · Construir la alternativa (3) ---- */
   {
     courseSlug: "construir-la-alternativa",
-    editionLabel: "Curso 02 · Edición septiembre 2026",
+    editionLabel: "Edición septiembre 2026",
     status: "open",
     statusLabel: "Inscripción abierta",
     priceCents: 19800,
     oldPriceCents: 33000,
     priceNote: "IVA inc.",
-    startDate: inDays(82),
-    startLabel: "1 sept",
+    startDate: "2026-09-03T08:00:00.000Z",
+    startLabel: "3 sept",
     seatsLabel: "30 plazas",
     liveSessions: [],
     announcements: [],
   },
   {
     courseSlug: "construir-la-alternativa",
-    editionLabel: "Curso 02 · Edición octubre 2026",
+    editionLabel: "Edición octubre 2026",
     status: "soon",
     statusLabel: "Reserva tu plaza",
     priceCents: 26400,
     oldPriceCents: 33000,
     priceNote: "IVA inc.",
-    startDate: inDays(112),
-    startLabel: "1 oct",
+    startDate: "2026-10-08T08:00:00.000Z",
+    startLabel: "8 oct",
     seatsLabel: "Reserva",
     liveSessions: [],
     announcements: [],
   },
   {
     courseSlug: "construir-la-alternativa",
-    editionLabel: "Curso 02 · Edición noviembre 2026",
+    editionLabel: "Edición noviembre 2026",
     status: "soon",
     statusLabel: "Reserva tu plaza",
     priceCents: 33000,
     priceNote: "IVA inc.",
-    startDate: inDays(143),
-    startLabel: "1 nov",
+    startDate: "2026-11-05T08:00:00.000Z",
+    startLabel: "5 nov",
     seatsLabel: "Reserva",
     liveSessions: [],
     announcements: [],
